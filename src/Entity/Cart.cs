@@ -1,4 +1,4 @@
-namespace sda_3_online_Backend_Teamwork.src.Entity
+namespace src.Entity
 {
     public class Cart
     {
