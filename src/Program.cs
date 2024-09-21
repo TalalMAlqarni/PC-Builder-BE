@@ -1,5 +1,3 @@
-using System.Text.Json;
-using src.Entity;
 var builder = WebApplication.CreateBuilder(args);
 //Add controllers
 builder.Services.AddControllers();

@@ -4,9 +4,8 @@ using src.Entity;
 namespace src.Controller
 {
     [ApiController]
-    //[Route("api/v1/categories/specific_category/subcategories/specific_subcategory)]
     [Route("api/v1/[controller]")]
-    class ProductsController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         /*The standard user privileges:
         view the product/products
@@ -28,7 +27,7 @@ namespace src.Controller
         {
             new Product
             {
-                ProductId = new Guid(),
+                ProductId = Guid.NewGuid(),
                 ProductName = "Sofa",
                 ProductColor = "Black",
                 SKU = 10,
@@ -39,7 +38,7 @@ namespace src.Controller
             },
             new Product
             {
-                ProductId = new Guid(),
+                ProductId = Guid.NewGuid(),
                 ProductName = "Sofa2",
                 ProductColor = "Gray",
                 SKU = 12,
@@ -58,7 +57,7 @@ namespace src.Controller
         }
 
         //view a specific product by Id
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public ActionResult GetProductById(Guid id)
         {
             Product? isFound = products.FirstOrDefault(x => x.ProductId == id);
@@ -72,17 +71,19 @@ namespace src.Controller
         }
 
         //search on a specific product byname
-        [HttpGet("{productname}")] //?
-        public ActionResult GetProductByName(string name)
+        [HttpGet("{name}")]
+        public ActionResult GetProductsByName(string name)
         {
-            Product? isFound = products.FirstOrDefault(x => x.ProductName == name);
+            List<Product>? result = products
+                .Where(x => x.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
-            if (isFound == null)
+            if (result is null)
             {
-                return NotFound();
+                return NotFound("No Results Found");
             }
 
-            return Ok(isFound);
+            return Ok(result);
         }
 
         //delete a specific product
@@ -102,7 +103,12 @@ namespace src.Controller
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateProductInfo(string attributeName, Product product, Guid id)
+        public ActionResult UpdateProductInfo(
+            string attributeName,
+            string newValue,
+            Product product,
+            Guid id
+        )
         {
             // Add the condition (if user_role is admin, otherwise it will not be allowed)
             Product? isFound = products.FirstOrDefault(x => x.ProductId == id);
@@ -115,17 +121,21 @@ namespace src.Controller
             // is switch case a good choice here? like what info you want to update?
             switch (attributeName)
             {
-                case "Name":
-                    isFound.ProductName = product.ProductName;
+                case "Name": // I want to add ignore case
+                    isFound.ProductName = newValue;
+                    product.ProductName = isFound.ProductName;
                     break;
                 case "Color":
-                    isFound.ProductColor = product.ProductColor;
+                    isFound.ProductColor = newValue;
+                    product.ProductColor = isFound.ProductColor;
                     break;
                 case "Price":
-                    isFound.ProductPrice = product.ProductPrice;
+                    isFound.ProductPrice = Convert.ToDecimal(newValue);
+                    product.ProductPrice = isFound.ProductPrice;
                     break;
                 case "Weight":
-                    isFound.Weight = product.Weight;
+                    isFound.Weight = Convert.ToDecimal(newValue);
+                    product.Weight = isFound.Weight;
                     break;
             }
             return Ok(isFound);
