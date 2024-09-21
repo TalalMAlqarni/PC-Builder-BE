@@ -1,6 +1,6 @@
 namespace src.Entity
 {
-    class Product
+    public class Product
     {
 
         
