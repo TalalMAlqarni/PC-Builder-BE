@@ -1,3 +1,4 @@
+using src.Entity;
 namespace sda_3_online_Backend_Teamwork.src.Entity
 {
     public class Cart
@@ -8,5 +9,5 @@ namespace sda_3_online_Backend_Teamwork.src.Entity
         public int CartQuantity { get; set; }
         public decimal TotalPrice { get; set; }
 
-//     }
-// }
+    }
+}
