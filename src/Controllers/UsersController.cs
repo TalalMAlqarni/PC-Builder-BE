@@ -11,7 +11,7 @@ namespace src.Controllers
     [Route("api/v1/[controller]")]
     public class UsersController  : ControllerBase
     {
-        public List<User> users = new List<User>
+        public static List<User> users = new List<User>
         {
             new User { UserId = Guid.NewGuid() , FirstName = "razan" , LastName = "Mansour" , Email = "razan@gmail.com" , BirthDate = new DateOnly(2001,2,1) , PhoneNumber = "0510000000" , Password = "asd123" , Role = "Admin"},
             new User { UserId = Guid.NewGuid() , FirstName = "ahmed" , LastName = "Ali" , Email = "ahmad@gmail.com" , BirthDate = new DateOnly(1998,4,10) , PhoneNumber = "0520000000" , Password = "qwe123" , Role = "customer"},
@@ -70,6 +70,18 @@ namespace src.Controllers
             {
                 return Ok(searchByFirstName);
             }
+        }
+        [HttpGet("{id:guid}")]
+        public ActionResult GetUserById2(Guid id)
+        {
+            User? isFound = users.FirstOrDefault(x => x.UserId == id);
+
+            if (isFound == null)
+            {
+                return NotFound("not found");
+            }
+
+            return Ok(isFound);
         }
         //POST MMETHOD -Create new user-
         //id - Auto generated
