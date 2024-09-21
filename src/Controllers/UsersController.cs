@@ -11,7 +11,7 @@ namespace src.Controllers
     [Route("api/v1/[controller]")]
     public class UsersController  : ControllerBase
     {
-        public List<User> users = new List<User>
+        public static List<User> users = new List<User>
         {
             new User { UserId = Guid.NewGuid() , FirstName = "razan" , LastName = "Mansour" , Email = "razan@gmail.com" , BirthDate = new DateOnly(2001,2,1) , PhoneNumber = "0510000000" , Password = "asd123" , Role = "Admin"},
             new User { UserId = Guid.NewGuid() , FirstName = "ahmed" , LastName = "Ali" , Email = "ahmad@gmail.com" , BirthDate = new DateOnly(1998,4,10) , PhoneNumber = "0520000000" , Password = "qwe123" , Role = "customer"},
@@ -58,54 +58,7 @@ namespace src.Controllers
                 return Ok(pagedUsers.OrderBy(x => x.UserId).ToList());
             }
         }
-        //show specific user by name
-        // [HttpGet("{search}")]
-        // public ActionResult FindUsers(string search)
-        // {
-        //     var searchById = users.Where(x => x.UserId.ToString().Contains(search ,StringComparison.OrdinalIgnoreCase));
-        //     var searchByFirstName = users.Where(x => x.FirstName.Contains(search , StringComparison.OrdinalIgnoreCase));
-        //     var searchByLastName = users.Where(x => x.LastName.Contains(search , StringComparison.OrdinalIgnoreCase));
-        //     var searchByEmail = users.Where(x => x.Email.Contains(search , StringComparison.OrdinalIgnoreCase));
-        //     var searchByPhoneNumber = users.Where(x => x.PhoneNumber.Contains(search , StringComparison.OrdinalIgnoreCase));
-        //     if (searchByFirstName == null)
-        //     {
-        //         if(searchByLastName == null)
-        //         {
-                    
-        //             if(searchByEmail == null)
-        //             {
-        //                 if(searchByPhoneNumber == null)
-        //                 {
-        //                     if(searchById == null)
-        //                     {
-        //                         return NotFound();
-        //                     }
-        //                     else
-        //                     {
-        //                         return Ok(searchById);
-        //                     }
-        //                 }
-        //                 else
-        //                 {
-        //                     return Ok(searchByPhoneNumber);
-        //                 }
-        //             }
-        //             else
-        //             {
-        //                 return Ok(searchByEmail);
-        //             }
-        //         }
-        //         else 
-        //         {
-        //             return Ok(searchByLastName);
-        //         }
-        //     }
-        //     else 
-        //     {
-        //         return Ok(searchByFirstName);
-        //     }
-        // }
-       [HttpGet("{id}")]
+        [HttpGet("{id}")]
         public ActionResult GetUserById(Guid id)
         {
             User? isFound = users.FirstOrDefault(x => x.UserId == id);
@@ -118,10 +71,30 @@ namespace src.Controllers
         //POST MMETHOD -Create new user-
         //id - Auto generated
         //Email and PhoneNumber UNIQUE -no duplicates-
-       // [HttpPost]
+        // [HttpPost]
         // public ActionResult CreateUser()
         // {
             
         // }
+        //Put Method -update information-
+        //Email and PhoneNumber UNIQUE -no duplicates-
+        // [HttpPut]
+        // public ActionResult CreateUser()
+        // {
+        //   
+        // }
+
+        //Delete user by id
+        [HttpDelete("id")]
+        public ActionResult DeleteUser(Guid id)
+        {
+            User? isFound =users.FirstOrDefault(x => x.UserId == id);
+            if(isFound == null)
+            {
+                return NotFound();
+            }
+            users.Remove(isFound);
+            return NoContent();
+        }
     }
 }
