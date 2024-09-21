@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using src.Entity;
 
 namespace sda_3_online_Backend_Teamwork.src.Entity
 {
@@ -7,9 +8,9 @@ namespace sda_3_online_Backend_Teamwork.src.Entity
     public class CartController : ControllerBase
     {
         public List<Product> Products = new List<Product>{
-            new Product { Name = "P1", Price = 100, Quantity = 10},
-            new Product { Name = "P2", Price = 200, Quantity = 20},
-            new Product { Name = "P3", Price = 300, Quantity = 30},
+            new Product { ProductName = "P1", ProductPrice = 100, Quantity = 10},
+            new Product { ProductName = "P2", ProductPrice = 200, Quantity = 20},
+            new Product { ProductName = "P3", ProductPrice = 300, Quantity = 30},
         };
         public static List<Cart> Carts = new List<Cart>();
 
