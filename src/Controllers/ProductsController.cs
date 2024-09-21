@@ -6,7 +6,7 @@ namespace src.Controller
     [ApiController]
     //[Route("api/v1/categories/specific_category/subcategories/specific_subcategory)]
     [Route("api/v1/[controller]")]
-    class ProductsController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         /*The standard user privileges:
         view the product/products
@@ -28,7 +28,7 @@ namespace src.Controller
         {
             new Product
             {
-                ProductId = new Guid(),
+                ProductId = Guid.NewGuid(),
                 ProductName = "Sofa",
                 ProductColor = "Black",
                 SKU = 10,
@@ -39,7 +39,7 @@ namespace src.Controller
             },
             new Product
             {
-                ProductId = new Guid(),
+                ProductId = Guid.NewGuid(),
                 ProductName = "Sofa2",
                 ProductColor = "Gray",
                 SKU = 12,
@@ -72,18 +72,18 @@ namespace src.Controller
         }
 
         //search on a specific product byname
-        [HttpGet("{productname}")] //?
-        public ActionResult GetProductByName(string name)
-        {
-            Product? isFound = products.FirstOrDefault(x => x.ProductName == name);
+        // [HttpGet("{productname}")] //?
+        // public ActionResult GetProductByName(string name)
+        // {
+        //     Product? isFound = products.FirstOrDefault(x => x.ProductName == name);
 
-            if (isFound == null)
-            {
-                return NotFound();
-            }
+        //     if (isFound == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            return Ok(isFound);
-        }
+        //     return Ok(isFound);
+        // }
 
         //delete a specific product
 

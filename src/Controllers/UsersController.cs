@@ -31,49 +31,97 @@ namespace src.Controllers
             }
             return NotFound();
         }
-        //show specific user by name
-        [HttpGet("{search}")]
-        public ActionResult GetUserById(string search)
+        //orderby and pagenation
+        [HttpGet("{search}/{pagesize}/{pagenumber}")]
+        public ActionResult GetOrderedUsers(int pagenumber , int pagesize , string search)
         {
-           
-            var searchByFirstName = users.FirstOrDefault(x => x.FirstName == search);
-            var searchByLastName = users.FirstOrDefault(x => x.LastName == search);
-            var searchByEmail = users.FirstOrDefault(x => x.Email == search);
-            var searchByPhoneNumber = users.FirstOrDefault(x => x.PhoneNumber == search);
-            if (searchByFirstName == null)
+
+            List<User> pagedUsers = users.Skip((pagenumber-1) * pagesize).Take(pagesize).ToList();
+            if(search.ToLower() == "firstname")
             {
-                if(searchByLastName == null)
-                {
-                    
-                    if(searchByEmail == null)
-                    {
-                        if(searchByPhoneNumber == null)
-                        {
-                               return NotFound();
-                        }
-                        else
-                        {
-                            return Ok(searchByPhoneNumber);
-                        }
-                    }
-                    else
-                    {
-                        return Ok(searchByEmail);
-                    }
-                }
-                else 
-                {
-                    return Ok(searchByLastName);
-                }
+                return Ok(pagedUsers.OrderBy(x => x.FirstName).ToList());
+            }
+            else if(search.ToLower() == "lastname")
+            {
+                return Ok(pagedUsers.OrderBy(x => x.LastName).ToList());
+            }
+            else if(search.ToLower() == "email")
+            {
+                return Ok(pagedUsers.OrderBy(x => x.Email).ToList());
+            }
+            else if(search.ToLower() == "phonenumber")
+            {
+                return Ok(pagedUsers.OrderBy(x => x.PhoneNumber).ToList());
             }
             else 
             {
-                return Ok(searchByFirstName);
+                return Ok(pagedUsers.OrderBy(x => x.UserId).ToList());
             }
+        }
+        //show specific user by name
+        // [HttpGet("{search}")]
+        // public ActionResult FindUsers(string search)
+        // {
+        //     var searchById = users.Where(x => x.UserId.ToString().Contains(search ,StringComparison.OrdinalIgnoreCase));
+        //     var searchByFirstName = users.Where(x => x.FirstName.Contains(search , StringComparison.OrdinalIgnoreCase));
+        //     var searchByLastName = users.Where(x => x.LastName.Contains(search , StringComparison.OrdinalIgnoreCase));
+        //     var searchByEmail = users.Where(x => x.Email.Contains(search , StringComparison.OrdinalIgnoreCase));
+        //     var searchByPhoneNumber = users.Where(x => x.PhoneNumber.Contains(search , StringComparison.OrdinalIgnoreCase));
+        //     if (searchByFirstName == null)
+        //     {
+        //         if(searchByLastName == null)
+        //         {
+                    
+        //             if(searchByEmail == null)
+        //             {
+        //                 if(searchByPhoneNumber == null)
+        //                 {
+        //                     if(searchById == null)
+        //                     {
+        //                         return NotFound();
+        //                     }
+        //                     else
+        //                     {
+        //                         return Ok(searchById);
+        //                     }
+        //                 }
+        //                 else
+        //                 {
+        //                     return Ok(searchByPhoneNumber);
+        //                 }
+        //             }
+        //             else
+        //             {
+        //                 return Ok(searchByEmail);
+        //             }
+        //         }
+        //         else 
+        //         {
+        //             return Ok(searchByLastName);
+        //         }
+        //     }
+        //     else 
+        //     {
+        //         return Ok(searchByFirstName);
+        //     }
+        // }
+       [HttpGet("{id}")]
+        public ActionResult GetUserById(Guid id)
+        {
+            User? isFound = users.FirstOrDefault(x => x.UserId == id);
+            if (isFound == null)
+            {
+                return NotFound();
+            }
+            return Ok(isFound);
         }
         //POST MMETHOD -Create new user-
         //id - Auto generated
         //Email and PhoneNumber UNIQUE -no duplicates-
-
+       // [HttpPost]
+        // public ActionResult CreateUser()
+        // {
+            
+        // }
     }
 }
