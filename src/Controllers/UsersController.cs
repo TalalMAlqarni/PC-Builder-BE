@@ -71,21 +71,50 @@ namespace src.Controllers
         //POST MMETHOD -Create new user-
         //id - Auto generated
         //Email and PhoneNumber UNIQUE -no duplicates-
-        // [HttpPost]
-        // public ActionResult CreateUser()
-        // {
-            
-        // }
+        [HttpPost]
+        public ActionResult CreateUser(User newUser)
+        {
+            var checkEmail = users.Any(x => x.Email == newUser.Email);
+            var checkPhoneNumber = users.Any(x => x.PhoneNumber == newUser.PhoneNumber);
+            if(checkEmail)
+            {
+                return NotFound();
+            } 
+            else if(checkPhoneNumber)
+            {
+                 return NotFound();
+            }
+            else
+            {
+                Guid newuserid = Guid.NewGuid();
+                newUser.UserId = newuserid;
+                users.Add(newUser);
+                return CreatedAtAction(nameof(GetUserById) , new {id = newUser.UserId } , newUser);
+            }
+        }
         //Put Method -update information-
         //Email and PhoneNumber UNIQUE -no duplicates-
-        // [HttpPut]
-        // public ActionResult CreateUser()
-        // {
-        //   
-        // }
+        [HttpPut("{id}")]
+        public ActionResult UpdateFirstName(Guid id, User newUser)
+        {
+            var user = users.FirstOrDefault(u => u.UserId == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+           
+                user.FirstName = newUser.FirstName;
+                user.LastName = newUser.LastName;
+                user.Email = newUser.Email;
+                user.PhoneNumber = newUser.PhoneNumber;
+                user.BirthDate = newUser.BirthDate;
+            
+            return NoContent();
+        }
 
         //Delete user by id
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public ActionResult DeleteUser(Guid id)
         {
             User? isFound =users.FirstOrDefault(x => x.UserId == id);
