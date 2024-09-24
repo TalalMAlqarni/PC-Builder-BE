@@ -7,7 +7,7 @@ namespace scr.Controller
     [Route("api/v1/[controller]")]
     public class OrdersController : ControllerBase
     {
-        private static List<Order> _orders = new List<Order>() {
+        public static List<Order> orders = new List<Order>() {
             // Testing instance
             new Order
             {
@@ -16,7 +16,7 @@ namespace scr.Controller
             PaymentId = Guid.NewGuid(),
             UserId = Guid.NewGuid(),
             OrderDate = DateTime.Now,
-            ShipDate = DateTime.Now.AddDays(7),
+            ShipDate = DateTime.Now.AddDays(deliveryDays),
             OrderStatus="Ordered",
             Address = "some address",
             City = "some city",
@@ -24,18 +24,18 @@ namespace scr.Controller
             PostalCode=12345
             }
          };
-        private static int _deliveryDays = 2;
+        public static int deliveryDays = 2;
 
         [HttpGet]
         public ActionResult GetOrders()
         {
-            return Ok(_orders.OrderByDescending(o => o.OrderDate));
+            return Ok(orders.OrderByDescending(o => o.OrderDate));
         }
 
         [HttpGet("{id}")]
         public ActionResult GetOrdersByUserID(Guid id)
         {
-            List<Order> userOrders = _orders.FindAll(o => o.UserId == id);
+            List<Order> userOrders = orders.FindAll(o => o.UserId == id);
             return Ok(userOrders.OrderByDescending(o => o.OrderDate));
         }
 
@@ -60,16 +60,17 @@ namespace scr.Controller
 
             newOrder.Id = Guid.NewGuid();
             newOrder.OrderDate = DateTime.Now;
-            newOrder.ShipDate = DateTime.Now.AddDays(_deliveryDays);
+            newOrder.ShipDate = DateTime.Now.AddDays(deliveryDays);
             newOrder.OrderStatus = "Ordered";
-            _orders.Add(newOrder);
+            newOrder.IsDelivered = false;
+            orders.Add(newOrder);
             return CreatedAtAction(nameof(GetOrders), new { id = newOrder.Id }, newOrder);
         }
 
         [HttpPut("{id}/orderstatus/{orderStatus}")]
         public ActionResult UpdateOrderStatus(Guid id, string orderStatus)
         {
-            Order? foundOrder = _orders.FirstOrDefault(o => o.Id == id);
+            Order? foundOrder = orders.FirstOrDefault(o => o.Id == id);
             if (foundOrder == null)
                 return BadRequest("Invalid ID instance");
 
@@ -80,7 +81,7 @@ namespace scr.Controller
         [HttpPut("{id}/shipdate/{shipDate:datetime}")]
         public ActionResult UpdateShipDate(Guid id, DateTime shipDate)
         {
-            Order? foundOrder = _orders.FirstOrDefault(o => o.Id == id);
+            Order? foundOrder = orders.FirstOrDefault(o => o.Id == id);
             if (foundOrder == null)
                 return NotFound("Invalid ID instance");
 
@@ -94,10 +95,10 @@ namespace scr.Controller
         [HttpDelete("{id}")]
         public ActionResult CancelOrder(Guid id)
         {
-            Order? foundOrder = _orders.FirstOrDefault(o => o.Id == id);
+            Order? foundOrder = orders.FirstOrDefault(o => o.Id == id);
             if (foundOrder == null)
                 return BadRequest("Invalid ID instance");
-            _orders.Remove(foundOrder);
+            orders.Remove(foundOrder);
 
             return NoContent();
         }
