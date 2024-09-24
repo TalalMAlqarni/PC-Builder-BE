@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using src.Entity;
 using Microsoft.AspNetCore.Mvc;
+using src.Utils;
 
 namespace src.Controllers
 {
@@ -13,9 +14,9 @@ namespace src.Controllers
     {
         public static List<User> users = new List<User>
         {
-            new User { UserId = Guid.NewGuid() , FirstName = "razan" , LastName = "Mansour" , Email = "razan@gmail.com" , BirthDate = new DateOnly(2001,2,1) , PhoneNumber = "0510000000" , Password = "asd123" , Role = "Admin"},
-            new User { UserId = Guid.NewGuid() , FirstName = "ahmed" , LastName = "Ali" , Email = "ahmad@gmail.com" , BirthDate = new DateOnly(1998,4,10) , PhoneNumber = "0520000000" , Password = "qwe123" , Role = "customer"},
-            new User { UserId = Guid.NewGuid() , FirstName = "leen" , LastName = "Mohanned" , Email = "leen@gmail.com" , BirthDate = new DateOnly(1988,2,10) , PhoneNumber = "0530000000" , Password = "mnb123" , Role = "customer"}
+            new User { UserId = Guid.NewGuid() , Username = "razan12" , FirstName = "razan" , LastName = "Mansour" , Email = "razan@gmail.com" , BirthDate = new DateOnly(2001,2,1) , PhoneNumber = "0510000000" , Password = "asd123" , Role = "Admin"},
+            new User { UserId = Guid.NewGuid() , Username = "ahhmmd" , FirstName = "ahmed" , LastName = "Ali" , Email = "ahmad@gmail.com" , BirthDate = new DateOnly(1998,4,10) , PhoneNumber = "0520000000" , Password = "qwe123" , Role = "customer"},
+            new User { UserId = Guid.NewGuid() , Username = "leen56" , FirstName = "leen" , LastName = "Mohanned" , Email = "leen@gmail.com" , BirthDate = new DateOnly(1988,2,10) , PhoneNumber = "0530000000" , Password = "mnb123" , Role = "customer"}
         };
         //get Method 
         //show all users
@@ -72,8 +73,12 @@ namespace src.Controllers
         //id - Auto generated
         //Email and PhoneNumber UNIQUE -no duplicates-
         [HttpPost]
-        public ActionResult CreateUser(User newUser)
+        public ActionResult SignUpUser(User newUser)
         {
+            PasswordUtils.HashPassword(newUser.Password, out string hashedPassword , out byte[] salt);
+            newUser.Password = hashedPassword;
+            newUser.Salt = salt;
+            var checkUsername = users.Any(x => x.Username == newUser.Username);
             var checkEmail = users.Any(x => x.Email == newUser.Email);
             var checkPhoneNumber = users.Any(x => x.PhoneNumber == newUser.PhoneNumber);
             if(checkEmail)
@@ -82,7 +87,11 @@ namespace src.Controllers
             } 
             else if(checkPhoneNumber)
             {
-                 return NotFound();
+                return NotFound();
+            }
+            else if(checkUsername)
+            {
+                return NotFound();
             }
             else
             {
@@ -91,6 +100,21 @@ namespace src.Controllers
                 users.Add(newUser);
                 return CreatedAtAction(nameof(GetUserById) , new {id = newUser.UserId } , newUser);
             }
+        }
+        [HttpPost("login")]
+        public ActionResult LogInUser(User user)
+        {
+            User? foundUser = users.FirstOrDefault(x => x.Username == user.Username);
+            if(foundUser == null)
+            {
+                return NotFound();;
+            }
+            bool isMatched = PasswordUtils.VerifyPassword(user.Password, foundUser.Password , foundUser.Salt);
+            if(!isMatched)
+            {
+                return Unauthorized();
+            }
+            return Ok(foundUser);
         }
         //Put Method -update information-
         //Email and PhoneNumber UNIQUE -no duplicates-
