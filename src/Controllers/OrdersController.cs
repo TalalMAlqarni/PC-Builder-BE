@@ -31,12 +31,14 @@ namespace scr.Controller
         {
             return Ok(_orders.OrderByDescending(o => o.OrderDate));
         }
+
         [HttpGet("{id}")]
         public ActionResult GetOrdersByUserID(Guid id)
         {
             List<Order> userOrders = _orders.FindAll(o => o.UserId == id);
             return Ok(userOrders.OrderByDescending(o => o.OrderDate));
         }
+
         [HttpPost("checkout")]
         public ActionResult CreateOrder(Order newOrder)
         {
@@ -63,6 +65,7 @@ namespace scr.Controller
             _orders.Add(newOrder);
             return CreatedAtAction(nameof(GetOrders), new { id = newOrder.Id }, newOrder);
         }
+
         [HttpPut("{id}/orderstatus/{orderStatus}")]
         public ActionResult UpdateOrderStatus(Guid id, string orderStatus)
         {
@@ -73,12 +76,16 @@ namespace scr.Controller
             foundOrder.OrderStatus = orderStatus;
             return NoContent();
         }
-        [HttpPut("{id}/shipdate/{shippingDate}")]
+
+        [HttpPut("{id}/shipdate/{shipDate:datetime}")]
         public ActionResult UpdateShipDate(Guid id, DateTime shipDate)
         {
             Order? foundOrder = _orders.FirstOrDefault(o => o.Id == id);
             if (foundOrder == null)
-                return BadRequest("Invalid ID instance");
+                return NotFound("Invalid ID instance");
+
+            if (shipDate < DateTime.Now)
+                return BadRequest("Invalid ship date");
 
             foundOrder.ShipDate = shipDate;
             return NoContent();
