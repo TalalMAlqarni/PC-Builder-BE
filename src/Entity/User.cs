@@ -22,7 +22,6 @@ namespace src.Entity
         { 
             get { return Encrypte(_password); }
             set { _password = value; }
-            // get; set;
         }
         public static string Encrypte(string password)
         {
