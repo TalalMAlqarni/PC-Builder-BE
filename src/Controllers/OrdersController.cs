@@ -25,20 +25,34 @@ namespace scr.Controller
             }
          };
         public static int deliveryDays = 2;
+        public readonly static string[] orderStatuses = { "ordered", "shipped", "on delivery", "delivered" };
 
+        // Gets all available orders.
         [HttpGet]
         public ActionResult GetOrders()
         {
             return Ok(orders.OrderByDescending(o => o.OrderDate));
         }
 
+
+        // Gets a user's orders by its ID in ascending.
         [HttpGet("{id}")]
         public ActionResult GetOrdersByUserID(Guid id)
         {
             List<Order> userOrders = orders.FindAll(o => o.UserId == id);
+            return Ok(userOrders.OrderBy(o => o.OrderDate));
+        }
+
+        // Gets a user's old orders by its ID in descending.
+        [HttpGet("{id}/ordershistory")]
+        public ActionResult GetOrdersHistoryByUserID(Guid id)
+        {
+            List<Order> userOrders = orders.FindAll(o => o.UserId == id && o.IsDelivered);
             return Ok(userOrders.OrderByDescending(o => o.OrderDate));
         }
 
+
+        // Post new order to the order list
         [HttpPost("checkout")]
         public ActionResult CreateOrder(Order newOrder)
         {
@@ -58,6 +72,9 @@ namespace scr.Controller
             if (newOrder.PostalCode == 0)
                 return BadRequest("Empty postalCode");
 
+
+
+            // initialize new entry
             newOrder.Id = Guid.NewGuid();
             newOrder.OrderDate = DateTime.Now;
             newOrder.ShipDate = DateTime.Now.AddDays(deliveryDays);
@@ -67,17 +84,36 @@ namespace scr.Controller
             return CreatedAtAction(nameof(GetOrders), new { id = newOrder.Id }, newOrder);
         }
 
+        // Update current order status into ("shipped", "on delivery", "delivered")
         [HttpPut("{id}/orderstatus/{orderStatus}")]
         public ActionResult UpdateOrderStatus(Guid id, string orderStatus)
         {
             Order? foundOrder = orders.FirstOrDefault(o => o.Id == id);
             if (foundOrder == null)
-                return BadRequest("Invalid ID instance");
+                return NotFound("Invalid ID instance");
+
+            bool foundOrderStatus = false;
+            foreach (string status in orderStatuses)
+            {
+                if (orderStatus.Equals(status, StringComparison.OrdinalIgnoreCase))
+                {
+                    foundOrderStatus = true;
+                    break;
+                }
+            }
+
+            if (!foundOrderStatus)
+                return NotFound("Invalid order status");
+
+            // if order is delivered to the user
+            if (orderStatus.Equals("delivered", StringComparison.OrdinalIgnoreCase))
+                foundOrder.IsDelivered = true;
 
             foundOrder.OrderStatus = orderStatus;
             return NoContent();
         }
 
+        // Updates the ship date into new one
         [HttpPut("{id}/shipdate/{shipDate:datetime}")]
         public ActionResult UpdateShipDate(Guid id, DateTime shipDate)
         {
@@ -92,12 +128,14 @@ namespace scr.Controller
             return NoContent();
         }
 
+
+        // Cancel the current order by deleting it from orders list
         [HttpDelete("{id}")]
         public ActionResult CancelOrder(Guid id)
         {
             Order? foundOrder = orders.FirstOrDefault(o => o.Id == id);
             if (foundOrder == null)
-                return BadRequest("Invalid ID instance");
+                return NotFound("Invalid ID instance");
             orders.Remove(foundOrder);
 
             return NoContent();
