@@ -71,10 +71,10 @@ namespace src.Controller
         }
 
         //search on a specific product byname
-        [HttpGet("{name}")]
-        public ActionResult GetProductsByName(string name)
+        [HttpGet("{name}")] //?
+        public ActionResult GetProductByName(string name)
         {
-            List<Product>? result = products
+           List<Product>? result = products
                 .Where(x => x.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
