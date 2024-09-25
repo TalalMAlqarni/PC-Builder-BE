@@ -1,4 +1,12 @@
+using Npgsql;
+using Microsoft.EntityFrameworkCore;
+using src.Database;
 var builder = WebApplication.CreateBuilder(args);
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
+builder.Services.AddDbContext<DatabaseContext>( options => {
+    options.UseNpgsql(dataSourceBuilder.Build());
+    }
+);
 //Add controllers
 builder.Services.AddControllers();
 // Add services to the container.
@@ -8,7 +16,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
 
 
 app.MapControllers();
