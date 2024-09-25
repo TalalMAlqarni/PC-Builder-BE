@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
+using src.Controller;
 
-namespace src.Controller
+namespace scr.Controller
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-        public class PaymentController : ControllerBase
-        {
-            public static List<Payment> payments = new List<Payment>
+    public class PaymentController : ControllerBase
+    {
+        public static List<Payment> payments = new List<Payment>
             {
                 new Payment
                 {
@@ -27,7 +28,7 @@ namespace src.Controller
                     PaymentStatus = true,
                     TotalPrice = 250.00M,
                     CartId = CartController.Carts.Count > 1 ? CartController.Carts[1].Id : Guid.Empty, // Check if second cart exists
-                    OrderId = OrdersController.orders[0].Id 
+                    OrderId = OrdersController.orders[0].Id
                 }
             };
 
@@ -42,7 +43,7 @@ namespace src.Controller
         [HttpGet("{PaymentMethod}")]
         public ActionResult GetPaymentByMethodName(string paymentMethod)
         {
-            Payment? foundPayment= payments.FirstOrDefault(p => p.PaymentMethod.Equals(paymentMethod, StringComparison.OrdinalIgnoreCase));
+            Payment? foundPayment = payments.FirstOrDefault(p => p.PaymentMethod.Equals(paymentMethod, StringComparison.OrdinalIgnoreCase));
             if (foundPayment == null)
             {
                 return NotFound();
@@ -68,7 +69,7 @@ namespace src.Controller
             // Add the new category to the list
             payments.Add(newPaymentMethod);
             return CreatedAtAction(nameof(GetPaymentByMethodName), new { PaymentMethod = newPaymentMethod.PaymentMethod }, newPaymentMethod);
-        }  
+        }
 
 
         // PUT (Update) method by OrderId
@@ -86,7 +87,7 @@ namespace src.Controller
             existingPayment.PaymentStatus = updatedPayment.PaymentStatus;
             existingPayment.TotalPrice = updatedPayment.TotalPrice;
             existingPayment.CartId = updatedPayment.CartId;  // Assuming CartId might change
-            return NoContent(); 
+            return NoContent();
         }
 
         // DELETE method by OrderId
@@ -103,5 +104,5 @@ namespace src.Controller
             return NoContent();
         }
     }
-    
+
 }
