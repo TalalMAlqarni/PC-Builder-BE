@@ -1,4 +1,3 @@
-
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -12,7 +11,6 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseNpgsql(dataSourceBuilder.Build());
 }
-
 );
 //Add controllers
 builder.Services.AddControllers();
@@ -23,7 +21,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
 
 // test database connection
 using (var scope = app.Services.CreateScope())
@@ -45,7 +42,6 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine(ex.Message);
     }
 }
-
 
 app.MapControllers();
 
