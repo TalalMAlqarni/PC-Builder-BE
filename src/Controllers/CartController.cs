@@ -6,6 +6,7 @@ namespace src.Controller
     [ApiController]
     [Route("api/v1/[controller]")]
     public class CartController : ControllerBase
+    //Todo: every product must be replaced with cartDetails and chang the logic to use sub totaland quantity of cart details instead of product
     {
         public static List<Cart> Carts = new List<Cart>(){
     new Cart
