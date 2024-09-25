@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using sda_3_online_Backend_Teamwork;
 using src.Entity;
 
 namespace src.Controller
@@ -6,74 +7,48 @@ namespace src.Controller
     [ApiController]
     [Route("api/v1/[controller]")]
     public class CartController : ControllerBase
-    //Todo: every product must be replaced with cartDetails and chang the logic to use sub totaland quantity of cart details instead of product
+    //Todo: if we have time we must use CartUtils and make this controller as short and clean as possible
     {
         public static List<Cart> Carts = new List<Cart>(){
     new Cart
     {
-        Id = Guid.NewGuid(),  // Use a new GUID for the cart
-        UserId = Guid.NewGuid(),  // Use a new GUID for the user (or assign a specific user ID)
-        Products = new List<Product>
+        Id = Guid.NewGuid(),
+        UserId = Guid.NewGuid(),
+        CartDetails = new List<CartDetails>
         {
-            new Product
+            new CartDetails
             {
-                ProductId = Guid.NewGuid(),  // Use a new GUID for the product
-                ProductName = "Chair",
-                ProductColor = "Red",
-                SKU = 15,
+                CartDetailsId = Guid.NewGuid(),
+                Product = new Product
+                {
+                    ProductId = Guid.NewGuid(),
+                    ProductName = "Laptop",
+                    ProductColor = "Silver",
+                    SKU = 10,
+                    ProductPrice = 1000.00m,
+                    Weight = 1.5m
+                },
                 Quantity = 1,
-                ProductPrice = 75.00m,
-                Subtotal = 75.00m,
-                Weight = 2
             },
-            new Product
+            new CartDetails
             {
-                ProductId = Guid.NewGuid(),  // Use a new GUID for the second product
-                ProductName = "Table",
-                ProductColor = "Brown",
-                SKU = 10,
-                Quantity = 1,
-                ProductPrice = 150.00m,
-                Subtotal = 150.00m,
-                Weight = 10
+                CartDetailsId = Guid.NewGuid(),
+                Product = new Product
+                {
+                    ProductId = Guid.NewGuid(),
+                    ProductName = "Mouse",
+                    ProductColor = "Black",
+                    SKU = 50,
+                    ProductPrice = 25.00m,
+                    Weight = 0.2m
+                },
+                Quantity = 5,
             }
         },
-        CartQuantity = 2,  // Total quantity of products in the cart
-        TotalPrice = 225.00m  // Total price of products in the cart
+        CartQuantity = 6,
+        TotalPrice = 1125.00m
     }
 };
-
-        /*
-        testing
-        {
-            "userId": "d7b5d5c8-7f75-4e8f-bfc4-90c3d50d2a11",
-            "products": [
-                {
-                    "ProductId": "e8a13c1b-8431-47e0-8a5f-e75df2a01e3a",  
-                    "ProductName": "Chair",
-                    "ProductColor": "Red",
-                    "SKU": 15,
-                    "Quantity": 1,
-                    "ProductPrice": 75.00,
-                    "Subtotal": 75.00,
-                    "Weight": 2
-                },
-                {
-                    "ProductId": "a5f3b6c4-12a3-4d67-8b5f-e89df7a34f92",  
-                    "ProductName": "Table",
-                    "ProductColor": "Brown",
-                    "SKU": 10,
-                    "Quantity": 1,
-                    "ProductPrice": 150.00,
-                    "Subtotal": 150.00,
-                    "Weight": 5
-                }
-            ]
-        }
-
-        */
-
-
 
         //get all carts: GET api/v1/cart
         [HttpGet]
@@ -100,10 +75,10 @@ namespace src.Controller
         public ActionResult CreateCart(Cart newCart)
         {
             // check if for SKU
-            var lowStockProduct = newCart.Products.FirstOrDefault(p => p.SKU < p.Quantity);
-            if (lowStockProduct != null)
+            string result = CartUtils.ThereIsLowStockProduct(newCart);
+            if (result != "")
             {
-                return BadRequest($"Not enough stock for {lowStockProduct.ProductName}");
+                return BadRequest($"Not enough stock for {result}");
             }
             // check if user already has an active cart
             var existingCart = Carts.FirstOrDefault(c => c.UserId == newCart.UserId);
@@ -111,8 +86,8 @@ namespace src.Controller
                 return BadRequest("User already has an active cart.");//TODO: as improvement we can add the list of products to the existing cart
 
             newCart.Id = Guid.NewGuid();
-            newCart.CartQuantity = newCart.Products.Sum(p => p.Quantity);
-            newCart.TotalPrice = newCart.Products.Sum(p => p.Subtotal);//Sum(p => p.ProductPrice * p.Quantity);
+            newCart.CartQuantity = newCart.CartDetails.Sum(p => p.Quantity);
+            newCart.TotalPrice = newCart.CartDetails.Sum(p => p.Subtotal);
             Carts.Add(newCart);
             return CreatedAtAction(nameof(GetCarts), new { id = newCart.Id }, newCart);
         }
@@ -133,77 +108,77 @@ namespace src.Controller
 
         //add list of product to cart: PUT api/v1/cart/{id}/addListProducts
         [HttpPut("{cartId:guid}/addListProducts")]
-        public ActionResult AddListProductsToCart(Guid cartId, List<Product> newProducts)
+        public ActionResult AddListProductsToCart(Guid cartId, List<CartDetails> newProducts)
         {
             var cart = Carts.FirstOrDefault(c => c.Id == cartId);//find cart
             if (cart == null)
                 return NotFound("Cart not found.");
 
             // check if product is already in cart update quantity and subtotal
-            List<Product> productsInCart = cart.Products;
+            List<CartDetails> productsInCart = cart.CartDetails;
 
             // check for SKU
-            foreach (var product in newProducts)
+            foreach (var addedProduct in newProducts)
             {
-                var existingProduct = productsInCart.FirstOrDefault(p => p.ProductId == product.ProductId);// maybe chang from ID to name
+                var existingProduct = productsInCart.FirstOrDefault(p => p.Product.ProductId == addedProduct.Product.ProductId);// maybe chang from ID to name
                 if (existingProduct != null)
                 {
-                    if (existingProduct.SKU < existingProduct.Quantity + product.Quantity)
+                    if (existingProduct.Product.SKU < existingProduct.Quantity + addedProduct.Quantity)
                     {
-                        return BadRequest($"Not enough stock for {existingProduct.ProductName}");
+                        return BadRequest($"Not enough stock for {existingProduct.Product.ProductName}");
                     }
                 }
                 else
                 {
-                    if (product.SKU < product.Quantity)
+                    if (addedProduct.Product.SKU < addedProduct.Quantity)
                     {
-                        return BadRequest($"Not enough stock for {product.ProductName}");
+                        return BadRequest($"Not enough stock for {addedProduct.Product.ProductName}");
                     }
                 }
             }
             // add product to cart
-            foreach (var product in newProducts)
+            foreach (var addedProduct in newProducts)
             {
-                var existingProduct = productsInCart.FirstOrDefault(p => p.ProductId == product.ProductId);
+                var existingProduct = productsInCart.FirstOrDefault(p => p.Product.ProductId == addedProduct.Product.ProductId);
                 if (existingProduct != null)// update quantity and subtotal if product is already in cart
                 {
-                    existingProduct.Quantity += product.Quantity;
-                    existingProduct.Subtotal += product.Subtotal;
+                    existingProduct.Quantity += addedProduct.Quantity;
+                    // existingProduct.Subtotal += addedProduct.Subtotal;// no longer needed auto calculated
                 }
                 else // add product to cart if it dose not exist
                 {
-                    cart.Products.Add(product);
+                    cart.CartDetails.Add(addedProduct);
                 }
-                cart.CartQuantity += product.Quantity;
-                cart.TotalPrice += product.Subtotal;
+                cart.CartQuantity += addedProduct.Quantity;
+                cart.TotalPrice += addedProduct.Subtotal;
             }
             return Ok(cart);
         }
         //add single product to cart: PUT api/v1/cart/{id}/addSingleProduct
         [HttpPut("{cartId:guid}/addSingleProduct")]
-        public ActionResult AddSingleProductToCart(Guid cartId, Product newProduct)
+        public ActionResult AddSingleProductToCart(Guid cartId, CartDetails newProduct)
         {
             var cart = Carts.FirstOrDefault(c => c.Id == cartId);//find cart
             if (cart == null)
                 return NotFound("Cart not found.");
             // check if product is already in cart update quantity and subtotal
-            var existingProduct = cart.Products.FirstOrDefault(p => p.ProductId == newProduct.ProductId);// maybe chang from ID to name
+            var existingProduct = cart.CartDetails.FirstOrDefault(p => p.Product.ProductId == newProduct.Product.ProductId);// maybe chang from ID to name
             if (existingProduct != null)
             {
-                if (existingProduct.SKU < existingProduct.Quantity + newProduct.Quantity)
+                if (existingProduct.Product.SKU < existingProduct.Quantity + newProduct.Quantity)
                 {
-                    return BadRequest($"Not enough stock for {existingProduct.ProductName}");
+                    return BadRequest($"Not enough stock for {existingProduct.Product.ProductName}");
                 }
                 existingProduct.Quantity += newProduct.Quantity;
-                existingProduct.Subtotal += newProduct.Subtotal;
+                //existingProduct.Subtotal += newProduct.Subtotal;// no longer needed auto calculated
             }
             else
             {
-                if (newProduct.SKU < newProduct.Quantity)
+                if (newProduct.Product.SKU < newProduct.Quantity)
                 {
-                    return BadRequest($"Not enough stock for {newProduct.ProductName}");
+                    return BadRequest($"Not enough stock for {newProduct.Product.ProductName}");
                 }
-                cart.Products.Add(newProduct);
+                cart.CartDetails.Add(newProduct);
             }
             // add product to cart
             cart.CartQuantity += newProduct.Quantity;
@@ -217,12 +192,12 @@ namespace src.Controller
             var cart = Carts.FirstOrDefault(c => c.Id == cartId);//find cart
             if (cart == null)
                 return NotFound("Cart not found.");
-            var product = cart.Products.FirstOrDefault(p => p.ProductId == productId);
-            if (product == null)
+            var removedProduct = cart.CartDetails.FirstOrDefault(p => p.Product.ProductId == productId);
+            if (removedProduct == null)
                 return NotFound("Product not found.");
-            cart.CartQuantity -= product.Quantity;
-            cart.TotalPrice -= product.Subtotal;
-            cart.Products.Remove(product);
+            cart.CartQuantity -= removedProduct.Quantity;
+            //cart.TotalPrice -= product.Subtotal;// no longer needed auto calculated
+            cart.CartDetails.Remove(removedProduct);
             return NoContent();
         }
         // in this method we insert the value of quantity in the product in cart (SET)
@@ -237,17 +212,17 @@ namespace src.Controller
             if (cart == null)//check if cart exists
                 return NotFound("Cart not found.");
 
-            var product = cart.Products.FirstOrDefault(p => p.ProductId == productId);
-            if (product == null)//check if product exists
+            var matchedProduct = cart.CartDetails.FirstOrDefault(p => p.Product.ProductId == productId);
+            if (matchedProduct == null)//check if product exists
                 return NotFound("Product not found.");
 
-            if (product.SKU < quantity)//check if there is enough stock
-                return BadRequest($"Not enough stock for {product.ProductName}");
+            if (matchedProduct.Product.SKU < quantity)//check if there is enough stock
+                return BadRequest($"Not enough stock for {matchedProduct.Product.ProductName}");
 
-            product.Quantity = quantity;
-            product.Subtotal = quantity * product.ProductPrice;
-            cart.CartQuantity = cart.Products.Sum(p => p.Quantity);
-            cart.TotalPrice = cart.Products.Sum(p => p.Subtotal);
+            matchedProduct.Quantity = quantity;
+            //product.Subtotal = quantity * product.ProductPrice;// no longer needed auto calculated
+            cart.CartQuantity = cart.CartDetails.Sum(p => p.Quantity);
+            cart.TotalPrice = cart.CartDetails.Sum(p => p.Subtotal);
             return Ok(cart);
         }
         // in this method we increase or decrease the value of quantity in the product in cart
@@ -260,20 +235,20 @@ namespace src.Controller
             if (cart == null)//check if cart exists
                 return NotFound("Cart not found.");
 
-            var product = cart.Products.FirstOrDefault(p => p.ProductId == productId);
-            if (product == null)//check if product exists
+            var matchedProduct = cart.CartDetails.FirstOrDefault(p => p.Product.ProductId == productId);
+            if (matchedProduct == null)//check if product exists
                 return NotFound("Product not found.");
 
-            if (product.SKU < product.Quantity + amount)//check if there is enough stock
-                return BadRequest($"Not enough stock for {product.ProductName}");
+            if (matchedProduct.Product.SKU < matchedProduct.Quantity + amount)//check if there is enough stock
+                return BadRequest($"Not enough stock for {matchedProduct.Product.ProductName}");
 
-            if (product.Quantity + amount <= 0)
+            if (matchedProduct.Quantity + amount <= 0)
                 return BadRequest("Quantity must be greater than zero.");//TODO: if quantity is 0 we should delete the product
 
-            product.Quantity += amount;
-            product.Subtotal = product.Quantity * product.ProductPrice;
-            cart.CartQuantity = cart.Products.Sum(p => p.Quantity);
-            cart.TotalPrice = cart.Products.Sum(p => p.Subtotal);
+            matchedProduct.Quantity += amount;
+            //product.Subtotal = product.Quantity * product.ProductPrice;// no longer needed auto calculated
+            cart.CartQuantity = cart.CartDetails.Sum(p => p.Quantity);
+            cart.TotalPrice = cart.CartDetails.Sum(p => p.Subtotal);
             return Ok(cart);
         }
     }
