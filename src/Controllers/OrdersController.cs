@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
+using src.Repository;
 
 namespace scr.Controller
 {
@@ -80,7 +81,8 @@ namespace scr.Controller
             newOrder.ShipDate = DateTime.Now.AddDays(deliveryDays);
             newOrder.OrderStatus = "Ordered";
             newOrder.IsDelivered = false;
-            orders.Add(newOrder);
+            //orders.Add(newOrder);
+
             return CreatedAtAction(nameof(GetOrders), new { id = newOrder.Id }, newOrder);
         }
 

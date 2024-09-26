@@ -2,7 +2,7 @@ using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Npgsql;
-using sda_3_online_Backend_Teamwork.src.Database;
+using src.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
