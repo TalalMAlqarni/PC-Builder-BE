@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using src.Entity;
 
-namespace sda_3_online_Backend_Teamwork.src.Database
+namespace src.Database
 {
     public class DatabaseContext : DbContext
     {

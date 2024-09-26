@@ -1,8 +1,9 @@
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Npgsql;
-using sda_3_online_Backend_Teamwork.src.Database;
+using src.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
@@ -21,7 +22,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
 // test database connection
 using (var scope = app.Services.CreateScope())
 {
