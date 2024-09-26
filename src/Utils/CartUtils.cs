@@ -1,7 +1,17 @@
+using src.Entity;
+
 namespace sda_3_online_Backend_Teamwork
 {
-    public class CartUtils
+    public static class CartUtils
     {
-        //todo: include all logic for setting quantity of product in cart and searching cart
+        public static string ThereIsLowStockProduct(Cart cart)
+        {
+            var lowStockProduct = cart.CartDetails.FirstOrDefault(p => p.Product.SKU < p.Quantity);
+            if (lowStockProduct != null)
+            {
+                return lowStockProduct.Product.ProductName;
+            }
+            return "";
+        }
     }
 }
