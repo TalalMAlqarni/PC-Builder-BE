@@ -7,7 +7,7 @@ namespace src.Entity
     public class Payment
     {
         public Guid PaymentId { get; set;}
-        public string PaymentMethod { get; set;}
+        public string? PaymentMethod { get; set;}
         public DateTime PaymentDate { get; set;}
         public bool PaymentStatus { get; set;}
         public decimal TotalPrice { get; set;}
