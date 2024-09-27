@@ -1,6 +1,6 @@
 using src.Entity;
 
-namespace sda_3_online_Backend_Teamwork
+namespace src.Utils
 {
     public static class CartUtils
     {
