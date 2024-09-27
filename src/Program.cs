@@ -1,9 +1,13 @@
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using src.Database;
+using src.Repository;
+using src.Services.user;
+using src.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
@@ -13,6 +17,10 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(dataSourceBuilder.Build());
 }
 );
+// add utomapper
+builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
+// add DI service
+builder.Services.AddScoped<IUserService , UserService>().AddScoped<UserRepository , UserRepository>();
 //Add controllers
 builder.Services.AddControllers();
 // Add services to the container.

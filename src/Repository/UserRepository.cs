@@ -24,6 +24,10 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return newUser;
         }
+        public async Task<List<User>> GetAllAsync()
+        {
+            return await _user.ToListAsync();
+        }
         public async Task<User> GetByIdAsync(Guid id)
         {
             return await _user.FindAsync(id);
@@ -33,6 +37,17 @@ namespace src.Repository
             _user.Remove(user);
             await _databaseContext.SaveChangesAsync();
             return true;
+        }
+        public async Task<bool> UpdateOneAsync(User updateUser)
+        {
+            _user.Update(updateUser);
+            await _databaseContext.SaveChangesAsync();
+            return true; ;
+        }
+
+        internal async Task<bool> UpdateOneAsync(Task<User> foundUser)
+        {
+            throw new NotImplementedException();
         }
     }
 }
