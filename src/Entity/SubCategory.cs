@@ -1,4 +1,4 @@
-        public class SubCategory
+    public class SubCategory
     {
         // Category forigen key 
         public Guid Id { get; set; }
