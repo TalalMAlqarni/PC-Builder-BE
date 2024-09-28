@@ -28,15 +28,15 @@ namespace src.Services.SubCategory
             return _mapper.Map<List<src.Entity.SubCategory>, List<SubCategoryReadDto>>(subCategoryList);
         }
 
-        public async Task<SubCategoryReadDto> GetByIdAsync(Guid Id)
+        public async Task<SubCategoryReadDto> GetByIdAsync(Guid subId)
         {
-            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(Id);
+            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subId);
             return _mapper.Map<src.Entity.SubCategory, SubCategoryReadDto> (foundSubCategory);
         }
 
-        public async Task<bool> DeleteOneAsync(Guid Id)
+        public async Task<bool> DeleteOneAsync(Guid subId)
         {
-            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(Id);
+            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subId);
            bool IsDeleted =await _subCategoryRepo.DeleteOneAsync(foundSubCategory);
 
            if(IsDeleted)
@@ -47,9 +47,9 @@ namespace src.Services.SubCategory
 
         }
 
-        public async Task<bool> UpdateOneAsync(Guid Id, SubCategoryUpdateDto updateDto)
+        public async Task<bool> UpdateOneAsync(Guid subId, SubCategoryUpdateDto updateDto)
         {
-            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(Id);
+            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subId);
             var isUpdated = await _subCategoryRepo.UpdateOneAsync(foundSubCategory);
 
             if (foundSubCategory==null)
@@ -66,7 +66,12 @@ namespace src.Services.SubCategory
             throw new NotImplementedException();
         }
 
-        public Task<SubCategoryReadDto> GetByIdAsynac(Guid Id)
+        public Task<SubCategoryReadDto> GetByIdAsynac(Guid subId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteOneAsync(string name)
         {
             throw new NotImplementedException();
         }
