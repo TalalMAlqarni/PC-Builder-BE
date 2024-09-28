@@ -25,7 +25,11 @@ namespace src.Controllers
             var userCreated = await _userService.CreateOneAsync(createDto);
             return Ok(userCreated);
         }
+        [HttpGet]
+        public async Task<ActionResult<List<UserReadDto>>> GetAll()
+        {
+            var userList = await _userService.GetAllAsync();
+            return Ok(userList);
+        }
     }
-
-    
 }
