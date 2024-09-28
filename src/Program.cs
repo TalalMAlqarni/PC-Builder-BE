@@ -1,11 +1,12 @@
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using src.Database;
-using src.Entity;
 using src.Repository;
+using src.Services.user;
 using src.Services;
 using src.Utils;
 
@@ -17,9 +18,10 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(dataSourceBuilder.Build());
 }
 );
-// add auto mapper
+// add utomapper
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
-// add DI services
+// add DI service
+builder.Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
 builder.Services
 .AddScoped<IOrderService, OrderService>()
 .AddScoped<OrderRepository, OrderRepository>();
