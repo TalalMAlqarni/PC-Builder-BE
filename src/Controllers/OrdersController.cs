@@ -38,31 +38,39 @@ namespace scr.Controller
         [HttpGet]
         public async Task<ActionResult<List<OrderReadDTO>>> GetAllOrders()
         {
-            var orderList = await _orderService.GetAllAsync();
-            return Ok(orderList.OrderByDescending(o => o.OrderDate));
+            var ordersList = await _orderService.GetAllAsync();
+            return Ok(ordersList.OrderByDescending(o => o.OrderDate));
         }
 
-
-        // Gets a user's orders by its ID in ascending.
-        [HttpGet("{id}")]
-        public ActionResult GetOrdersByUserID(Guid id)
+        // Gets a specific order by it's ID
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<OrderReadDTO>> GetOrderById([FromRoute] Guid orderId)
         {
-            List<Order> userOrders = orders.FindAll(o => o.UserId == id);
+            var foundOrder = await _orderService.GetByIdAsync(orderId);
+            if (foundOrder == null)
+                return NotFound("order not found");
+            return Ok(foundOrder);
+        }
+        // Gets a user's orders by its ID in ascending.
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<List<OrderReadDTO>>> GetOrdersByUserID([FromRoute] Guid userId)
+        {
+            var userOrders = await _orderService.GetByUserIdAsync(userId);
             return Ok(userOrders.OrderBy(o => o.OrderDate));
         }
 
         // Gets a user's old orders by its ID in descending.
-        [HttpGet("{id}/ordershistory")]
-        public ActionResult GetOrdersHistoryByUserID(Guid id)
+        [HttpGet("user/{userId}/ordershistory")]
+        public async Task<ActionResult<List<OrderReadDTO>>> GetOrdersHistoryByUserID([FromRoute] Guid userId)
         {
-            List<Order> userOrders = orders.FindAll(o => o.UserId == id && o.IsDelivered);
+            var userOrders = await _orderService.GetHistoryByUserIdAsync(userId);
             return Ok(userOrders.OrderByDescending(o => o.OrderDate));
         }
 
 
         // Post new order to the order list
         [HttpPost("checkout")]
-        public async Task<ActionResult<OrderReadDTO>> CreateOrder(OrderCreateDTO newOrder)
+        public async Task<ActionResult<OrderReadDTO>> CreateOrder([FromBody] OrderCreateDTO newOrder)
         {
             // validate entries
             if (newOrder.UserId == Guid.Empty)
@@ -87,24 +95,23 @@ namespace scr.Controller
             newOrder.ShipDate = DateTime.Now.AddDays(deliveryDays);
             newOrder.OrderStatus = "Ordered";
             newOrder.IsDelivered = false;
-            //orders.Add(newOrder);
             var createdOrder = await _orderService.CreateOneAsync(newOrder);
 
-            return Ok(CreateOrder);
+            return Created($"api/v1/orders/{createdOrder.Id}", createdOrder);
         }
 
         // Update current order status into ("shipped", "on delivery", "delivered")
-        [HttpPut("{id}/orderstatus/{orderStatus}")]
-        public ActionResult UpdateOrderStatus(Guid id, string orderStatus)
+        [HttpPut("{orderId}/orderstatus/{orderStatus}")]
+        public async Task<ActionResult> UpdateOrderStatus(Guid orderId, OrderUpdateDTO updatedOrder)
         {
-            Order? foundOrder = orders.FirstOrDefault(o => o.Id == id);
+            var foundOrder = await _orderService.GetByIdAsync(orderId);
             if (foundOrder == null)
-                return NotFound("Invalid ID instance");
+                return NotFound("Order ID not found");
 
             bool foundOrderStatus = false;
             foreach (string status in orderStatuses)
             {
-                if (orderStatus.Equals(status, StringComparison.OrdinalIgnoreCase))
+                if (updatedOrder.OrderStatus.Equals(status, StringComparison.OrdinalIgnoreCase))
                 {
                     foundOrderStatus = true;
                     break;
@@ -115,39 +122,42 @@ namespace scr.Controller
                 return NotFound("Invalid order status");
 
             // if order is delivered to the user
-            if (orderStatus.Equals("delivered", StringComparison.OrdinalIgnoreCase))
+            if (updatedOrder.OrderStatus.Equals("delivered", StringComparison.OrdinalIgnoreCase))
                 foundOrder.IsDelivered = true;
 
-            foundOrder.OrderStatus = orderStatus;
-            return NoContent();
+            bool isUpdated = await _orderService.UpdateOneAsync(foundOrder.Id, updatedOrder);
+
+            return isUpdated ? NoContent() : StatusCode(500);
+
         }
 
         // Updates the ship date into new one
-        [HttpPut("{id}/shipdate/{shipDate:datetime}")]
-        public ActionResult UpdateShipDate(Guid id, DateTime shipDate)
+        [HttpPut("{orderId}/shipdate/{shipDate:datetime}")]
+        public async Task<ActionResult> UpdateShipDate(Guid orderId, OrderUpdateDTO updatedOrder)
         {
-            Order? foundOrder = orders.FirstOrDefault(o => o.Id == id);
+            var foundOrder = await _orderService.GetByIdAsync(orderId);
             if (foundOrder == null)
-                return NotFound("Invalid ID instance");
+                return NotFound("Order ID not found");
 
-            if (shipDate < DateTime.Now)
+            if (updatedOrder.ShipDate < DateTime.Now)
                 return BadRequest("Invalid ship date");
 
-            foundOrder.ShipDate = shipDate;
-            return NoContent();
+            bool isUpdated = await _orderService.UpdateOneAsync(foundOrder.Id, updatedOrder);
+
+            return isUpdated ? NoContent() : StatusCode(500);
         }
 
 
         // Cancel the current order by deleting it from orders list
-        [HttpDelete("{id}")]
-        public ActionResult CancelOrder(Guid id)
+        [HttpDelete("{orderId}")]
+        public async Task<ActionResult> CancelOrder(Guid orderId)
         {
-            Order? foundOrder = orders.FirstOrDefault(o => o.Id == id);
+            var foundOrder = await _orderService.GetByIdAsync(orderId);
             if (foundOrder == null)
-                return NotFound("Invalid ID instance");
-            orders.Remove(foundOrder);
+                return NotFound("Order ID not found");
 
-            return NoContent();
+            var isDeleted = await _orderService.DeleteOneAsync(orderId);
+            return isDeleted ? NoContent() : StatusCode(500);
         }
     }
 }

@@ -12,6 +12,8 @@ namespace src.Services
         Task<OrderReadDTO> CreateOneAsync(OrderCreateDTO createDTO);
         Task<List<OrderReadDTO>> GetAllAsync();
         Task<OrderReadDTO> GetByIdAsync(Guid id);
+        Task<List<OrderReadDTO>> GetByUserIdAsync(Guid userId);
+        Task<List<OrderReadDTO>> GetHistoryByUserIdAsync(Guid userId);
         Task<bool> DeleteOneAsync(Guid id);
 
         Task<bool> UpdateOneAsync(Guid id, OrderUpdateDTO updateDTO);

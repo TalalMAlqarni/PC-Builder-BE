@@ -25,13 +25,21 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return newOrder;
         }
+        public async Task<List<Order>> GetAllAsync()
+        {
+            return await _order.ToListAsync();
+        }
         public async Task<Order?> GetByIdAsync(Guid id)
         {
             return await _order.FindAsync(id);
         }
-        public async Task<List<Order>> GetAllAsync()
+        public async Task<List<Order>> GetByUserIdAsync(Guid userId)
         {
-            return await _order.ToListAsync();
+            return await _order.Where(o => o.UserId == userId && o.IsDelivered).ToListAsync();
+        }
+        public async Task<List<Order>> GetByHistoryUserIdAsync(Guid userId)
+        {
+            return await _order.Where(o => o.UserId == userId && o.IsDelivered).ToListAsync();
         }
         public async Task<bool> UpdateOneAsync(Order updateOrder)
         {
