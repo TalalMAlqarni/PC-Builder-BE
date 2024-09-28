@@ -19,8 +19,7 @@ namespace src.Utils
             CreateMap<UserUpdateDto, User>().ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
             CreateMap<Order, OrderReadDTO>();
             CreateMap<OrderReadDTO, Order>();
-            CreateMap<OrderUpdateDTO, Order>().ForAllMembers(
-                opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
+            CreateMap<OrderUpdateDTO, Order>().ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
         }
     }
 }
