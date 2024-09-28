@@ -29,6 +29,10 @@ namespace src.Repository
         {
             return await _order.FindAsync(id);
         }
+        public async Task<List<Order>> GetAllAsync()
+        {
+            return await _order.ToListAsync();
+        }
         public async Task<bool> UpdateOneAsync(Order updateOrder)
         {
             _order.Update(updateOrder);
