@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+namespace src.Entity
+{
     public class SubCategory
     {
         // Category forigen key 
@@ -6,3 +12,4 @@
         public Guid subId { get; set; }
         public string? Name { get; set; }
     }
+}    
