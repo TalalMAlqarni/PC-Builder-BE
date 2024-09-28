@@ -12,6 +12,7 @@ using src.Services.Payment;
 using src.Services.product;
 using src.Services.SubCategory;
 using src.Services.user;
+using src.Services;
 using src.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +30,12 @@ builder
     .Services.AddScoped<IUserService , UserService>().AddScoped<UserRepository , UserRepository>();
 
 builder
+    .Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
+
+builder
+    .Services.AddScoped<IOrderService, OrderService>().AddScoped<OrderRepository, OrderRepository>();
+
+builder
     .Services.AddScoped<IProductService, ProductService>()
     .AddScoped<ProductRepository, ProductRepository>();
 
@@ -43,6 +50,7 @@ builder
 builder
     .Services.AddScoped<IPaymentService, PaymentService>()
     .AddScoped<PaymentRepository, PaymentRepository>();
+
 
 
 //Add controllers

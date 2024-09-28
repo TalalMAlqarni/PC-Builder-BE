@@ -8,6 +8,7 @@ using static src.DTO.CategoryDTO;
 using static src.DTO.PaymentDTO;
 using static src.DTO.ProductDTO;
 using static src.DTO.UserDTO;
+using static src.DTO.OrderDTO;
 
 namespace src.Utils
 {
@@ -24,6 +25,7 @@ namespace src.Utils
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
 
+            // Product Mapping
             CreateMap<Product, GetProductDto>();
             CreateMap<CreateProductDto, Product>();
             CreateMap<UpdateProductInfoDto, Product>()
@@ -55,6 +57,13 @@ namespace src.Utils
                 .ForAllMembers(options =>
                     options.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
+
+            // Order mappings
+            CreateMap<Order, OrderReadDTO>();
+            CreateMap<OrderReadDTO, Order>();
+            CreateMap<OrderUpdateDTO, Order>().ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
         }
+
+
     }
 }
