@@ -13,5 +13,10 @@ namespace src.Utils
             }
             return "";
         }
+        public static void UpdateTPAndTQ(Cart cart)//must be called after adding or removing products
+        {
+            cart.CartQuantity = cart.CartDetails.Sum(cd => cd.Quantity);
+            cart.TotalPrice = cart.CartDetails.Sum(cd => cd.Subtotal);
+        }
     }
 }

@@ -8,6 +8,7 @@ using static src.DTO.CategoryDTO;
 using static src.DTO.PaymentDTO;
 using static src.DTO.ProductDTO;
 using static src.DTO.UserDTO;
+using static src.DTO.CartDTO;
 
 namespace src.Utils
 {
@@ -55,6 +56,15 @@ namespace src.Utils
                 .ForAllMembers(options =>
                     options.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
+
+            // Cart mappings
+            CreateMap<Cart, CartReadDto>();
+            CreateMap<CartCreateDto, Cart>();
+            CreateMap<CartUpdateDto, Cart>()
+                .ForAllMembers(options =>
+                    options.Condition((src, dest, srcProperty) => srcProperty != null)
+                );
+
         }
     }
 }

@@ -8,6 +8,5 @@ namespace src.Entity
         public List<CartDetails> CartDetails { get; set; }// a list contains all the products in the cart with their quantity and subtotal
         public int CartQuantity { get; set; }
         public decimal TotalPrice { get; set; }
-
     }
 }
