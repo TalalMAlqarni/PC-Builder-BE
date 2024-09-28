@@ -14,8 +14,8 @@ namespace src.Services.Category
 
         Task<CategoryReadDto> GetByIdAsynac(Guid Id);
 
-        Task<bool> DeleteOneAsync(Guid Id);
-        Task<bool> UpdateOneAsync(Guid Id, CategoryUpdateDto updateDto);
-
+        Task<bool> DeleteOneAsync(Guid Id, string categoryName);
+        Task<bool> UpdateOneAsync(Guid Id, string categoryName,CategoryUpdateDto updateDto);
+        Task<bool> DeleteOneAsync(string categoryName);
     }
 }

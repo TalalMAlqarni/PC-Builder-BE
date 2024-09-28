@@ -79,6 +79,21 @@ namespace src.Services.Category
         {
             throw new NotImplementedException();
         }
+
+        public Task<bool> DeleteOneAsync(Guid Id, string categoryName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateOneAsync(Guid Id, string categoryName, CategoryUpdateDto updateDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteOneAsync(string categoryName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

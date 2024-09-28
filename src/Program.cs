@@ -5,8 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using src.Database;
+using src.Entity;
 using src.Repository;
+using src.Services.Category;
+using src.Services.Payment;
 using src.Services.product;
+using src.Services.SubCategory;
 using src.Services.user;
 using src.Utils;
 
@@ -21,11 +25,26 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 // add utomapper
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 // add DI service
-builder.Services.AddScoped<IUserService , UserService>().AddScoped<UserRepository , UserRepository>();
+builder
+    .Services.AddScoped<IUserService , UserService>().AddScoped<UserRepository , UserRepository>();
 
 builder
     .Services.AddScoped<IProductService, ProductService>()
     .AddScoped<ProductRepository, ProductRepository>();
+
+builder
+    .Services.AddScoped<ICategoryService, CategoryService>()
+    .AddScoped<CategoryRepository, CategoryRepository>();
+
+builder
+    .Services.AddScoped<ISubCategoryService, SubCategoryService>()
+    .AddScoped<SubCategoryRepository, SubCategoryRepository>();
+    
+builder
+    .Services.AddScoped<IPaymentService, PaymentService>()
+    .AddScoped<PaymentRepository, PaymentRepository>();
+
+
 //Add controllers
 builder.Services.AddControllers();
 // Add services to the container.
