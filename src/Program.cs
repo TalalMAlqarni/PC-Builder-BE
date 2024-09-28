@@ -22,9 +22,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 // add DI service
 builder.Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
-builder.Services
-.AddScoped<IOrderService, OrderService>()
-.AddScoped<OrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>().AddScoped<OrderRepository, OrderRepository>();
 //Add controllers
 builder.Services.AddControllers();
 // Add services to the container.
