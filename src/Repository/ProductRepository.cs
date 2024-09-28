@@ -16,10 +16,16 @@ namespace src.Repository
         }
 
         // add a new product:
-        public async Task AddProductAsync(Product newProduct)
+        public async Task<Product> AddProductAsync(Product newProduct)
         {
             await _products.AddAsync(newProduct);
             await _databaseContext.SaveChangesAsync();
+            return newProduct;
+        }
+
+        public async Task<List<Product>> GetAllProductsAsync()
+        {
+            return await _products.ToListAsync();
         }
 
         //get product by Id:
