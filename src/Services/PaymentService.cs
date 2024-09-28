@@ -38,9 +38,9 @@ namespace src.Services.Payment
 
 
 
-        public async Task<PaymentReadDto> GetByIdAsync(Guid Id)
+        public async Task<PaymentReadDto> GetByIdAsync(Guid PaymentId)
         {
-            var foundPayment = await _paymentRepo.GetByIdAsync(Id);
+            var foundPayment = await _paymentRepo.GetByIdAsync(PaymentId);
             return _mapper.Map<src.Entity.Payment, PaymentReadDto> (foundPayment);
         }
 

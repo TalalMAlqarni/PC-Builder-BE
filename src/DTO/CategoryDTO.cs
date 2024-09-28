@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;  
  
-
 namespace src.DTO
 {
     public class CategoryDTO
@@ -21,6 +20,13 @@ namespace src.DTO
 
         public class CategoryUpdateDto
         {
+            public Guid Id { get; set; }
+            public string categoryName{ get; set; }
+        }
+        
+        public class CategoryDeleteDto
+        {
+            public Guid Id { get; set; }
             public string categoryName{ get; set; }
         }
     }

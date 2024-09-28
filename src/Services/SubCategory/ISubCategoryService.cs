@@ -16,6 +16,6 @@ namespace src.Services.SubCategory
 
         Task<bool> DeleteOneAsync(Guid Id);
         Task<bool> UpdateOneAsync(Guid Id, SubCategoryUpdateDto updateDto);
-
+        Task<bool> DeleteOneAsync(string name);
     }
 }
