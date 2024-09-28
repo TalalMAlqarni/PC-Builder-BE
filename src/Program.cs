@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using src.Database;
 using src.Repository;
+using src.Services.product;
 using src.Services.user;
 using src.Services;
 using src.Utils;
@@ -23,6 +24,10 @@ builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 // add DI service
 builder.Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>().AddScoped<OrderRepository, OrderRepository>();
+builder
+    .Services.AddScoped<IProductService, ProductService>()
+    .AddScoped<ProductRepository, ProductRepository>();
+
 //Add controllers
 builder.Services.AddControllers();
 // Add services to the container.
