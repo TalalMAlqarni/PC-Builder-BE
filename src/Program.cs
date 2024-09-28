@@ -4,6 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using src.Database;
+using src.Entity;
+using src.Repository;
+using src.Services;
+using src.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
@@ -13,6 +17,12 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(dataSourceBuilder.Build());
 }
 );
+// add auto mapper
+builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
+// add DI services
+builder.Services
+.AddScoped<IOrderService, OrderService>()
+.AddScoped<OrderRepository, OrderRepository>();
 //Add controllers
 builder.Services.AddControllers();
 // Add services to the container.
