@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
-using src.Repository;
+using src.Services;
+using static src.DTO.OrderDTO;
 
 namespace scr.Controller
 {
@@ -8,6 +9,7 @@ namespace scr.Controller
     [Route("api/v1/[controller]")]
     public class OrdersController : ControllerBase
     {
+        protected IOrderService _orderService;
         public static List<Order> orders = new List<Order>() {
             // Testing instance
             new Order
@@ -28,11 +30,16 @@ namespace scr.Controller
         public static int deliveryDays = 2;
         public readonly static string[] orderStatuses = { "ordered", "shipped", "on delivery", "delivered" };
 
+        public OrdersController(IOrderService orderService)
+        {
+            _orderService = orderService;
+        }
         // Gets all available orders.
         [HttpGet]
-        public ActionResult GetOrders()
+        public async Task<ActionResult<List<OrderReadDTO>>> GetAllOrders()
         {
-            return Ok(orders.OrderByDescending(o => o.OrderDate));
+            var orderList = await _orderService.GetAllAsync();
+            return Ok(orderList.OrderByDescending(o => o.OrderDate));
         }
 
 
@@ -55,7 +62,7 @@ namespace scr.Controller
 
         // Post new order to the order list
         [HttpPost("checkout")]
-        public ActionResult CreateOrder(Order newOrder)
+        public async Task<ActionResult<OrderReadDTO>> CreateOrder(OrderCreateDTO newOrder)
         {
             // validate entries
             if (newOrder.UserId == Guid.Empty)
@@ -76,14 +83,14 @@ namespace scr.Controller
 
 
             // initialize new entry
-            newOrder.Id = Guid.NewGuid();
             newOrder.OrderDate = DateTime.Now;
             newOrder.ShipDate = DateTime.Now.AddDays(deliveryDays);
             newOrder.OrderStatus = "Ordered";
             newOrder.IsDelivered = false;
             //orders.Add(newOrder);
+            var createdOrder = await _orderService.CreateOneAsync(newOrder);
 
-            return CreatedAtAction(nameof(GetOrders), new { id = newOrder.Id }, newOrder);
+            return Ok(CreateOrder);
         }
 
         // Update current order status into ("shipped", "on delivery", "delivered")
