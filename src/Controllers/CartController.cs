@@ -34,11 +34,11 @@ namespace src.Controller
 
         //create new cart: POST api/v1/cart
         [HttpPost]
-        public async Task<ActionResult<CartReadDto>> CreateCart(CartCreateDto createDto)
+        public async Task<ActionResult<CartReadDto>> CreateCart([FromBody] CartCreateDto createDto)
         {
             var cartRead = await _cartService.CreateCartAsync(createDto);
 
-            return CreatedAtAction(nameof(cartRead), new { id = cartRead.Id }, cartRead);
+            return CreatedAtAction(nameof(GetCartById), new { id = cartRead.Id }, cartRead);
         }
 
         //update cart: PUT api/v1/cart/{id}

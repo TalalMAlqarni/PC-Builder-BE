@@ -35,8 +35,6 @@ namespace src.Repository
         public async Task<bool> DeleteCartAsync(Cart cart)
         {
             //var cartDetails = _dbContext.CartDetails.Where(cd => cd.CartId == cart.Id).ToList();
-            var cartDetails = cart.CartDetails;
-            _dbContext.CartDetails.RemoveRange(cartDetails);
             _dbContext.Cart.Remove(cart);
             await _dbContext.SaveChangesAsync();
             return true;
