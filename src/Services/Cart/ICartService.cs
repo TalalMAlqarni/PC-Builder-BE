@@ -1,6 +1,6 @@
 using static src.DTO.CartDTO;
 using src.Entity;
-namespace src.Services.Cart
+namespace src.Services.cart
 {
     public interface ICartService
     {

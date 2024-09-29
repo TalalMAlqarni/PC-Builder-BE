@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using src.Database;
 using src.Entity;
 
-namespace sda_3_online_Backend_Teamwork
+namespace src.Repository
 {
     public class CartRepository
     {
@@ -48,6 +48,12 @@ namespace sda_3_online_Backend_Teamwork
             _dbContext.Cart.Update(cart);
             await _dbContext.SaveChangesAsync();
             return cart;
+        }
+
+        //get all carts
+        public async Task<List<Cart>> GetAllCartsAsync()
+        {
+            return await _dbContext.Cart.ToListAsync();
         }
     }
 }

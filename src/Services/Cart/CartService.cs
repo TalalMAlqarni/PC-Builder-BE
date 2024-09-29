@@ -1,8 +1,10 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using src.Repository;
+using src.Entity;
 using static src.DTO.CartDTO;
 
-namespace src.Services.Cart
+
+namespace src.Services.cart
 {
     public class CartService : ICartService
     {
@@ -13,6 +15,7 @@ namespace src.Services.Cart
             _cartRepo = cartRepo;
             _mapper = mapper;
         }
+
         public async Task<CartReadDto> CreateCartAsync(CartCreateDto createDto)
         {
             var cart = _mapper.Map<CartCreateDto, Cart>(createDto);
@@ -20,24 +23,36 @@ namespace src.Services.Cart
             return _mapper.Map<Cart, CartReadDto>(cartCreated);
         }
 
-        public Task<bool> DeleteCartByIdAsync(Guid id)
+        public async Task<bool> DeleteCartByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var foundCart = await _cartRepo.GetCartByIdAsync(id);
+            bool isDeleted = await _cartRepo.DeleteCartAsync(foundCart);
+            return isDeleted;
         }
 
-        public Task<CartDTO.CartReadDto> GetCartByIdAsync(Guid id)
+        public async Task<CartReadDto> GetCartByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var foundCart = await _cartRepo.GetCartByIdAsync(id);
+            //handle not found
+            return _mapper.Map<Cart, CartReadDto>(foundCart);
         }
 
-        public Task<List<CartDTO.CartReadDto>> GetCartsAsync()
+        public async Task<List<CartReadDto>> GetCartsAsync()
         {
-            throw new NotImplementedException();
+            var carts = await _cartRepo.GetAllCartsAsync();
+            return _mapper.Map<List<Cart>, List<CartReadDto>>(carts);
         }
 
-        public Task<CartDTO.CartReadDto> UpdateCartAsync(Guid id, CartDTO.CartUpdateDto updateDto)
+        public async Task<CartReadDto> UpdateCartAsync(Guid id, CartUpdateDto updateDto)
         {
-            throw new NotImplementedException();
+            var foundCart = await _cartRepo.GetCartByIdAsync(id);
+
+            if (foundCart == null)
+                return null;
+
+            _mapper.Map(updateDto, foundCart);
+            var updatedCart = await _cartRepo.UpdateCartAsync(foundCart);
+            return _mapper.Map<Cart, CartReadDto>(updatedCart);
         }
 
     }
