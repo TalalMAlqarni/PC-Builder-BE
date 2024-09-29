@@ -9,6 +9,7 @@ using static src.DTO.PaymentDTO;
 using static src.DTO.ProductDTO;
 using static src.DTO.UserDTO;
 using static src.DTO.OrderDTO;
+using static src.DTO.CartDTO;
 
 namespace src.Utils
 {
@@ -62,8 +63,14 @@ namespace src.Utils
             CreateMap<Order, OrderReadDTO>();
             CreateMap<OrderReadDTO, Order>();
             CreateMap<OrderUpdateDTO, Order>().ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
+
+            // Cart mappings
+            CreateMap<Cart, CartReadDto>();
+            CreateMap<CartCreateDto, Cart>();
+            CreateMap<CartUpdateDto, Cart>()
+                .ForAllMembers(options =>
+                    options.Condition((src, dest, srcProperty) => srcProperty != null)
+                );
         }
-
-
     }
 }
