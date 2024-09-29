@@ -9,7 +9,7 @@ namespace src.Entity
         // Category forigen key 
         public Guid Id { get; set; }
         // SubCategory primary id 
-        public Guid subId { get; set; }
+        public Guid SubCategoryId  { get; set; }
         public string? Name { get; set; }
     }
 }    
