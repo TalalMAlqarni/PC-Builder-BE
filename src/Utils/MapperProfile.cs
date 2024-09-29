@@ -10,6 +10,7 @@ using static src.DTO.ProductDTO;
 using static src.DTO.UserDTO;
 using static src.DTO.OrderDTO;
 using static src.DTO.CartDTO;
+using static src.DTO.SubCategoryDTO;
 
 namespace src.Utils
 {
@@ -44,9 +45,9 @@ namespace src.Utils
                 );
 
             // Subcategory mappings
-            CreateMap<SubCategory, PaymentReadDto>();
-            CreateMap<PaymentCreateDto, SubCategory>();
-            CreateMap<PaymentUpdateDto, SubCategory>()
+            CreateMap<SubCategory, SubCategoryReadDto>();
+            CreateMap<SubCategoryCreateDto, SubCategory>();
+            CreateMap<SubCategoryUpdateDto, SubCategory>()
                 .ForAllMembers(options =>
                     options.Condition((src, dest, srcProperty) => srcProperty != null)
                 );

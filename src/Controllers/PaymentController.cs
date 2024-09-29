@@ -43,10 +43,10 @@ namespace src.Controller
             return Ok(paymentList);
         }
              
-        [HttpGet("{PaymentId}")]
-        public async Task<ActionResult<PaymentReadDto>>GetById([FromRoute] Guid PaymentId)
+        [HttpGet("{paymentId}")]
+        public async Task<ActionResult<PaymentReadDto>>GetById([FromRoute] Guid paymentId)
         {
-            var payment = await _paymentService.GetByIdAsynac (PaymentId);
+            var payment = await _paymentService.GetByIdAsynac (paymentId);
             return Ok(payment);
         }
 
@@ -58,14 +58,14 @@ namespace src.Controller
             return Created($"api/v1//payments/{paymentCreated.PaymentId}",paymentCreated);
         }
 
-        [HttpDelete("{PaymentId}")]
-        public async Task<IActionResult> DeleteOne([FromRoute] Guid PaymentId)
+        [HttpDelete("{paymentId}")]
+        public async Task<IActionResult> DeleteOne([FromRoute] Guid paymentId)
         {
-            var result = await _paymentService.DeleteOneAsync(PaymentId);
+            var result = await _paymentService.DeleteOneAsync(paymentId);
             
             if (!result)
             {
-                return NotFound($"Payment with ID = {PaymentId} not found.");
+                return NotFound($"Payment with ID = {paymentId} not found.");
             }
 
             return NoContent(); // 204 No Content

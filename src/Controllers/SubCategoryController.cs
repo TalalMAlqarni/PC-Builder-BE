@@ -23,21 +23,21 @@ namespace src.Controller
             return Ok(subCategoryList);
         }
         
-        [HttpGet("{subId}")]
-        public async Task<ActionResult<SubCategoryReadDto>>GetById([FromRoute] Guid subId)
+        [HttpGet("{subCategoryId}")]
+        public async Task<ActionResult<SubCategoryReadDto>>GetById([FromRoute] Guid subCategoryId)
         {
-            var subCategory = await _subCategoryService.GetByIdAsynac (subId);
+            var subCategory = await _subCategoryService.GetByIdAsynac (subCategoryId);
             return Ok(subCategory);
         }
 
-        [HttpDelete("{subId}")]
-        public async Task<IActionResult> DeleteOne([FromRoute] Guid subId)
+        [HttpDelete("{subCategoryId}")]
+        public async Task<IActionResult> DeleteOne([FromRoute] Guid subCategoryId)
         {
-            var result = await _subCategoryService.DeleteOneAsync(subId);
+            var result = await _subCategoryService.DeleteOneAsync(subCategoryId);
             
             if (!result)
             {
-                return NotFound($"Subcategory with Id = {subId} not found.");
+                return NotFound($"Subcategory with Id = {subCategoryId} not found.");
             }
             
             return NoContent(); // 204 No Content
@@ -47,7 +47,7 @@ namespace src.Controller
         public async Task<ActionResult<SubCategoryReadDto>> CreateOne([FromBody] SubCategoryCreateDto createDto)
         {
             var subCategoryCreated = await _subCategoryService.CreateOneAsync(createDto);
-            return Created($"api/v1/subcategories/{subCategoryCreated.subId}", subCategoryCreated);
+            return Created($"api/v1/subcategories/{subCategoryCreated.SubCategoryId}", subCategoryCreated);
         }
 
 
