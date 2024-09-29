@@ -7,7 +7,7 @@ namespace src.DTO
         //create new cart
         public class CartCreateDto
         {
-            public string UserId { get; set; }
+            public Guid UserId { get; set; }
             public List<CartDetails> CartDetails { get; set; }
             public int CartQuantity { get; set; }//Todo: should be auto calculated
             public decimal TotalPrice { get; set; }//Todo: should be auto calculated
@@ -16,7 +16,7 @@ namespace src.DTO
         public class CartReadDto
         {
             public Guid Id { get; set; }
-            public string UserId { get; set; }
+            public Guid UserId { get; set; }
             public List<CartDetails> CartDetails { get; set; }
             public int CartQuantity { get; set; }
             public decimal TotalPrice { get; set; }

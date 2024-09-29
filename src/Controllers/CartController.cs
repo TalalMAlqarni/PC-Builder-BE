@@ -54,7 +54,7 @@ namespace src.Controller
         public async Task<ActionResult<bool>> DeleteCartById(Guid id)
         {
             var isDeleted = await _cartService.DeleteCartByIdAsync(id);
-            return Ok(isDeleted);//? should I use no content or ok
+            return Ok(isDeleted);
         }
 
 
