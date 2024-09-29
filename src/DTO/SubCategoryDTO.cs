@@ -14,20 +14,20 @@ namespace src.DTO
         }
         public class SubCategoryReadDto
         {
-            public Guid subId { get; set; }
-            public string Name { get; set; }    
+            public Guid SubCategoryId { get; set; }
+            public string Name { get; set; }
         }
 
         public class SubCategoryUpdateDto
         {
-            public Guid subId { get; set; }
+            public Guid SubCategoryId { get; set; }
             public string Name{ get; set; }
 
         }
         public class SubCategoryDeleteDto
         {
+            public Guid SubCategoryId { get; set; }
             public string Name{ get; set; }
-            public Guid subId { get; set; }
         }
     }
 }

@@ -5,4 +5,8 @@ obj
 *.http
 appsettings.json
 Backend.csproj
+<<<<<<< HEAD
 Migrations
+=======
+Migrations
+>>>>>>> 7656d47e881f592f7ac63663433b27d45173e79c
