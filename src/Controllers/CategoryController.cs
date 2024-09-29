@@ -22,10 +22,10 @@ namespace src.Controller
             return Ok(categoryList);
         }
 
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<CategoryReadDto>>GetById([FromRoute] Guid Id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CategoryReadDto>>GetById([FromRoute] Guid id)
         {
-            var category = await _categoryService.GetByIdAsynac (Id);
+            var category = await _categoryService.GetByIdAsynac (id);
             return Ok(category);
         }
 
@@ -38,13 +38,13 @@ namespace src.Controller
         }
         
         [HttpDelete("{categoryName}")]
-        public async Task<IActionResult> DeleteOne([FromRoute] string categoryName)
+        public async Task<IActionResult> DeleteOne(Guid id, [FromRoute] string CategoryName)
         {
-            var result = await _categoryService.DeleteOneAsync(categoryName);
+            var result = await _categoryService.DeleteOneAsync(id, CategoryName);
             
             if (!result)
             {
-                return NotFound($"Category with Name = {categoryName} not found.");
+                return NotFound($"Category with Name = {CategoryName} not found.");
             }
             
             return NoContent(); // 204 No Content

@@ -31,9 +31,9 @@ namespace src.Repository
         // {
         //     return await _subCategories.ToListAsync();
         // }
-        public async Task<SubCategory?> GetByIdAsync(Guid Id)
+        public async Task<SubCategory?> GetByIdAsync(Guid subCategoryId)
         {
-            return await _subCategories.FindAsync(Id);
+            return await _subCategories.FindAsync(subCategoryId);
         }
 
         public async Task<bool> DeleteOneAsync(SubCategory subCategory)

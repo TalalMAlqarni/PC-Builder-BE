@@ -75,8 +75,8 @@ namespace src.Services.Payment
         {
             throw new NotImplementedException();
         }
-
-        public Task<PaymentReadDto> GetByIdAsynac(Guid PaymentId)
+        
+        public Task<PaymentReadDto> GetByIdAsynac(Guid paymentId)
         {
             throw new NotImplementedException();
         }

@@ -12,10 +12,9 @@ namespace src.Services.Category
         Task<CategoryReadDto> CreateOneAsync(CategoryCreateDto createDto);
         Task<List<CategoryReadDto>> GetAllAsynac();
 
-        Task<CategoryReadDto> GetByIdAsynac(Guid Id);
+        Task<CategoryReadDto> GetByIdAsynac(Guid id);
 
-        Task<bool> DeleteOneAsync(Guid Id, string categoryName);
-        Task<bool> UpdateOneAsync(Guid Id, string categoryName,CategoryUpdateDto updateDto);
-        Task<bool> DeleteOneAsync(string categoryName);
+        Task<bool> DeleteOneAsync(Guid id, string categoryName);
+        Task<bool> UpdateOneAsync(Guid id, string categoryName,CategoryUpdateDto updateDto);
     }
 }
