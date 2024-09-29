@@ -24,6 +24,7 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return newUser;
         }
+
         public async Task<List<User>> GetAllAsync()
         {
             return await _user.ToListAsync();
