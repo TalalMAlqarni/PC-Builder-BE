@@ -15,11 +15,12 @@ namespace src.DTO
             public decimal RatingResult { get; set; }
         }
 
-
         //GET ALL RPODUCTS
 
         public class GetProductDto
         {
+            public Guid ProductId { get; set; }
+
             public string ProductName { get; set; }
             public string ProductColor { get; set; }
             public string Descreption { get; set; }
@@ -40,10 +41,5 @@ namespace src.DTO
             public decimal Weight { get; set; }
         }
 
-// public class UpdateProdouctDescDto{
-
-//     public string Descreption {get;set;}
-// }
-       
     }
 }
