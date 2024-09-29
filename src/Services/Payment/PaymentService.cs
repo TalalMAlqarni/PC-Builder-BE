@@ -38,15 +38,15 @@ namespace src.Services.Payment
 
 
 
-        public async Task<PaymentReadDto> GetByIdAsync(Guid PaymentId)
+        public async Task<PaymentReadDto> GetByIdAsync(Guid paymentId)
         {
-            var foundPayment = await _paymentRepo.GetByIdAsync(PaymentId);
+            var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
             return _mapper.Map<src.Entity.Payment, PaymentReadDto> (foundPayment);
         }
 
-        public async Task<bool> DeleteOneAsync(Guid PaymentId)
+        public async Task<bool> DeleteOneAsync(Guid paymentId)
         {
-            var foundPayment = await _paymentRepo.GetByIdAsync(PaymentId);
+            var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
            bool IsDeleted = await _paymentRepo.DeleteOneAsync(foundPayment);
 
            if(IsDeleted)
@@ -56,9 +56,9 @@ namespace src.Services.Payment
            return false;
         }
 
-        public async Task<bool> UpdateOneAsync(Guid PaymentId, PaymentUpdateDto updateDto)
+        public async Task<bool> UpdateOneAsync(Guid paymentId, PaymentUpdateDto updateDto)
         {
-            var foundPayment = await _paymentRepo.GetByIdAsync(PaymentId);
+            var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
             var isUpdated = await _paymentRepo.UpdateOneAsync(foundPayment);
 
             if (foundPayment==null)

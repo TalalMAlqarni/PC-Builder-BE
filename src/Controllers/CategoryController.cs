@@ -38,13 +38,13 @@ namespace src.Controller
         }
         
         [HttpDelete("{categoryName}")]
-        public async Task<IActionResult> DeleteOne(Guid id, [FromRoute] string CategoryName)
+        public async Task<IActionResult> DeleteOne(Guid id, [FromRoute] string categoryName)
         {
-            var result = await _categoryService.DeleteOneAsync(id, CategoryName);
+            var result = await _categoryService.DeleteOneAsync(id, categoryName);
             
             if (!result)
             {
-                return NotFound($"Category with Name = {CategoryName} not found.");
+                return NotFound($"Category with Name = {categoryName} not found.");
             }
             
             return NoContent(); // 204 No Content
