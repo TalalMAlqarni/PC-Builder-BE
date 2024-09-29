@@ -36,15 +36,15 @@ namespace src.Services.Category
 
 
 
-        public async Task<CategoryReadDto> GetByIdAsync(Guid Id)
+        public async Task<CategoryReadDto> GetByIdAsync(Guid id)
         {
-            var foundCategory = await _categoryRepo.GetByIdAsync(Id);
+            var foundCategory = await _categoryRepo.GetByIdAsync(id);
             return _mapper.Map<src.Entity.Category, CategoryReadDto> (foundCategory);
         }
 
-        public async Task<bool> DeleteOneAsync(Guid Id)
+        public async Task<bool> DeleteOneAsync(Guid id)
         {
-            var foundCategory = await _categoryRepo.GetByIdAsync(Id);
+            var foundCategory = await _categoryRepo.GetByIdAsync(id);
            bool IsDeleted = await _categoryRepo.DeleteOneAsync(foundCategory);
 
            if(IsDeleted)
@@ -55,9 +55,9 @@ namespace src.Services.Category
 
         }
 
-        public async Task<bool> UpdateOneAsync(Guid Id, CategoryUpdateDto updateDto)
+        public async Task<bool> UpdateOneAsync(Guid id, CategoryUpdateDto updateDto)
         {
-            var foundCategory = await _categoryRepo.GetByIdAsync(Id);
+            var foundCategory = await _categoryRepo.GetByIdAsync(id);
             var isUpdated = await _categoryRepo.UpdateOneAsync(foundCategory);
 
             if (foundCategory==null)
@@ -75,17 +75,17 @@ namespace src.Services.Category
             throw new NotImplementedException();
         }
 
-        public Task<CategoryReadDto> GetByIdAsynac(Guid Id)
+        public Task<CategoryReadDto> GetByIdAsynac(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteOneAsync(Guid Id, string categoryName)
+        public Task<bool> DeleteOneAsync(Guid id, string categoryName)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateOneAsync(Guid Id, string categoryName, CategoryUpdateDto updateDto)
+        public Task<bool> UpdateOneAsync(Guid id, string categoryName, CategoryUpdateDto updateDto)
         {
             throw new NotImplementedException();
         }
