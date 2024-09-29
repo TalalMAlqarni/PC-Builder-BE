@@ -14,6 +14,7 @@ using src.Services.SubCategory;
 using src.Services.user;
 using src.Services;
 using src.Utils;
+using src.Services.cart;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
@@ -27,7 +28,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 // add DI service
 builder
-    .Services.AddScoped<IUserService , UserService>().AddScoped<UserRepository , UserRepository>();
+    .Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
 
 builder
     .Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
@@ -46,10 +47,13 @@ builder
 builder
     .Services.AddScoped<ISubCategoryService, SubCategoryService>()
     .AddScoped<SubCategoryRepository, SubCategoryRepository>();
-    
+
 builder
     .Services.AddScoped<IPaymentService, PaymentService>()
     .AddScoped<PaymentRepository, PaymentRepository>();
+builder
+    .Services.AddScoped<ICartService, CartService>()
+    .AddScoped<CartRepository, CartRepository>();
 
 
 

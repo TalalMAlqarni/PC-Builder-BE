@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace src.Entity
 {
@@ -17,8 +18,15 @@ namespace src.Entity
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public DateOnly BirthDate { get; set; }
-        public string? Role { get; set; }
+        public Role Role { get; set; } = Role.Customer;
         public string? Password { get ; set ; }
         public byte[]? Salt { get; set; }
+        public Guid CartId { get; set; }
+    }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum Role
+    {
+        Admin,
+        Customer
     }
 }
