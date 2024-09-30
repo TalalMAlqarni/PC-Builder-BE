@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using src.Database;
 using src.Entity;
+using src.Utils;
 
 namespace src.Repository
 {
@@ -20,6 +21,7 @@ namespace src.Repository
         //create new cart
         public async Task<Cart> CreateCartAsync(Cart newCart)
         {
+            CartUtils.CalculateCartFields(newCart);
             await _dbContext.Cart.AddAsync(newCart);
             await _dbContext.SaveChangesAsync();
             return newCart;
@@ -28,15 +30,22 @@ namespace src.Repository
         //find cart by id
         public async Task<Cart?> GetCartByIdAsync(Guid id)
         {
-            return await _dbContext.Cart.FindAsync(id);
+            return await _dbContext.Cart
+                .Include(c => c.CartDetails)
+                    .ThenInclude(cd => cd.Product)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
+
+
 
         //delete cart
         public async Task<bool> DeleteCartAsync(Cart cart)
         {
-            //var cartDetails = _dbContext.CartDetails.Where(cd => cd.CartId == cart.Id).ToList();
-            var cartDetails = cart.CartDetails;
-            _dbContext.CartDetails.RemoveRange(cartDetails);
+            var cartDetails = await _dbContext.CartDetails.Where(cd => cd.CartId == cart.Id).ToListAsync();
+            if (cartDetails.Any())
+            {
+                _dbContext.CartDetails.RemoveRange(cartDetails);
+            }
             _dbContext.Cart.Remove(cart);
             await _dbContext.SaveChangesAsync();
             return true;
@@ -45,6 +54,7 @@ namespace src.Repository
         //update cart
         public async Task<Cart?> UpdateCartAsync(Cart cart)
         {
+            CartUtils.CalculateCartFields(cart);
             _dbContext.Cart.Update(cart);
             await _dbContext.SaveChangesAsync();
             return cart;
@@ -53,7 +63,13 @@ namespace src.Repository
         //get all carts
         public async Task<List<Cart>> GetAllCartsAsync()
         {
-            return await _dbContext.Cart.ToListAsync();
+            return await _dbContext.Cart.Include(c => c.CartDetails).ThenInclude(cd => cd.Product).ToListAsync();
+        }
+
+        //get product by id to use in cart
+        public async Task<Product?> GetProductByIdForCartAsync(Guid productId)
+        {
+            return await _dbContext.Product.FindAsync(productId);
         }
     }
 }

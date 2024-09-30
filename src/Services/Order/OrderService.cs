@@ -1,6 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using src.DTO;
 using src.Entity;
 using src.Repository;
 using static src.DTO.OrderDTO;
@@ -50,7 +48,7 @@ namespace src.Services
         public async Task<bool> UpdateOneAsync(Guid id, OrderUpdateDTO updateDTO)
         {
             var foundOrder = await _orderRepository.GetByIdAsync(id);
-            if (foundOrder != null)
+            if (foundOrder == null)
             {
                 return false;
             }
