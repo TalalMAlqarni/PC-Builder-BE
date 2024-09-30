@@ -17,7 +17,7 @@ Task<List<GetProductDto>> GetAllProductsAsync();
 Task<GetProductDto> GetProductByIdAsync (Guid id);
 
 //update product info
- Task<bool> UpdateProductInfoAsync(Guid id, UpdateProductInfoDto product);
+ Task<GetProductDto> UpdateProductInfoAsync(Guid id, UpdateProductInfoDto product);
 
 //delete product 
 Task<bool> DeleteProductByIdAsync (Guid id);
