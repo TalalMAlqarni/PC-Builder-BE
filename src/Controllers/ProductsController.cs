@@ -100,7 +100,7 @@ namespace src.Controller
             return Ok();
         }
 
-        //edit on the product info , should it move to the subcategory class? also, how to add authorization here
+        
 
         [HttpPut("{productId}")]
         // [Authorize(Roles = "Admin")] //didn't test it yet

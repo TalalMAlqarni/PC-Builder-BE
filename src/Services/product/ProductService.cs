@@ -32,17 +32,25 @@ namespace src.Services.product
             return _mapper.Map<List<Product>, List<GetProductDto>>(productsList);
         }
 
-        public async Task<List<GetProductDto>> GetAllBySearchAsync(
+        public async Task<List<GetProductDto>> GetAllBySearchAsync( // if the result of the search is null ,
             PaginationOptions paginationOptions
         )
         {
             var productsList = await _productRepository.GetAllResults(paginationOptions);
+            if (productsList is null)
+            {
+                throw CustomException.NotFound("No results found");
+            }
             return _mapper.Map<List<Product>, List<GetProductDto>>(productsList);
         }
 
         public async Task<GetProductDto> GetProductByIdAsync(Guid id)
         {
             var isFound = await _productRepository.GetProductByIdAsync(id);
+            if (isFound is null)
+            {
+                throw CustomException.NotFound($"Product with {id} not found");
+            }
             return _mapper.Map<Product, GetProductDto>(isFound);
         }
 
@@ -55,7 +63,7 @@ namespace src.Services.product
 
             if (isFound is null)
             {
-                throw CustomException.NotFound($"Category with {id} not found");
+                throw CustomException.NotFound($"Product with {id} not found");
             }
             _mapper.Map(product, isFound);
             var updatedProduct = await _productRepository.UpdateProductInfoAsync(isFound);
@@ -69,7 +77,7 @@ namespace src.Services.product
 
             if (isFound is null)
             {
-                return false;
+                throw CustomException.NotFound($"Product with {id} not found");
             }
 
             await _productRepository.DeleteProductAsync(isFound);
@@ -98,5 +106,5 @@ namespace src.Services.product
 
 
         // }
-    }}
-
+    }
+}
