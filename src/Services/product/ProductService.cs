@@ -37,16 +37,18 @@ namespace src.Services.product
             return _mapper.Map<Product,GetProductDto>(isFound);
         }
 
-        public async Task<bool> UpdateProductInfoAsync(Guid id, UpdateProductInfoDto product)
+        public async Task<GetProductDto> UpdateProductInfoAsync(Guid id, UpdateProductInfoDto product)
         {
             var isFound = await _productRepository.GetProductByIdAsync(id);
 
             if (isFound is null)
             {
-                return false;
+                  return null;
             }
             _mapper.Map(product, isFound);
-            return await _productRepository.UpdateProductInfoAsync(isFound);
+            var updatedProduct = await _productRepository.UpdateProductInfoAsync(isFound);
+            return _mapper.Map<Product,GetProductDto>(updatedProduct); 
+            
         }
 
         //delete product 
