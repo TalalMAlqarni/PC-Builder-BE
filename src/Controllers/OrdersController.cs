@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
 using src.Services;
+using src.Services.cart;
+using src.Services.product;
 using static src.DTO.OrderDTO;
 
 namespace scr.Controller
@@ -10,6 +12,8 @@ namespace scr.Controller
     public class OrdersController : ControllerBase
     {
         protected IOrderService _orderService;
+        protected ICartService _cartService;
+        protected IProductService _productService;
         public static List<Order> orders = new List<Order>() {
             // Testing instance
             new Order
@@ -88,14 +92,14 @@ namespace scr.Controller
             if (newOrder.PostalCode == 0)
                 return BadRequest("Empty postalCode");
 
-
-
             // initialize new entry
             newOrder.OrderDate = DateTime.Now.ToUniversalTime();
             newOrder.ShipDate = DateTime.Now.AddDays(deliveryDays).ToUniversalTime();
             newOrder.OrderStatus = "Ordered";
             newOrder.IsDelivered = false;
             var createdOrder = await _orderService.CreateOneAsync(newOrder);
+
+            var cart = await _cartService.GetCartByIdAsync(createdOrder.CartId);
 
             return Created($"api/v1/orders/{createdOrder.Id}", createdOrder);
         }
