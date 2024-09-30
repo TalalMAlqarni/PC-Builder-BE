@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
 using src.Services;
@@ -14,23 +15,6 @@ namespace scr.Controller
         protected IOrderService _orderService;
         protected ICartService _cartService;
         protected IProductService _productService;
-        public static List<Order> orders = new List<Order>() {
-            // Testing instance
-            new Order
-            {
-            Id = Guid.NewGuid(),
-            CartId = Guid.NewGuid(),
-            PaymentId = Guid.NewGuid(),
-            UserId = Guid.NewGuid(),
-            OrderDate = DateTime.Now,
-            ShipDate = DateTime.Now.AddDays(deliveryDays),
-            OrderStatus="Ordered",
-            Address = "some address",
-            City = "some city",
-            State="some state",
-            PostalCode=12345
-            }
-         };
         public static int deliveryDays = 2;
         public readonly static string[] orderStatuses = { "ordered", "shipped", "on delivery", "delivered" };
 
@@ -39,6 +23,7 @@ namespace scr.Controller
             _orderService = orderService;
         }
         // Gets all available orders.
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<OrderReadDTO>>> GetAllOrders()
         {
@@ -47,6 +32,7 @@ namespace scr.Controller
         }
 
         // Gets a specific order by it's ID
+        [Authorize]
         [HttpGet("{orderId}")]
         public async Task<ActionResult<OrderReadDTO>> GetOrderById([FromRoute] Guid orderId)
         {
@@ -56,6 +42,7 @@ namespace scr.Controller
             return Ok(foundOrder);
         }
         // Gets a user's orders by its ID in ascending.
+        [Authorize]
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<List<OrderReadDTO>>> GetOrdersByUserID([FromRoute] Guid userId)
         {
@@ -64,6 +51,7 @@ namespace scr.Controller
         }
 
         // Gets a user's old orders by its ID in descending.
+        [Authorize]
         [HttpGet("user/{userId}/ordershistory")]
         public async Task<ActionResult<List<OrderReadDTO>>> GetOrdersHistoryByUserID([FromRoute] Guid userId)
         {
@@ -73,6 +61,7 @@ namespace scr.Controller
 
 
         // Post new order to the order list
+        [Authorize]
         [HttpPost("checkout")]
         public async Task<ActionResult<OrderReadDTO>> CreateOrder([FromBody] OrderCreateDTO newOrder)
         {
@@ -99,12 +88,13 @@ namespace scr.Controller
             newOrder.IsDelivered = false;
             var createdOrder = await _orderService.CreateOneAsync(newOrder);
 
-            var cart = await _cartService.GetCartByIdAsync(createdOrder.CartId);
+            //var cart = await _cartService.GetCartByIdAsync(createdOrder.CartId);
 
             return Created($"api/v1/orders/{createdOrder.Id}", createdOrder);
         }
 
         // Update current order status into ("shipped", "on delivery", "delivered")
+        [Authorize(Roles = "Admin")]
         [HttpPut("{orderId}/orderstatus")]
         public async Task<ActionResult> UpdateOrderStatus(Guid orderId, OrderUpdateDTO updatedOrder)
         {
@@ -132,6 +122,7 @@ namespace scr.Controller
         }
 
         // Updates the ship date into new one
+        [Authorize(Roles = "Admin")]
         [HttpPut("{orderId}/shipdate")]
         public async Task<ActionResult> UpdateShipDate(Guid orderId, OrderUpdateDTO updatedOrder)
         {
@@ -145,6 +136,7 @@ namespace scr.Controller
 
 
         // Cancel the current order by deleting it from orders list
+        [Authorize]
         [HttpDelete("{orderId}")]
         public async Task<ActionResult> CancelOrder(Guid orderId)
         {
