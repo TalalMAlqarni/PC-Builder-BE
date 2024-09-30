@@ -28,32 +28,13 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 // add DI service
 builder
-    .Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
-
-builder
-    .Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
-
-builder
-    .Services.AddScoped<IOrderService, OrderService>().AddScoped<OrderRepository, OrderRepository>();
-
-builder
-    .Services.AddScoped<IProductService, ProductService>()
-    .AddScoped<ProductRepository, ProductRepository>();
-
-builder
-    .Services.AddScoped<ICategoryService, CategoryService>()
-    .AddScoped<CategoryRepository, CategoryRepository>();
-
-builder
-    .Services.AddScoped<ISubCategoryService, SubCategoryService>()
-    .AddScoped<SubCategoryRepository, SubCategoryRepository>();
-
-builder
-    .Services.AddScoped<IPaymentService, PaymentService>()
-    .AddScoped<PaymentRepository, PaymentRepository>();
-builder
-    .Services.AddScoped<ICartService, CartService>()
-    .AddScoped<CartRepository, CartRepository>();
+    .Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>()
+    .AddScoped<IOrderService, OrderService>().AddScoped<OrderRepository, OrderRepository>()
+    .AddScoped<IProductService, ProductService>().AddScoped<ProductRepository, ProductRepository>()
+    .AddScoped<ICategoryService, CategoryService>().AddScoped<CategoryRepository, CategoryRepository>()
+    .AddScoped<ISubCategoryService, SubCategoryService>().AddScoped<SubCategoryRepository, SubCategoryRepository>()
+    .AddScoped<IPaymentService, PaymentService>().AddScoped<PaymentRepository, PaymentRepository>()
+    .AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>();
 
 
 
