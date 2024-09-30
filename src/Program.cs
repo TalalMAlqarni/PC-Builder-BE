@@ -18,11 +18,13 @@ using src.Services.cart;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using src.Middlewares;
+using static src.Entity.User;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
-dataSourceBuilder.MapEnum<Role>();
+dataSourceBuilder.MapEnum<UserRole>();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
@@ -33,32 +35,13 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 // add DI service
 builder
-    .Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
-
-builder
-    .Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
-
-builder
-    .Services.AddScoped<IOrderService, OrderService>().AddScoped<OrderRepository, OrderRepository>();
-
-builder
-    .Services.AddScoped<IProductService, ProductService>()
-    .AddScoped<ProductRepository, ProductRepository>();
-
-builder
-    .Services.AddScoped<ICategoryService, CategoryService>()
-    .AddScoped<CategoryRepository, CategoryRepository>();
-
-builder
-    .Services.AddScoped<ISubCategoryService, SubCategoryService>()
-    .AddScoped<SubCategoryRepository, SubCategoryRepository>();
-
-builder
-    .Services.AddScoped<IPaymentService, PaymentService>()
-    .AddScoped<PaymentRepository, PaymentRepository>();
-builder
-    .Services.AddScoped<ICartService, CartService>()
-    .AddScoped<CartRepository, CartRepository>();
+    .Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>()
+    .AddScoped<IOrderService, OrderService>().AddScoped<OrderRepository, OrderRepository>()
+    .AddScoped<IProductService, ProductService>().AddScoped<ProductRepository, ProductRepository>()
+    .AddScoped<ICategoryService, CategoryService>().AddScoped<CategoryRepository, CategoryRepository>()
+    .AddScoped<ISubCategoryService, SubCategoryService>().AddScoped<SubCategoryRepository, SubCategoryRepository>()
+    .AddScoped<IPaymentService, PaymentService>().AddScoped<PaymentRepository, PaymentRepository>()
+    .AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>();
 
 // add logic for auth
 builder.Services
@@ -116,6 +99,12 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine(ex.Message);
     }
 }
+// add middleware 
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllers();
 

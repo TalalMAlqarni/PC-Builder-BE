@@ -10,7 +10,7 @@ using static src.DTO.UserDTO;
 using Microsoft.AspNetCore.Authorization;
 
 namespace src.Controllers
-{ [ApiController]
+{   [ApiController]
     [Route("api/v1/[controller]")]
     public class UsersController  : ControllerBase
     {

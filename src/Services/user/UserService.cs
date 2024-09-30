@@ -8,6 +8,7 @@ using src.Controllers;
 using static src.DTO.UserDTO;
 using src.Entity;
 using src.Utils;
+using static src.Entity.User;
 
 
 namespace src.Services.user
@@ -29,7 +30,7 @@ namespace src.Services.user
             var user = _mapper.Map<UserCreateDto, User>(createDto);
             user.Password = hashedPassword;
             user.Salt = salt;
-            user.Role = Role.Customer;
+            user.Role = UserRole.Customer;
 
 
             var savedUser = await _userRepo.CreateOneAsync(user);

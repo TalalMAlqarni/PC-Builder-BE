@@ -18,15 +18,16 @@ namespace src.Entity
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public DateOnly BirthDate { get; set; }
-         public Role Role { get; set; } 
+         public UserRole Role { get; set; } = UserRole.Customer;
         public string? Password { get ; set ; }
         public byte[]? Salt { get; set; }
         public Guid CartId { get; set; }
-    }
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum Role
-    {
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum UserRole
+        {
         Admin,
         Customer
+        }
     }
+    
 }
