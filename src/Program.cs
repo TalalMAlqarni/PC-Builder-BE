@@ -15,10 +15,15 @@ using src.Services.user;
 using src.Services;
 using src.Utils;
 using src.Services.cart;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
+dataSourceBuilder.MapEnum<Rule>();
+
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseNpgsql(dataSourceBuilder.Build());
@@ -54,6 +59,33 @@ builder
 builder
     .Services.AddScoped<ICartService, CartService>()
     .AddScoped<CartRepository, CartRepository>();
+
+// add logic for auth
+builder.Services
+.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+// auth for admin
+// role
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
 
 
 //Add controllers

@@ -17,5 +17,7 @@ namespace src.Services.user
         Task<bool> DeleteOneAsync(Guid id);
         // update
         Task<bool> UpdateOneAsync(Guid id , UserUpdateDto updateDto);
+        Task<string> SignInAsync(UserCreateDto createDto);
+
     }
 }
