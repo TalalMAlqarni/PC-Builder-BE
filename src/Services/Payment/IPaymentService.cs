@@ -9,10 +9,11 @@ namespace src.Services.Payment
 {
     public interface IPaymentService
     {
+        
         Task<PaymentReadDto> CreateOneAsync(PaymentCreateDto createDto);
-        Task<List<PaymentReadDto>> GetAllAsynac();
+        Task<List<PaymentReadDto>> GetAllAsync();
 
-        Task<PaymentReadDto> GetByIdAsynac(Guid PaymentId);
+        Task<PaymentReadDto> GetByIdAsync(Guid PaymentId);
 
         Task<bool> DeleteOneAsync(Guid PaymentId);
         Task<bool> UpdateOneAsync(Guid PaymentId, PaymentUpdateDto updateDto);

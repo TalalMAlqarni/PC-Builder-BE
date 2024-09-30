@@ -10,6 +10,8 @@ namespace src.Entity
 
         public string? ProductColor { get; set; }
 
+        public string Descreption {get;set;}
+
         public int SKU { get; set; }
 
         public decimal ProductPrice { get; set; } // Probably it'll be shown to the user, the used on will be subtotal
@@ -20,5 +22,9 @@ namespace src.Entity
         // public string? Barcode { get; set; } 
 
         public decimal RatingResult { get; set; } //Idk how I'll use it here
+
+        // Foreign key to SubCategory
+        public Guid SubCategoryId { get; set; }
+        public SubCategory Name { get; set; }
     }
 }

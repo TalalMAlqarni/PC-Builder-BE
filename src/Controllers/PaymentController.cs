@@ -4,7 +4,6 @@ using src.Controller;
 using src.Services.Payment;
 using src.Repository;
 using static src.DTO.PaymentDTO;
-using scr.Controller;
 
 namespace src.Controller
 {
@@ -13,9 +12,9 @@ namespace src.Controller
     public class PaymentController : ControllerBase
     {
         protected readonly IPaymentService _paymentService;
-        public PaymentController(IPaymentService Service)
+        public PaymentController(IPaymentService service)
         {
-            _paymentService = Service;
+            _paymentService = service;
         }
         // GET method to retrive all payments
         // [HttpGet]
@@ -35,18 +34,18 @@ namespace src.Controller
         //     }
         //     return Ok(foundPayment);
         // }
-
         [HttpGet]
-        public async Task<ActionResult<List< PaymentCreateDto>>>GetAll()
+        public async Task<ActionResult<List< PaymentCreateDto>>>GetAllAsync()
         {
-            var paymentList = await _paymentService.GetAllAsynac();
+        
+            var paymentList = await _paymentService.GetAllAsync();
             return Ok(paymentList);
         }
              
         [HttpGet("{paymentId}")]
-        public async Task<ActionResult<PaymentReadDto>>GetById([FromRoute] Guid paymentId)
+        public async Task<ActionResult<PaymentReadDto>>GetByIdAsync([FromRoute] Guid paymentId)
         {
-            var payment = await _paymentService.GetByIdAsynac (paymentId);
+            var payment = await _paymentService.GetByIdAsync (paymentId);
             return Ok(payment);
         }
 
@@ -58,8 +57,21 @@ namespace src.Controller
             return Created($"api/v1//payments/{paymentCreated.PaymentId}",paymentCreated);
         }
 
+          [HttpPut("{paymentId}")]
+        public async Task<ActionResult<PaymentReadDto>> UpdateOneAsync([FromRoute] Guid paymentId,[FromBody] PaymentUpdateDto updateDto)
+        {
+            var result = await _paymentService.UpdateOneAsync(paymentId, updateDto);
+            if (result == null)
+            {
+                return NotFound($"Payment with ID = {paymentId} not found.");
+            }
+            
+            var updatedPayment = await _paymentService.GetByIdAsync(paymentId); // Assuming you have a method to fetch the updated category
+            return Ok(updatedPayment);
+        }
+
         [HttpDelete("{paymentId}")]
-        public async Task<IActionResult> DeleteOne([FromRoute] Guid paymentId)
+        public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid paymentId)
         {
             var result = await _paymentService.DeleteOneAsync(paymentId);
             

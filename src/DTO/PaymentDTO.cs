@@ -6,7 +6,9 @@ namespace src.DTO
         public class PaymentBaseDto
         {
             public string PaymentMethod { get; set; }
+            
             public DateTime PaymentDate { get; set; }
+            
             public bool PaymentStatus { get; set; }
             public decimal TotalPrice { get; set; }
             public Guid CartId { get; set; }
@@ -25,7 +27,6 @@ namespace src.DTO
         // DTO for updating payments
         public class PaymentUpdateDto : PaymentBaseDto
         {
-            public Guid PaymentId { get; set; }
         }
 
         // DTO for deleting payments

@@ -11,5 +11,7 @@ namespace src.Entity
         // SubCategory primary id 
         public Guid SubCategoryId  { get; set; }
         public string? Name { get; set; }
+        public List<Product> Products { get; set; }
+
     }
 }    

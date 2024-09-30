@@ -35,7 +35,7 @@ public ProductsController(IProductService productService){
 
 
 
-        // view all the products in specific subcategory:
+        // view all the products
         [HttpGet]
         public async Task<ActionResult<List<GetProductDto>>>GetAllProducts()
         {
@@ -44,6 +44,7 @@ public ProductsController(IProductService productService){
          }
 
         // //view a specific product by Id
+        
         // [HttpGet("{id:guid}")]
         // public ActionResult GetProductById(Guid id)
         // {

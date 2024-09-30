@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -37,7 +38,7 @@ namespace src.Repository
         // {
         //     return await _categories.ToListAsync();
         // }
-        public async Task<Category?> GetByIdAsync(Guid id)
+        public async Task<Category> GetByIdAsync(Guid id)
         {
             return await _categories.FindAsync(id);
         }
@@ -56,5 +57,6 @@ namespace src.Repository
             return true;
             // return updateCategory;
         }
+
     }
 }   

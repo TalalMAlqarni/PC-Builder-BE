@@ -32,6 +32,7 @@ namespace src.Services.Payment
 
         public async Task<List<PaymentReadDto>> GetAllAsync()
         {
+            
             var paymentList= await _paymentRepo.GetAllAsync();
             return _mapper.Map<List<src.Entity.Payment>, List<PaymentReadDto>>(paymentList);
         }
@@ -80,6 +81,8 @@ namespace src.Services.Payment
         {
             throw new NotImplementedException();
         }
+
+
     }
 }
 

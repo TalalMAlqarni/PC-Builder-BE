@@ -5,29 +5,35 @@ using static src.DTO.CategoryDTO;
 
 namespace src.Controller
 {
+    
     [ApiController]
     [Route("api/v1/[controller]")]
     public class CategoryController : ControllerBase
     {
         protected readonly ICategoryService _categoryService;
-        public CategoryController(ICategoryService Service)
+        public CategoryController(ICategoryService service)
         {
-            _categoryService = Service;
+            _categoryService = service;
         }
 
        [HttpGet]
-        public async Task<ActionResult<List< CategoryCreateDto>>>GetAll()
+
+        public async Task<ActionResult<List<CategoryReadDto>>> GetAllCategories()
         {
-            var categoryList = await _categoryService.GetAllAsynac();
-            return Ok(categoryList);
+            var category_list = await _categoryService.GetAllAsync();
+            return Ok(category_list);
         }
 
+
+
+        //get cart by id: GET api/v1/Category/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<CategoryReadDto>>GetById([FromRoute] Guid id)
+        public async Task<ActionResult<CategoryReadDto>> GetCategoryById(Guid id)
         {
-            var category = await _categoryService.GetByIdAsynac (id);
+            var category = await _categoryService.GetByIdAsync(id);
             return Ok(category);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<CategoryReadDto>> CreateOne([FromBody] CategoryCreateDto createDto)
@@ -37,14 +43,37 @@ namespace src.Controller
             return Created($"api/v1/category/{categoryCreated.Id}",categoryCreated);
         }
         
-        [HttpDelete("{categoryName}")]
-        public async Task<IActionResult> DeleteOne(Guid id, [FromRoute] string categoryName)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<CategoryReadDto>> UpdateOneAsync([FromRoute] Guid id, [FromBody] CategoryUpdateDto updateDto)
         {
-            var result = await _categoryService.DeleteOneAsync(id, categoryName);
+            // First, check if the category exists
+            var category = await _categoryService.GetByIdAsync(id);
+            if (category == null)
+            {
+                return NotFound($"Category with ID = {id} not found.");
+            }
+
+            // Perform the update
+            var isUpdated = await _categoryService.UpdateOneAsync(id, updateDto);
+            if (isUpdated==null)
+            {
+                return StatusCode(500, "An error occurred while updating the category.");
+            }
+
+            // Fetch the updated category and return it
+            var updatedCategory = await _categoryService.GetByIdAsync(id);
+            return Ok(updatedCategory);
+        }
+
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
+        {
+            var result = await _categoryService.DeleteOneAsync(id);
             
             if (!result)
             {
-                return NotFound($"Category with Name = {categoryName} not found.");
+                return NotFound($"Category with ID = {id} not found.");
             }
             
             return NoContent(); // 204 No Content

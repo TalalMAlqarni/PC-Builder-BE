@@ -28,26 +28,25 @@ namespace src.Services.SubCategory
             return _mapper.Map<List<src.Entity.SubCategory>, List<SubCategoryReadDto>>(subCategoryList);
         }
 
-        public async Task<SubCategoryReadDto> GetByIdAsync(Guid subCategoryId)
+        public async Task<SubCategoryReadDto> GetByCategoryIdAsync(Guid id)
         {
-            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
+            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(id);
             return _mapper.Map<src.Entity.SubCategory, SubCategoryReadDto> (foundSubCategory);
         }
 
-        public async Task<bool> DeleteOneAsync(Guid subCategoryId)
+
+        public async Task<bool> DeleteOneAsync(Guid id, Guid subCategoryId)
         {
             var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
-           bool IsDeleted =await _subCategoryRepo.DeleteOneAsync(foundSubCategory);
-
-           if(IsDeleted)
-           {    
-            return true;
-           }
-           return false;
+            if (foundSubCategory == null || foundSubCategory.Id != id)
+            {
+                return false;  // Subcategory not found or belongs to different category
+            }
+            return await _subCategoryRepo.DeleteOneAsync(foundSubCategory);
 
         }
 
-        public async Task<bool> UpdateOneAsync(Guid subCategoryId, SubCategoryUpdateDto updateDto)
+        public async Task<bool> UpdateOneAsync(Guid id, Guid subCategoryId, SubCategoryUpdateDto updateDto)
         {
             var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
             var isUpdated = await _subCategoryRepo.UpdateOneAsync(foundSubCategory);
@@ -67,6 +66,21 @@ namespace src.Services.SubCategory
         }
 
         public Task<SubCategoryReadDto> GetByIdAsynac(Guid subCategoryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SubCategoryReadDto> GetByIdAsync(Guid subCategoryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateOneAsync(Guid subCategoryId, SubCategoryUpdateDto updateDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteOneAsync(Guid subCategoryId)
         {
             throw new NotImplementedException();
         }

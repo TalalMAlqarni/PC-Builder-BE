@@ -45,37 +45,31 @@ namespace src.Services.Category
         public async Task<bool> DeleteOneAsync(Guid id)
         {
             var foundCategory = await _categoryRepo.GetByIdAsync(id);
-           bool IsDeleted = await _categoryRepo.DeleteOneAsync(foundCategory);
-
-           if(IsDeleted)
-           {    
-            return true;
-           }
-           return false;
-
+            
+            if (foundCategory == null)
+            {
+                return false; // Category not found, return false
+            }
+            
+            return await _categoryRepo.DeleteOneAsync(foundCategory); // Proceed to delete
         }
+
 
         public async Task<bool> UpdateOneAsync(Guid id, CategoryUpdateDto updateDto)
         {
             var foundCategory = await _categoryRepo.GetByIdAsync(id);
-            var isUpdated = await _categoryRepo.UpdateOneAsync(foundCategory);
 
-            if (foundCategory==null)
+            if (foundCategory == null)
             {
-                return false;
+                return false; // Category not found
             }
 
+            // Map update DTO to the found entity and update it
             _mapper.Map(updateDto, foundCategory);
-            return await _categoryRepo.UpdateOneAsync(foundCategory);
-            
+            return await _categoryRepo.UpdateOneAsync(foundCategory); 
         }
 
-        public Task<List<CategoryReadDto>> GetAllAsynac()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<CategoryReadDto> GetByIdAsynac(Guid id)
+        public Task<CategoryReadDto> GetByNameAsync(string categoryName)
         {
             throw new NotImplementedException();
         }
@@ -85,15 +79,7 @@ namespace src.Services.Category
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateOneAsync(Guid id, string categoryName, CategoryUpdateDto updateDto)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<bool> DeleteOneAsync(string categoryName)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
 
