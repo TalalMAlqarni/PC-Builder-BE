@@ -11,6 +11,7 @@ using static src.DTO.UserDTO;
 using static src.DTO.OrderDTO;
 using static src.DTO.CartDTO;
 using static src.DTO.SubCategoryDTO;
+using Microsoft.Extensions.Options;
 
 namespace src.Utils
 {
@@ -76,6 +77,11 @@ namespace src.Utils
                 .ForAllMembers(options =>
                     options.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
+            CreateMap<CartDetailsDto, CartDetails>()
+                .ForAllMembers(options =>
+                    options.Condition((src, dest, srcProperty) => srcProperty != null)
+                );
+
         }
     }
 }

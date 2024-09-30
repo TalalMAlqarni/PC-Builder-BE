@@ -69,15 +69,38 @@ namespace src.Services.cart
 
         public async Task<CartReadDto> UpdateCartAsync(Guid id, CartUpdateDto updateDto)
         {
+
             var foundCart = await _cartRepo.GetCartByIdAsync(id);
 
-            if (foundCart == null)
-                return null;
+            foundCart.CartDetails.Clear();
 
-            _mapper.Map(updateDto, foundCart);
+
+            foreach (var detailsDto in updateDto.CartDetails)
+            {
+
+                var product = await _cartRepo.GetProductByIdForCartAsync(detailsDto.ProductId);
+                if (product == null)
+                {
+                    throw new Exception($"Product with ID {detailsDto.ProductId} not found");
+                }
+
+
+                var cartDetails = new CartDetails
+                {
+                    Product = product,
+                    Quantity = detailsDto.Quantity,
+                    CartId = foundCart.Id
+                };
+                foundCart.CartDetails.Add(cartDetails);
+            }
+
+            //_mapper.Map(updateDto, foundCart); //this line was causing an error
+
             var updatedCart = await _cartRepo.UpdateCartAsync(foundCart);
+
             return _mapper.Map<Cart, CartReadDto>(updatedCart);
         }
+
 
     }
 }
