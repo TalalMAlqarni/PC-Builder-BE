@@ -29,7 +29,7 @@ namespace src.Services.user
             var user = _mapper.Map<UserCreateDto, User>(createDto);
             user.Password = hashedPassword;
             user.Salt = salt;
-            user.Role = Rule.Customer;
+            user.Role = Role.Customer;
 
 
             var savedUser = await _userRepo.CreateOneAsync(user);

@@ -17,7 +17,6 @@ namespace src.DTO
             public string Email { get; set; }
             public string? PhoneNumber { get; set; }
             public DateOnly? BirthDate { get; set; }
-            public Rule? Role { get; set; }
             public string Password { get ; set ; }
            
         }
@@ -30,7 +29,7 @@ namespace src.DTO
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
             public DateOnly BirthDate { get; set; }
-            public Rule Role { get; set; }
+            public Role Role { get; set; }
             public string Password { get ; set ; }
             public Guid CartId { get; set; }
         }
@@ -42,7 +41,7 @@ namespace src.DTO
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
             public DateOnly BirthDate { get; set; }
-            public Rule Role { get; set; }
+            public Role Role { get; set; }
             public string Password { get ; set ; }
             public Guid CartId { get; set; }
         }

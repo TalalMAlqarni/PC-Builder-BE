@@ -22,7 +22,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
-dataSourceBuilder.MapEnum<Rule>();
+dataSourceBuilder.MapEnum<Role>();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {

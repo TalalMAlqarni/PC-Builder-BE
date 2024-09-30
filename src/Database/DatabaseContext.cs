@@ -19,7 +19,7 @@ namespace src.Database
         public DatabaseContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasPostgresEnum<Rule>();
+            modelBuilder.HasPostgresEnum<Role>();
         }
     }
 }
