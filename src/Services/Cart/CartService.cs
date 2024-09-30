@@ -2,6 +2,7 @@ using AutoMapper;
 using src.Repository;
 using src.Entity;
 using static src.DTO.CartDTO;
+using src.Utils;
 
 
 namespace src.Services.cart
@@ -30,10 +31,10 @@ namespace src.Services.cart
             {
                 //check if product exists
                 var product = await _cartRepo.GetProductByIdForCartAsync(detailsDto.ProductId);
+
                 if (product == null)
-                {
-                    throw new Exception("Product not found");
-                }
+                    throw CustomException.NotFound($"Product with ID {detailsDto.ProductId} not found");
+
                 // Create new CartDetails but reference the existing Product
                 var cartDetails = new CartDetails
                 {
@@ -50,6 +51,10 @@ namespace src.Services.cart
         public async Task<bool> DeleteCartByIdAsync(Guid id)
         {
             var foundCart = await _cartRepo.GetCartByIdAsync(id);
+
+            if (foundCart == null)
+                throw CustomException.NotFound($"Cart with ID {id} not found");
+
             bool isDeleted = await _cartRepo.DeleteCartAsync(foundCart);
             return isDeleted;
         }
@@ -57,7 +62,10 @@ namespace src.Services.cart
         public async Task<CartReadDto> GetCartByIdAsync(Guid id)
         {
             var foundCart = await _cartRepo.GetCartByIdAsync(id);
-            //handle not found
+
+            if (foundCart == null)
+                throw CustomException.NotFound($"Cart with ID {id} not found");
+
             return _mapper.Map<Cart, CartReadDto>(foundCart);
         }
 
@@ -72,6 +80,9 @@ namespace src.Services.cart
 
             var foundCart = await _cartRepo.GetCartByIdAsync(id);
 
+            if (foundCart == null)
+                throw CustomException.NotFound($"Cart with ID {id} not found");
+
             foundCart.CartDetails.Clear();
 
 
@@ -79,11 +90,9 @@ namespace src.Services.cart
             {
 
                 var product = await _cartRepo.GetProductByIdForCartAsync(detailsDto.ProductId);
-                if (product == null)
-                {
-                    throw new Exception($"Product with ID {detailsDto.ProductId} not found");
-                }
 
+                if (product == null)
+                    throw CustomException.NotFound($"Product with ID {detailsDto.ProductId} not found");
 
                 var cartDetails = new CartDetails
                 {
@@ -97,6 +106,9 @@ namespace src.Services.cart
             //_mapper.Map(updateDto, foundCart); //this line was causing an error
 
             var updatedCart = await _cartRepo.UpdateCartAsync(foundCart);
+
+            if (updatedCart == null)
+                throw CustomException.NotFound($"Cart with ID {id} not found");
 
             return _mapper.Map<Cart, CartReadDto>(updatedCart);
         }
