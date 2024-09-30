@@ -91,8 +91,8 @@ namespace scr.Controller
 
 
             // initialize new entry
-            newOrder.OrderDate = DateTime.Now;
-            newOrder.ShipDate = DateTime.Now.AddDays(deliveryDays);
+            newOrder.OrderDate = DateTime.Now.ToUniversalTime();
+            newOrder.ShipDate = DateTime.Now.AddDays(deliveryDays).ToUniversalTime();
             newOrder.OrderStatus = "Ordered";
             newOrder.IsDelivered = false;
             var createdOrder = await _orderService.CreateOneAsync(newOrder);
@@ -101,13 +101,9 @@ namespace scr.Controller
         }
 
         // Update current order status into ("shipped", "on delivery", "delivered")
-        [HttpPut("{orderId}/orderstatus/{orderStatus}")]
+        [HttpPut("{orderId}/orderstatus")]
         public async Task<ActionResult> UpdateOrderStatus(Guid orderId, OrderUpdateDTO updatedOrder)
         {
-            var foundOrder = await _orderService.GetByIdAsync(orderId);
-            if (foundOrder == null)
-                return NotFound("Order ID not found");
-
             bool foundOrderStatus = false;
             foreach (string status in orderStatuses)
             {
@@ -123,28 +119,24 @@ namespace scr.Controller
 
             // if order is delivered to the user
             if (updatedOrder.OrderStatus.Equals("delivered", StringComparison.OrdinalIgnoreCase))
-                foundOrder.IsDelivered = true;
+                updatedOrder.IsDelivered = true;
 
-            bool isUpdated = await _orderService.UpdateOneAsync(foundOrder.Id, updatedOrder);
+            bool isUpdated = await _orderService.UpdateOneAsync(orderId, updatedOrder);
 
-            return isUpdated ? NoContent() : StatusCode(500);
+            return isUpdated ? NoContent() : NotFound("Order ID not found");
 
         }
 
         // Updates the ship date into new one
-        [HttpPut("{orderId}/shipdate/{shipDate:datetime}")]
+        [HttpPut("{orderId}/shipdate")]
         public async Task<ActionResult> UpdateShipDate(Guid orderId, OrderUpdateDTO updatedOrder)
         {
-            var foundOrder = await _orderService.GetByIdAsync(orderId);
-            if (foundOrder == null)
-                return NotFound("Order ID not found");
-
             if (updatedOrder.ShipDate < DateTime.Now)
                 return BadRequest("Invalid ship date");
 
-            bool isUpdated = await _orderService.UpdateOneAsync(foundOrder.Id, updatedOrder);
+            bool isUpdated = await _orderService.UpdateOneAsync(orderId, updatedOrder);
 
-            return isUpdated ? NoContent() : StatusCode(500);
+            return isUpdated ? NoContent() : NotFound("Order ID not found");
         }
 
 
@@ -152,12 +144,8 @@ namespace scr.Controller
         [HttpDelete("{orderId}")]
         public async Task<ActionResult> CancelOrder(Guid orderId)
         {
-            var foundOrder = await _orderService.GetByIdAsync(orderId);
-            if (foundOrder == null)
-                return NotFound("Order ID not found");
-
             var isDeleted = await _orderService.DeleteOneAsync(orderId);
-            return isDeleted ? NoContent() : StatusCode(500);
+            return isDeleted ? NoContent() : NotFound("Order ID not found");
         }
     }
 }
