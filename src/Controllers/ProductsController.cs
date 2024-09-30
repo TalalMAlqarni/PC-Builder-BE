@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using src.Entity;
 using src.Services;
 using src.Services.product;
+using src.Utils;
 using static src.DTO.ProductDTO;
 
 namespace src.Controller
@@ -40,6 +41,16 @@ namespace src.Controller
             var products = await _productService.GetAllProductsAsync();
             return Ok(products);
         }
+        //get all products that match the search with pagination
+
+        [HttpGet("search")]
+        public async Task<ActionResult<List<GetProductDto>>> GetAllProductsBySearch(
+            [FromQuery] PaginationOptions paginationOptions
+        )
+        {
+            var productsList = await _productService.GetAllBySearchAsync(paginationOptions);
+            return Ok(productsList);
+        }
 
         //get product by id
 
@@ -52,7 +63,7 @@ namespace src.Controller
 
         //add product : it'll moved to the subcategory class
         [HttpPost] // had to check the endopoint
-       // [Authorize(Roles = "Admin")] //didn't test it yet
+        // [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult<GetProductDto>> CreateProduct(CreateProductDto productDto)
         {
             var newProduct = await _productService.CreateProductAsync(productDto);
@@ -82,7 +93,7 @@ namespace src.Controller
 
         //delete a product, it'll moved to the subcategory class
         [HttpDelete("{productId}")]
-       // [Authorize(Roles = "Admin")] //didn't test it yet
+        // [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult> DeleteProductById(Guid productId)
         {
             var toDelete = await _productService.DeleteProductByIdAsync(productId);
@@ -92,7 +103,7 @@ namespace src.Controller
         //edit on the product info , should it move to the subcategory class? also, how to add authorization here
 
         [HttpPut("{productId}")]
-       // [Authorize(Roles = "Admin")] //didn't test it yet
+        // [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult<GetProductDto>> UpdateProductInfo(
             Guid productId,
             UpdateProductInfoDto productInfoDto
@@ -104,6 +115,7 @@ namespace src.Controller
             );
             return Ok(updatedInfo);
         }
+
         // public ActionResult UpdateProductInfo(
         //     string attributeName,
         //     string newValue,

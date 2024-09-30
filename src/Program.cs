@@ -18,6 +18,7 @@ using src.Services.cart;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using src.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
@@ -97,7 +98,11 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine(ex.Message);
     }
 }
-
+// add middleware 
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 // Configure the HTTP request pipeline.
