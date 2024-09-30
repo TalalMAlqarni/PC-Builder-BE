@@ -28,13 +28,22 @@ namespace src.Repository
         //find cart by id
         public async Task<Cart?> GetCartByIdAsync(Guid id)
         {
-            return await _dbContext.Cart.FindAsync(id);
+            return await _dbContext.Cart
+                .Include(c => c.CartDetails)
+                    .ThenInclude(cd => cd.Product)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
+
+
 
         //delete cart
         public async Task<bool> DeleteCartAsync(Cart cart)
         {
-            //var cartDetails = _dbContext.CartDetails.Where(cd => cd.CartId == cart.Id).ToList();
+            var cartDetails = await _dbContext.CartDetails.Where(cd => cd.CartId == cart.Id).ToListAsync();
+            if (cartDetails.Any())
+            {
+                _dbContext.CartDetails.RemoveRange(cartDetails);
+            }
             _dbContext.Cart.Remove(cart);
             await _dbContext.SaveChangesAsync();
             return true;
@@ -51,7 +60,7 @@ namespace src.Repository
         //get all carts
         public async Task<List<Cart>> GetAllCartsAsync()
         {
-            return await _dbContext.Cart.ToListAsync();
+            return await _dbContext.Cart.Include(c => c.CartDetails).ThenInclude(cd => cd.Product).ToListAsync();
         }
     }
 }

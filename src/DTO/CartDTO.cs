@@ -8,10 +8,15 @@ namespace src.DTO
         public class CartCreateDto
         {
             public Guid UserId { get; set; }
-            public List<CartDetails> CartDetails { get; set; }
-            public int CartQuantity { get; set; }//Todo: should be auto calculated
-            public decimal TotalPrice { get; set; }//Todo: should be auto calculated
+            public List<CartDetailsDto> CartDetails { get; set; }
         }
+
+        public class CartDetailsDto
+        {
+            public Guid ProductId { get; set; }
+            public int Quantity { get; set; }
+        }
+
         //read cart
         public class CartReadDto
         {
