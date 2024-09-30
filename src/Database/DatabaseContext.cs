@@ -3,6 +3,7 @@ using src.Entity;
 
 namespace src.Database
 {
+   
     public class DatabaseContext : DbContext
     {
 
@@ -16,7 +17,9 @@ namespace src.Database
         public DbSet<User> User { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options) { }
-
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasPostgresEnum<Rule>();
+        }
     }
 }

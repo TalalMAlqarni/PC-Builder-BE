@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using src.Entity;
 
 namespace src.DTO
 {
@@ -9,15 +10,16 @@ namespace src.DTO
     {  
         public class UserCreateDto
         {
-            public string Username { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
+          
+            public string? Username { get; set; }
+            public string? FirstName { get; set; }
+            public string? LastName { get; set; }
             public string Email { get; set; }
-            public string PhoneNumber { get; set; }
-            public DateOnly BirthDate { get; set; }
-            public string Role { get; set; }
+            public string? PhoneNumber { get; set; }
+            public DateOnly? BirthDate { get; set; }
+            public Rule? Role { get; set; }
             public string Password { get ; set ; }
-            public byte[]? Salt { get; set; }
+           
         }
         public class UserReadDto
         {
@@ -28,9 +30,9 @@ namespace src.DTO
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
             public DateOnly BirthDate { get; set; }
-            public string Role { get; set; }
+            public Rule Role { get; set; }
             public string Password { get ; set ; }
-            public byte[]? Salt { get; set; }
+            public Guid CartId { get; set; }
         }
         public class UserUpdateDto
         {
@@ -40,8 +42,10 @@ namespace src.DTO
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
             public DateOnly BirthDate { get; set; }
-            public string Role { get; set; }
+            public Rule Role { get; set; }
             public string Password { get ; set ; }
+            public Guid CartId { get; set; }
         }
+        
     }
 }

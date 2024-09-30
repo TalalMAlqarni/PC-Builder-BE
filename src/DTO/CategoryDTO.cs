@@ -10,24 +10,23 @@ namespace src.DTO
     {
         public class CategoryCreateDto
         {
-            public string categoryName { get ; set;}
+            public string CategoryName { get ; set;}
         }
         public class CategoryReadDto
         {
             public Guid Id { get; set; }
-            public string categoryName { get; set; }    
-        }
+            public string CategoryName { get; set; }        }
 
         public class CategoryUpdateDto
         {
             public Guid Id { get; set; }
-            public string categoryName{ get; set; }
+            public string CategoryName{ get; set; }
         }
         
         public class CategoryDeleteDto
         {
             public Guid Id { get; set; }
-            public string categoryName{ get; set; }
+            public string CategoryName{ get; set; }
         }
     }
 }
