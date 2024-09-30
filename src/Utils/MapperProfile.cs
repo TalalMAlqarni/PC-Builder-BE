@@ -61,8 +61,12 @@ namespace src.Utils
 
             // Order mappings
             CreateMap<Order, OrderReadDTO>();
+            CreateMap<OrderCreateDTO, Order>();
             CreateMap<OrderReadDTO, Order>();
-            CreateMap<OrderUpdateDTO, Order>().ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
+            CreateMap<OrderUpdateDTO, Order>()
+                .ForAllMembers(opts =>
+                    opts.Condition((src, dest, srcProperty) => srcProperty != null)
+                );
 
             // Cart mappings
             CreateMap<Cart, CartReadDto>();
