@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using src.Database;
 using src.Entity;
+using src.Utils;
 
 namespace src.Repository
 {
@@ -20,6 +21,7 @@ namespace src.Repository
         //create new cart
         public async Task<Cart> CreateCartAsync(Cart newCart)
         {
+            CartUtils.CalculateCartFields(newCart);
             await _dbContext.Cart.AddAsync(newCart);
             await _dbContext.SaveChangesAsync();
             return newCart;
@@ -52,6 +54,7 @@ namespace src.Repository
         //update cart
         public async Task<Cart?> UpdateCartAsync(Cart cart)
         {
+            CartUtils.CalculateCartFields(cart);
             _dbContext.Cart.Update(cart);
             await _dbContext.SaveChangesAsync();
             return cart;
@@ -61,6 +64,12 @@ namespace src.Repository
         public async Task<List<Cart>> GetAllCartsAsync()
         {
             return await _dbContext.Cart.Include(c => c.CartDetails).ThenInclude(cd => cd.Product).ToListAsync();
+        }
+
+        //get product by id to use in cart
+        public async Task<Product?> GetProductByIdForCartAsync(Guid productId)
+        {
+            return await _dbContext.Product.FindAsync(productId);
         }
     }
 }

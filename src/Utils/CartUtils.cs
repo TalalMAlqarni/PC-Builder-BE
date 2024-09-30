@@ -13,7 +13,7 @@ namespace src.Utils
             }
             return "";
         }
-        public static void UpdateTPAndTQ(Cart cart)//must be called after adding or removing products
+        public static void CalculateCartFields(Cart cart)//must be called after adding or removing products
         {
             cart.CartQuantity = cart.CartDetails.Sum(cd => cd.Quantity);
             cart.TotalPrice = cart.CartDetails.Sum(cd => cd.Subtotal);

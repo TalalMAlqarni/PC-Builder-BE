@@ -18,7 +18,31 @@ namespace src.Services.cart
 
         public async Task<CartReadDto> CreateCartAsync(CartCreateDto createDto)
         {
-            var cart = _mapper.Map<CartCreateDto, Cart>(createDto);
+
+            var cart = new Cart
+            {
+                UserId = createDto.UserId,
+                CartDetails = new List<CartDetails>(),
+                CartQuantity = 0,
+                TotalPrice = 0
+            };
+            foreach (var detailsDto in createDto.CartDetails)
+            {
+                //check if product exists
+                var product = await _cartRepo.GetProductByIdForCartAsync(detailsDto.ProductId);
+                if (product == null)
+                {
+                    throw new Exception("Product not found");
+                }
+                // Create new CartDetails but reference the existing Product
+                var cartDetails = new CartDetails
+                {
+                    Product = product,
+                    Quantity = detailsDto.Quantity,
+                    CartId = cart.Id
+                };
+                cart.CartDetails.Add(cartDetails);
+            }
             var cartCreated = await _cartRepo.CreateCartAsync(cart);
             return _mapper.Map<Cart, CartReadDto>(cartCreated);
         }
