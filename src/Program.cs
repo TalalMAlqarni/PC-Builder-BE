@@ -103,6 +103,8 @@ app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+
+
 app.MapControllers();
 
 // Configure the HTTP request pipeline.
