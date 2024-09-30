@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using src.Database;
 using src.Entity;
 
@@ -37,7 +38,7 @@ namespace src.Repository
         //delete a product
         public async Task<bool> DeleteProductAsync(Product product)
         {
-            _products.Remove(product); //?
+            _products.Remove(product);
             await _databaseContext.SaveChangesAsync();
             return true;
         }

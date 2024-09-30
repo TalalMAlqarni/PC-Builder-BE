@@ -42,8 +42,8 @@ namespace src.Controller
 
         //get product by id
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<GetProductDto>> GetProductById(Guid productId)
+        [HttpGet("{id}")]   //check it again 
+        public async Task<ActionResult<GetProductDto>> GetProductById([FromRoute] Guid productId)
         {
             var isFound = await _productService.GetProductByIdAsync(productId);
             return Ok(isFound);
@@ -51,7 +51,7 @@ namespace src.Controller
 
         //add product : it'll moved to the subcategory class
         [HttpPost] // had to check the endopoint
-        public async Task<ActionResult> AddProduct(CreateProductDto productDto)
+        public async Task<ActionResult<GetProductDto>> CreateProduct(CreateProductDto productDto)
         {
             var newProduct = await _productService.CreateProductAsync(productDto);
             return CreatedAtAction(
@@ -59,6 +59,7 @@ namespace src.Controller
                 new { id = newProduct.ProductId },
                 newProduct
             );
+            
         }
 
         // //search on a specific product byname
@@ -83,7 +84,7 @@ namespace src.Controller
         public async Task<ActionResult> DeleteProductById(Guid productId)
         {
             var toDelete = await _productService.DeleteProductByIdAsync(productId);
-            return NoContent();
+            return Ok();
         }
 
         //edit on the product info , should it move to the subcategory class? also, how to add authorization here
