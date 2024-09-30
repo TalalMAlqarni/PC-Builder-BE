@@ -31,9 +31,9 @@ namespace src.DTO
         //update cart
         public class CartUpdateDto
         {
-            public List<CartDetails> CartDetails { get; set; }
-            public int CartQuantity { get; set; }//Todo: should be auto calculated
-            public decimal TotalPrice { get; set; }//Todo: should be auto calculated
+            public List<CartDetailsDto> CartDetails { get; set; }
+            public int CartQuantity { get; set; }
+            public decimal TotalPrice { get; set; }
         }
     }
 }
