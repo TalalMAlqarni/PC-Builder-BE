@@ -35,7 +35,7 @@ namespace src.Repository
         }
         public async Task<List<Order>> GetByUserIdAsync(Guid userId)
         {
-            return await _order.Where(o => o.UserId == userId && o.IsDelivered).ToListAsync();
+            return await _order.Where(o => o.UserId == userId && !o.IsDelivered).ToListAsync();
         }
         public async Task<List<Order>> GetByHistoryUserIdAsync(Guid userId)
         {
