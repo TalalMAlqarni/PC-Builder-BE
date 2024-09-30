@@ -44,11 +44,11 @@ namespace src.Repository
         }
 
         //edit on a product
-        public async Task<bool> UpdateProductInfoAsync(Product product)
+        public async Task<Product?> UpdateProductInfoAsync(Product product)
         {
-            _products.Update(product);
-            await _databaseContext.SaveChangesAsync();
-            return true;
+           _products.Update(product);
+           await _databaseContext.SaveChangesAsync();
+            return product;
         }
     }
 }

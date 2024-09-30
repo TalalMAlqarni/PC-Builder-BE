@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
 using src.Services;
@@ -42,24 +43,24 @@ namespace src.Controller
 
         //get product by id
 
-        [HttpGet("{id}")]   //check it again 
-        public async Task<ActionResult<GetProductDto>> GetProductById([FromRoute] Guid productId)
+        [HttpGet("{productId}")] //check it again
+        public async Task<ActionResult<GetProductDto>> GetProductById(Guid productId)
         {
-            var isFound = await _productService.GetProductByIdAsync(productId);
-            return Ok(isFound);
+            //var isFound = await _productService.GetProductByIdAsync(productId);
+            return Ok(await _productService.GetProductByIdAsync(productId));
         }
 
         //add product : it'll moved to the subcategory class
         [HttpPost] // had to check the endopoint
+       // [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult<GetProductDto>> CreateProduct(CreateProductDto productDto)
         {
             var newProduct = await _productService.CreateProductAsync(productDto);
             return CreatedAtAction(
-                nameof(newProduct),
+                nameof(CreateProduct),
                 new { id = newProduct.ProductId },
                 newProduct
             );
-            
         }
 
         // //search on a specific product byname
@@ -80,7 +81,8 @@ namespace src.Controller
 
 
         //delete a product, it'll moved to the subcategory class
-        [HttpDelete("{id}")]
+        [HttpDelete("{productId}")]
+       // [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult> DeleteProductById(Guid productId)
         {
             var toDelete = await _productService.DeleteProductByIdAsync(productId);
@@ -89,7 +91,8 @@ namespace src.Controller
 
         //edit on the product info , should it move to the subcategory class? also, how to add authorization here
 
-        [HttpPut("{id}")]
+        [HttpPut("{productId}")]
+       // [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult<GetProductDto>> UpdateProductInfo(
             Guid productId,
             UpdateProductInfoDto productInfoDto
@@ -138,7 +141,5 @@ namespace src.Controller
         //     }
         //     return Ok(isFound);
         // }
-
-
     }
 }
