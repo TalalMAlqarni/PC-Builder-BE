@@ -1,4 +1,5 @@
 using src.Entity;
+using src.Utils;
 using static src.DTO.ProductDTO;
 
 namespace src.Services.product {
@@ -12,6 +13,13 @@ Task<GetProductDto> CreateProductAsync (CreateProductDto createProductDto);
 
 //get all products 
 Task<List<GetProductDto>> GetAllProductsAsync();
+
+//search for a product with pagination 
+Task<List<GetProductDto>>GetAllBySearchAsync(PaginationOptions paginationOptions);
+
+//sort functionality test: 
+
+// Task<List<GetProductDto>>GetAllBySortAsync(SortOptions sortOptions);
 
 //get product by id
 Task<GetProductDto> GetProductByIdAsync (Guid id);

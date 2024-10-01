@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using src.Database;
 using src.Entity;
 using Microsoft.EntityFrameworkCore;
+using src.Utils;
 
 namespace src.Repository
 {
@@ -25,21 +26,23 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return newOrder;
         }
-        public async Task<List<Order>> GetAllAsync()
+        public async Task<List<Order>> GetAllAsync(PaginationOptions paginationOptions)
         {
-            return await _order.ToListAsync();
+            return await _order.Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
         }
         public async Task<Order?> GetByIdAsync(Guid id)
         {
             return await _order.FindAsync(id);
         }
-        public async Task<List<Order>> GetByUserIdAsync(Guid userId)
+        public async Task<List<Order>> GetByUserIdAsync(Guid userId, PaginationOptions paginationOptions)
         {
-            return await _order.Where(o => o.UserId == userId && o.IsDelivered).ToListAsync();
+            return await _order.Where(o => o.UserId == userId && !o.IsDelivered)
+                .Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
         }
-        public async Task<List<Order>> GetByHistoryUserIdAsync(Guid userId)
+        public async Task<List<Order>> GetByHistoryUserIdAsync(Guid userId, PaginationOptions paginationOptions)
         {
-            return await _order.Where(o => o.UserId == userId && o.IsDelivered).ToListAsync();
+            return await _order.Where(o => o.UserId == userId && o.IsDelivered)
+                .Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
         }
         public async Task<bool> UpdateOneAsync(Order updateOrder)
         {

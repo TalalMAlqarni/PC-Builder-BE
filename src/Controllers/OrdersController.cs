@@ -1,7 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using src.Entity;
 using src.Services;
 using static src.DTO.OrderDTO;
+using src.Utils;
 
 namespace scr.Controller
 {
@@ -10,23 +11,6 @@ namespace scr.Controller
     public class OrdersController : ControllerBase
     {
         protected IOrderService _orderService;
-        public static List<Order> orders = new List<Order>() {
-            // Testing instance
-            new Order
-            {
-            Id = Guid.NewGuid(),
-            CartId = Guid.NewGuid(),
-            PaymentId = Guid.NewGuid(),
-            UserId = Guid.NewGuid(),
-            OrderDate = DateTime.Now,
-            ShipDate = DateTime.Now.AddDays(deliveryDays),
-            OrderStatus="Ordered",
-            Address = "some address",
-            City = "some city",
-            State="some state",
-            PostalCode=12345
-            }
-         };
         public static int deliveryDays = 2;
         public readonly static string[] orderStatuses = { "ordered", "shipped", "on delivery", "delivered" };
 
@@ -35,14 +19,16 @@ namespace scr.Controller
             _orderService = orderService;
         }
         // Gets all available orders.
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<ActionResult<List<OrderReadDTO>>> GetAllOrders()
+        public async Task<ActionResult<List<OrderReadDTO>>> GetAllOrders([FromQuery] PaginationOptions paginationOptions)
         {
-            var ordersList = await _orderService.GetAllAsync();
+            var ordersList = await _orderService.GetAllAsync(paginationOptions);
             return Ok(ordersList.OrderByDescending(o => o.OrderDate));
         }
 
         // Gets a specific order by it's ID
+        [Authorize]
         [HttpGet("{orderId}")]
         public async Task<ActionResult<OrderReadDTO>> GetOrderById([FromRoute] Guid orderId)
         {
@@ -52,62 +38,42 @@ namespace scr.Controller
             return Ok(foundOrder);
         }
         // Gets a user's orders by its ID in ascending.
+        [Authorize]
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<List<OrderReadDTO>>> GetOrdersByUserID([FromRoute] Guid userId)
+        public async Task<ActionResult<List<OrderReadDTO>>> GetOrdersByUserID([FromRoute] Guid userId,
+            [FromQuery] PaginationOptions paginationOptions)
         {
-            var userOrders = await _orderService.GetByUserIdAsync(userId);
+            var userOrders = await _orderService.GetByUserIdAsync(userId, paginationOptions);
             return Ok(userOrders.OrderBy(o => o.OrderDate));
         }
 
         // Gets a user's old orders by its ID in descending.
+        [Authorize]
         [HttpGet("user/{userId}/ordershistory")]
-        public async Task<ActionResult<List<OrderReadDTO>>> GetOrdersHistoryByUserID([FromRoute] Guid userId)
+        public async Task<ActionResult<List<OrderReadDTO>>> GetOrdersHistoryByUserID([FromRoute] Guid userId,
+            [FromQuery] PaginationOptions paginationOptions)
         {
-            var userOrders = await _orderService.GetHistoryByUserIdAsync(userId);
+            var userOrders = await _orderService.GetHistoryByUserIdAsync(userId, paginationOptions);
             return Ok(userOrders.OrderByDescending(o => o.OrderDate));
         }
 
 
-        // Post new order to the order list
+        // Post new order to the order database
+        [Authorize]
         [HttpPost("checkout")]
         public async Task<ActionResult<OrderReadDTO>> CreateOrder([FromBody] OrderCreateDTO newOrder)
         {
-            // validate entries
-            if (newOrder.UserId == Guid.Empty)
-                return BadRequest("Empty userId");
-            if (newOrder.CartId == Guid.Empty)
-                return BadRequest("Empty cartId");
-            if (newOrder.PaymentId == Guid.Empty)
-                return BadRequest("Empty paymentId");
-            if (string.IsNullOrEmpty(newOrder.Address))
-                return BadRequest("Empty address");
-            if (string.IsNullOrEmpty(newOrder.City))
-                return BadRequest("Empty city");
-            if (string.IsNullOrEmpty(newOrder.State))
-                return BadRequest("Empty state");
-            if (newOrder.PostalCode == 0)
-                return BadRequest("Empty postalCode");
-
-
-
-            // initialize new entry
-            newOrder.OrderDate = DateTime.Now;
-            newOrder.ShipDate = DateTime.Now.AddDays(deliveryDays);
-            newOrder.OrderStatus = "Ordered";
-            newOrder.IsDelivered = false;
             var createdOrder = await _orderService.CreateOneAsync(newOrder);
-
-            return Created($"api/v1/orders/{createdOrder.Id}", createdOrder);
+            return createdOrder != null ?
+                Created($"api/v1/orders/{createdOrder.Id}", createdOrder) :
+                BadRequest("One of products is out of stock");
         }
 
         // Update current order status into ("shipped", "on delivery", "delivered")
-        [HttpPut("{orderId}/orderstatus/{orderStatus}")]
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{orderId}/orderstatus")]
         public async Task<ActionResult> UpdateOrderStatus(Guid orderId, OrderUpdateDTO updatedOrder)
         {
-            var foundOrder = await _orderService.GetByIdAsync(orderId);
-            if (foundOrder == null)
-                return NotFound("Order ID not found");
-
             bool foundOrderStatus = false;
             foreach (string status in orderStatuses)
             {
@@ -121,43 +87,33 @@ namespace scr.Controller
             if (!foundOrderStatus)
                 return NotFound("Invalid order status");
 
-            // if order is delivered to the user
-            if (updatedOrder.OrderStatus.Equals("delivered", StringComparison.OrdinalIgnoreCase))
-                foundOrder.IsDelivered = true;
+            bool isUpdated = await _orderService.UpdateOneAsync(orderId, updatedOrder);
 
-            bool isUpdated = await _orderService.UpdateOneAsync(foundOrder.Id, updatedOrder);
-
-            return isUpdated ? NoContent() : StatusCode(500);
+            return isUpdated ? NoContent() : NotFound("Order ID not found");
 
         }
 
         // Updates the ship date into new one
-        [HttpPut("{orderId}/shipdate/{shipDate:datetime}")]
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{orderId}/shipdate")]
         public async Task<ActionResult> UpdateShipDate(Guid orderId, OrderUpdateDTO updatedOrder)
         {
-            var foundOrder = await _orderService.GetByIdAsync(orderId);
-            if (foundOrder == null)
-                return NotFound("Order ID not found");
-
             if (updatedOrder.ShipDate < DateTime.Now)
                 return BadRequest("Invalid ship date");
 
-            bool isUpdated = await _orderService.UpdateOneAsync(foundOrder.Id, updatedOrder);
+            bool isUpdated = await _orderService.UpdateOneAsync(orderId, updatedOrder);
 
-            return isUpdated ? NoContent() : StatusCode(500);
+            return isUpdated ? NoContent() : NotFound("Order ID not found");
         }
 
 
-        // Cancel the current order by deleting it from orders list
+        // Cancel the current order by deleting it from orders database
+        [Authorize]
         [HttpDelete("{orderId}")]
         public async Task<ActionResult> CancelOrder(Guid orderId)
         {
-            var foundOrder = await _orderService.GetByIdAsync(orderId);
-            if (foundOrder == null)
-                return NotFound("Order ID not found");
-
             var isDeleted = await _orderService.DeleteOneAsync(orderId);
-            return isDeleted ? NoContent() : StatusCode(500);
+            return isDeleted ? NoContent() : NotFound("Order ID not found");
         }
     }
 }

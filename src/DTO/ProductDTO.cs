@@ -34,12 +34,12 @@ namespace src.DTO
         //UPDATE PRODUCT INFO
 
         public class UpdateProductInfoDto
-        
         {
             public string ProductName { get; set; }
             public string ProductColor { get; set; }
             public string Description { get; set; }
             public int SKU { get; set; }
+            public decimal ProductPrice { get; set; }
             public decimal Weight { get; set; }
         }
     }
