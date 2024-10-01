@@ -22,6 +22,7 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return newSubCategory;
         }
+
         
         public async Task<List<SubCategory>> GetAllAsync()
         {

@@ -3,6 +3,8 @@ namespace src.Entity
     public class Product
     {
 
+        public Guid SubCategoryId { get; set; }
+        public SubCategory SubCategory { get; set; }
 
         public Guid ProductId { get; set; }
         public string? ProductName { get; set; }
@@ -10,7 +12,7 @@ namespace src.Entity
 
         public string? ProductColor { get; set; }
 
-        public string Descreption {get;set;}
+        public string Description {get;set;}
 
         public int SKU { get; set; }
 
@@ -21,10 +23,6 @@ namespace src.Entity
 
         // public string? Barcode { get; set; } 
 
-        public decimal RatingResult { get; set; } //Idk how I'll use it here
-
-        // Foreign key to SubCategory
-        public Guid SubCategoryId { get; set; }
-        public SubCategory Name { get; set; }
+        //public decimal RatingResult { get; set; } //Idk how I'll use it here
     }
 }

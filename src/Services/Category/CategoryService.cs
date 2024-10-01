@@ -55,20 +55,23 @@ namespace src.Services.Category
         }
 
 
-        public async Task<bool> UpdateOneAsync(Guid id, CategoryUpdateDto updateDto)
+    public async Task<bool> UpdateOneAsync(Guid id, CategoryUpdateDto updateDto)
+    {
+        // Retrieve the category by ID from the repository
+        var foundCategory = await _categoryRepo.GetByIdAsync(id);
+
+        if (foundCategory == null)
         {
-            var foundCategory = await _categoryRepo.GetByIdAsync(id);
-
-            if (foundCategory == null)
-            {
-                return false; // Category not found
-            }
-
-            // Map update DTO to the found entity and update it
-            _mapper.Map(updateDto, foundCategory);
-            return await _categoryRepo.UpdateOneAsync(foundCategory); 
+            return false; // Category not found
         }
 
+        // Map the update DTO to the existing category entity
+        // _mapper.Map(updateDto, foundCategory);
+
+        // Save the updated category in the repository
+        return await _categoryRepo.UpdateOneAsync(id,foundCategory);
+
+    }
         public Task<CategoryReadDto> GetByNameAsync(string categoryName)
         {
             throw new NotImplementedException();
@@ -79,7 +82,10 @@ namespace src.Services.Category
             throw new NotImplementedException();
         }
 
-
+        Task<bool> ICategoryService.UpdateOneAsync(Guid id, CategoryUpdateDto updatedCategory)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

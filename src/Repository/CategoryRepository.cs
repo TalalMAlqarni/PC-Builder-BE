@@ -49,14 +49,15 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return true;
         }  
-         public async Task<bool> UpdateOneAsync(Category updateCategory)
-        // public async Task<Category> UpdateOneAsync(Category updateCategory)
+        
+        public async Task<bool> UpdateOneAsync(Guid id,Category updateDto)
         {
-            _categories.Update(updateCategory);
+            _categories.Update(updateDto);
             await _databaseContext.SaveChangesAsync();
             return true;
-            // return updateCategory;
         }
+
+
 
     }
 }   

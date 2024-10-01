@@ -8,6 +8,8 @@ namespace src.Entity
     {
         public Guid Id { get; set; }
         public string? CategoryName { get; set; }
+        public List<SubCategory>? SubCategory { get; set; }
+
     }
 
 }

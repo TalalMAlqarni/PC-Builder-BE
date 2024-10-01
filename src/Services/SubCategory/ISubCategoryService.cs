@@ -9,7 +9,7 @@ namespace src.Services.SubCategory
 {
     public interface ISubCategoryService
     {
-        Task<SubCategoryReadDto> CreateOneAsync(SubCategoryCreateDto createDto);
+        Task<SubCategoryReadDto> CreateOneAsync(Guid id,SubCategoryCreateDto createDto);
         Task<List<SubCategoryReadDto>> GetAllAsync();
         Task<SubCategoryReadDto> GetByIdAsync(Guid subCategoryId);
 
@@ -18,5 +18,6 @@ namespace src.Services.SubCategory
         Task<bool> DeleteOneAsync(string name);
         Task<bool> UpdateOneAsync(Guid id, Guid subCategoryId, SubCategoryUpdateDto updateDto);
         Task<bool> DeleteOneAsync(Guid id, Guid subCategoryId);
+        Task CreateOneAsync(Entity.SubCategory subCategory);
     }
 }

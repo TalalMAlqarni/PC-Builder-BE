@@ -12,23 +12,25 @@ namespace src.DTO
     {
         public class SubCategoryCreateDto
         {
+            // public Guid Id;
+
             public string Name { get ; set;}
-            public Guid Id { get ; set;}
-            public List <Product> products { get; set; }
+            // public Guid Id { get ; set;}
+            // public List <Product>? products { get; set; }
 
         }
         public class SubCategoryReadDto
         {
-            public Guid SubCategoryId { get; set; }
+            // public Guid SubCategoryId { get; set; }
             public string Name { get; set; }
-            public Guid Id { get ; set;}
+            // public List<GetProductDto?> Products { get; set; }
 
 
         }
 
         public class SubCategoryUpdateDto
         {
-            public Guid SubCategoryId { get; set; }
+            // public Guid SubCategoryId { get; set; }
             public string Name{ get; set; }
             public Guid Id { get ; set;}
 

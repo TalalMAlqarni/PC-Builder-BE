@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
 using src.Services;
@@ -10,9 +11,8 @@ namespace src.Controller
     [Route("api/v1/[controller]")]
     public class ProductsController : ControllerBase
     {
-
-
         protected readonly IProductService _productService;
+
         /*The standard user privileges:
         view the product/products
         search for product by name
@@ -28,35 +28,40 @@ namespace src.Controller
 */
 
 
-public ProductsController(IProductService productService){
-
-    _productService=productService;
-}
-
-
+        public ProductsController(IProductService productService)
+        {
+            _productService = productService;
+        }
 
         // view all the products
         [HttpGet]
-        public async Task<ActionResult<List<GetProductDto>>>GetAllProducts()
+        public async Task<ActionResult<List<GetProductDto>>> GetAllProducts()
         {
             var products = await _productService.GetAllProductsAsync();
             return Ok(products);
-         }
+        }
 
-        // //view a specific product by Id
-        
-        // [HttpGet("{id:guid}")]
-        // public ActionResult GetProductById(Guid id)
-        // {
-        //     Product? isFound = products.FirstOrDefault(x => x.ProductId == id);
+        //get product by id
 
-        //     if (isFound == null)
-        //     {
-        //         return NotFound();
-        //     }
+        [HttpGet("{productId}")] //check it again
+        public async Task<ActionResult<GetProductDto>> GetProductById(Guid productId)
+        {
+            //var isFound = await _productService.GetProductByIdAsync(productId);
+            return Ok(await _productService.GetProductByIdAsync(productId));
+        }
 
-        //     return Ok(isFound);
-        // }
+        //add product : it'll moved to the subcategory class
+        [HttpPost] // had to check the endopoint
+       // [Authorize(Roles = "Admin")] //didn't test it yet
+        public async Task<ActionResult<GetProductDto>> CreateProduct(CreateProductDto productDto)
+        {
+            var newProduct = await _productService.CreateProductAsync(productDto);
+            return CreatedAtAction(
+                nameof(CreateProduct),
+                new { id = newProduct.ProductId },
+                newProduct
+            );
+        }
 
         // //search on a specific product byname
         // [HttpGet("{name}")] //?
@@ -74,23 +79,31 @@ public ProductsController(IProductService productService){
         //     return Ok(result);
         // }
 
-        // //delete a specific product
 
-        // [HttpDelete("{id}")]
-        // public ActionResult DeleteProductById(Guid id)
-        // {
-        //     //Add the condition (if user_role is admin, otherwise it will not be allowed)
-        //     Product? isFound = products.FirstOrDefault(x => x.ProductId == id);
+        //delete a product, it'll moved to the subcategory class
+        [HttpDelete("{productId}")]
+       // [Authorize(Roles = "Admin")] //didn't test it yet
+        public async Task<ActionResult> DeleteProductById(Guid productId)
+        {
+            var toDelete = await _productService.DeleteProductByIdAsync(productId);
+            return Ok();
+        }
 
-        //     if (isFound == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     products.Remove(isFound);
-        //     return NoContent();
-        // }
+        //edit on the product info , should it move to the subcategory class? also, how to add authorization here
 
-        // [HttpPut("{id}")]
+        [HttpPut("{productId}")]
+       // [Authorize(Roles = "Admin")] //didn't test it yet
+        public async Task<ActionResult<GetProductDto>> UpdateProductInfo(
+            Guid productId,
+            UpdateProductInfoDto productInfoDto
+        )
+        {
+            var updatedInfo = await _productService.UpdateProductInfoAsync(
+                productId,
+                productInfoDto
+            );
+            return Ok(updatedInfo);
+        }
         // public ActionResult UpdateProductInfo(
         //     string attributeName,
         //     string newValue,
@@ -128,16 +141,5 @@ public ProductsController(IProductService productService){
         //     }
         //     return Ok(isFound);
         // }
-
-        //add product to the cart:
-        /*
-        public ActionResult AddProduct (Product product) {
-
-        //if all the conditions are met, add the product to cart list:
-
-        carts.Add(product);
-        }
-
-        */
     }
 }
