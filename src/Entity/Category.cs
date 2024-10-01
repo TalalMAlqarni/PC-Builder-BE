@@ -10,6 +10,8 @@ namespace src.Entity
         public string? CategoryName { get; set; }
         public List<SubCategory>? SubCategory { get; set; }
 
+        public Guid SubCategoryId { get; set; }
+
     }
 
 }
