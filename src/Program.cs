@@ -43,7 +43,6 @@ builder
     .AddScoped<IPaymentService, PaymentService>().AddScoped<PaymentRepository, PaymentRepository>()
     .AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>();
 
-// add logic for auth
 builder.Services
 .AddAuthentication(options =>
 {
@@ -63,7 +62,7 @@ builder.Services
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
-// auth for admin
+//auth for admin
 // role
 builder.Services.AddAuthorization(options =>
 {
