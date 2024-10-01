@@ -11,7 +11,12 @@ namespace src.Services.review
     {
         protected readonly ReviewRepository _reviewRepo;
         protected readonly IMapper _mapper;
-        public async Task<ReadReviewDto> CreateReviewAsync(ReviewDTO.CreateReviewDto createDto)
+        public ReviewService(ReviewRepository reviewRepo, IMapper mapper)
+        {
+            _reviewRepo = reviewRepo;
+            _mapper = mapper;
+        }
+        public async Task<ReadReviewDto> CreateReviewAsync(CreateReviewDto createDto)
         {
             var review = _mapper.Map<Review>(createDto);
             var reviewCreated = await _reviewRepo.CreateReviewAsync(review);
