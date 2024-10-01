@@ -64,6 +64,8 @@ namespace src.Services
         public async Task<OrderReadDTO> GetByIdAsync(Guid id)
         {
             var foundOrder = await _orderRepository.GetByIdAsync(id);
+            if (foundOrder == null)
+                throw CustomException.NotFound($"Order with ID {id} not found");
             return _mapper.Map<Order, OrderReadDTO>(foundOrder);
         }
 
@@ -94,8 +96,9 @@ namespace src.Services
         }
         public async Task<bool> DeleteOneAsync(Guid id)
         {
-
             var foundOrder = await _orderRepository.GetByIdAsync(id);
+            if (foundOrder == null)
+                throw CustomException.NotFound($"Order with ID {id} not found");
             return await _orderRepository.DeleteOneAsync(foundOrder);
         }
     }

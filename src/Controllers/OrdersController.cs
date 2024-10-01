@@ -11,7 +11,6 @@ namespace scr.Controller
     public class OrdersController : ControllerBase
     {
         protected IOrderService _orderService;
-        public static int deliveryDays = 2;
         public readonly static string[] orderStatuses = { "ordered", "shipped", "on delivery", "delivered" };
 
         public OrdersController(IOrderService orderService)
@@ -69,10 +68,10 @@ namespace scr.Controller
                 BadRequest("One of products is out of stock");
         }
 
-        // Update current order status into ("shipped", "on delivery", "delivered")
+        // Update current order status into ("shipped", "on delivery", "delivered") or the ship date into new one.
         [Authorize(Roles = "Admin")]
-        [HttpPut("{orderId}/orderstatus")]
-        public async Task<ActionResult> UpdateOrderStatus(Guid orderId, OrderUpdateDTO updatedOrder)
+        [HttpPut("{orderId}")]
+        public async Task<ActionResult> UpdateOrder(Guid orderId, OrderUpdateDTO updatedOrder)
         {
             bool foundOrderStatus = false;
             foreach (string status in orderStatuses)
@@ -87,26 +86,14 @@ namespace scr.Controller
             if (!foundOrderStatus)
                 return NotFound("Invalid order status");
 
-            bool isUpdated = await _orderService.UpdateOneAsync(orderId, updatedOrder);
-
-            return isUpdated ? NoContent() : NotFound("Order ID not found");
-
-        }
-
-        // Updates the ship date into new one
-        [Authorize(Roles = "Admin")]
-        [HttpPut("{orderId}/shipdate")]
-        public async Task<ActionResult> UpdateShipDate(Guid orderId, OrderUpdateDTO updatedOrder)
-        {
             if (updatedOrder.ShipDate < DateTime.Now)
                 return BadRequest("Invalid ship date");
 
             bool isUpdated = await _orderService.UpdateOneAsync(orderId, updatedOrder);
 
             return isUpdated ? NoContent() : NotFound("Order ID not found");
+
         }
-
-
         // Cancel the current order by deleting it from orders database
         [Authorize]
         [HttpDelete("{orderId}")]
