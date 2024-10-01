@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
 using src.Services.Category;
@@ -30,6 +31,7 @@ namespace src.Controller
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CategoryReadDto>> CreateOne([FromBody] CategoryCreateDto createDto)
         {
             var categoryCreated = await _categoryService.CreateOneAsync(createDto);
@@ -38,6 +40,7 @@ namespace src.Controller
         }
         
         [HttpDelete("{categoryName}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteOne(Guid id, [FromRoute] string categoryName)
         {
             var result = await _categoryService.DeleteOneAsync(id, categoryName);
