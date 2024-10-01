@@ -38,7 +38,6 @@ namespace src.DTO
         {
             public DateTime ShipDate { get; set; }
             public string? OrderStatus { get; set; }
-
         }
 
     }
