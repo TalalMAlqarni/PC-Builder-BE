@@ -45,7 +45,6 @@ builder
     .AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>()
     .AddScoped<IReviewService, ReviewService>().AddScoped<ReviewRepository, ReviewRepository>();
 
-// add logic for auth
 builder.Services
 .AddAuthentication(options =>
 {
@@ -65,7 +64,7 @@ builder.Services
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
-// auth for admin
+//auth for admin
 // role
 builder.Services.AddAuthorization(options =>
 {

@@ -72,19 +72,16 @@ namespace src.Controllers
             }
             return Ok(foundUser);
         }
+        [Authorize]
         [HttpGet]
         
         public async Task<ActionResult<List<UserReadDto>>> GetAll()
         {
             var userList = await _userService.GetAllAsync();
-            if(userList.Count == 0)
-            {
-                throw CustomException.NotFound("User table is empty");
-            }
-            else 
-            {
-                return Ok(userList);
-            }
+             
+           
+            return Ok(userList);
+            
         }
          [HttpDelete("{userId}")]
         public async Task<ActionResult> CancelOrder(Guid userId)
