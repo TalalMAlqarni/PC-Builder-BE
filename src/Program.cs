@@ -19,11 +19,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using src.Middlewares;
+using static src.Entity.User;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
-dataSourceBuilder.MapEnum<Rule>();
+dataSourceBuilder.MapEnum<UserRole>();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
