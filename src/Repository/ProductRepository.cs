@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using src.Database;
@@ -52,8 +53,9 @@ namespace src.Repository
             return product;
         }
 
+        //get all with applying the pagination & search
         public async Task<List<Product>> GetAllResults(PaginationOptions paginationOptions)
-        { // check the naming 
+        { // check the naming convention
             var result = _products.Where(x =>
                 x.ProductName.ToLower().Contains(paginationOptions.Search.ToLower())
             );
@@ -63,6 +65,26 @@ namespace src.Repository
                 .ToListAsync();
         }
 
+        //get all with using sort
+        public async Task<List<Product>> GetAllByAscSortAsync(SortOptions sortOption)
+        {
+            var result = await _products.ToListAsync();
+            if (sortOption.Equals(SortOption.PriceAsc))
+            {
+                result = await _products.OrderBy(x => x.ProductPrice).ToListAsync();
+            }
+            else if (sortOption.Equals(SortOption.SKUAsc))
+            {
+                result = await _products.OrderBy(x => x.SKU).ToListAsync();
+            }
+
+            return result;
+        }
+
+        public async Task<List<Product?>> GetAllByDescSortAsync(SortOptions sortOption)
+        {
+            return await _products.ToListAsync();
+        }
         // public async Task<List<Product>> GetResultsBySortAsync (SortOptions sortOptions){
 
         //     var result = _products.Where(x => x.ProductPrice).
