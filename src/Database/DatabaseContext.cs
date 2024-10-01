@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using src.Entity;
+using static src.Entity.User;
 
 namespace src.Database
 {
@@ -19,7 +20,7 @@ namespace src.Database
         public DatabaseContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasPostgresEnum<Rule>();
+            modelBuilder.HasPostgresEnum<UserRole>();
         }
     }
 }

@@ -44,7 +44,7 @@ namespace src.Repository
         {
             _user.Update(updateUser);
             await _databaseContext.SaveChangesAsync();
-            return true; ;
+            return true;
         }
 
          // find user by email
