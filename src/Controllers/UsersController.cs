@@ -25,7 +25,30 @@ namespace src.Controllers
         public async Task<ActionResult<UserReadDto>> CreateOne(UserCreateDto createDto)
         {
             var userCreated = await _userService.CreateOneAsync(createDto);
-            return Ok(userCreated);
+            if(createDto.Email == null)
+            {
+                throw CustomException.BadRequest("You cant leave Email empty");
+            }
+            if(createDto.PhoneNumber == null)
+            {
+                throw CustomException.BadRequest("You cant leave phone number empty");
+            }
+            if(createDto.Username == null)
+            {
+                throw CustomException.BadRequest("You cant leave Username empty");
+            }
+            if(createDto.FirstName == null)
+            {
+                throw CustomException.BadRequest("You cant leave First name empty");
+            }
+            if(createDto.LastName == null)
+            {
+                throw CustomException.BadRequest("You cant leave Last name empty");
+              
+            }
+            
+                return Ok(userCreated);
+           
         }
         // log in
         [HttpPost("signIn")]
@@ -33,6 +56,10 @@ namespace src.Controllers
         {
             var token = await _userService.SignInAsync(createDto);
             //return Created($"api/v1/users/{UserCreated.Id}", UserCreated);
+            // if(token )
+            // {
+            //     throw CustomException.UnAuthorized("Unauthorized access");
+            // }
             return Ok(token);
         }
         [HttpGet("{userId}")]
@@ -50,7 +77,14 @@ namespace src.Controllers
         public async Task<ActionResult<List<UserReadDto>>> GetAll()
         {
             var userList = await _userService.GetAllAsync();
-            return Ok(userList);
+            if(userList.Count == 0)
+            {
+                throw CustomException.NotFound("User table is empty");
+            }
+            else 
+            {
+                return Ok(userList);
+            }
         }
          [HttpDelete("{userId}")]
         public async Task<ActionResult> CancelOrder(Guid userId)
