@@ -31,7 +31,7 @@ namespace src.Controllers
         public async Task<ActionResult<ReadReviewDto>> CreateReview(CreateReviewDto createDto)
         {
             var review = await _reviewService.CreateReviewAsync(createDto);
-            return CreatedAtAction(nameof(GetReviewById), new { id = review.Id }, review);
+            return CreatedAtAction(nameof(GetReviewById), new { id = review.ReviewId }, review);
         }
 
         // update review: PUT api/v1/review/{id}
