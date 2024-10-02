@@ -73,7 +73,7 @@ namespace src.Controllers
             return Ok(foundUser);
         }
         [HttpGet]
-        
+        [Authorize]
         public async Task<ActionResult<List<UserReadDto>>> GetAll()
         {
             var userList = await _userService.GetAllAsync();

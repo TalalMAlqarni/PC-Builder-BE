@@ -22,7 +22,6 @@ namespace src.Controller
         }
 
        [HttpGet]
-
         public async Task<ActionResult<List<CategoryReadDto>>> GetAllCategories()
         {
             var category_list = await _categoryService.GetAllAsync();
@@ -133,20 +132,21 @@ namespace src.Controller
     // }
 
 // POST subcategory under a category
-[HttpPost("{id}/subcategories")]
-public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory(Guid id, [FromBody] SubCategoryCreateDto createDto)
-{
-    // Call the service method to create the subcategory
-    var subCategoryCreated = await _subCategoryService.CreateOneAsync(id, createDto);
+// [HttpPost("{id}/subcategories")]
+// [HttpPost]
+// public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory(Guid id, [FromBody] SubCategoryCreateDto createDto)
+// {
+//     // Call the service method to create the subcategory
+//     var subCategoryCreated = await _subCategoryService.CreateOneAsync(id, createDto);
 
-    if (subCategoryCreated == null)
-    {
-        return NotFound($"Category with ID = {id} not found.");
-    }
+//     if (subCategoryCreated == null)
+//     {
+//         return NotFound($"Category with ID = {id} not found.");
+//     }
 
-    // Return the created subcategory with a 201 status code
-    return Ok(subCategoryCreated);
-}
+//     // Return the created subcategory with a 201 status code
+//     return Ok(subCategoryCreated);
+// }
 
     // [HttpPost("{id}/subcategories")]
     // public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory( [FromBody] SubCategoryCreateDto createDto)
@@ -176,28 +176,28 @@ public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory(Guid id, [
 
 
     // DELETE subcategory under a category
-    [HttpDelete("{id}/subcategories/{subCategoryId}")]
-    public async Task<ActionResult> DeleteSubCategory(Guid id, Guid subCategoryId)
-    {
-        var result = await _subCategoryService.DeleteOneAsync(id, subCategoryId);
-        if (!result)
-        {
-            return NotFound();
-        }
-        return NoContent();
-    }
+    // [HttpDelete("{id}/subcategories/{subCategoryId}")]
+    // public async Task<ActionResult> DeleteSubCategory(Guid id, Guid subCategoryId)
+    // {
+    //     var result = await _subCategoryService.DeleteOneAsync(id, subCategoryId);
+    //     if (!result)
+    //     {
+    //         return NotFound();
+    //     }
+    //     return NoContent();
+    // }
 
-    // UPDATE subcategory under a category
-    [HttpPut("{id}/subcategories/{subCategoryId}")]
-    public async Task<ActionResult> UpdateSubCategory(Guid id, Guid subCategoryId, [FromBody] SubCategoryUpdateDto updateDto)
-    {
-        var result = await _subCategoryService.UpdateOneAsync(id, subCategoryId, updateDto);
-        if (!result)
-        {
-            return NotFound();
-        }
-        return NoContent();
-    }   
+    // // UPDATE subcategory under a category
+    // [HttpPut("{id}/subcategories/{subCategoryId}")]
+    // public async Task<ActionResult> UpdateSubCategory(Guid id, Guid subCategoryId, [FromBody] SubCategoryUpdateDto updateDto)
+    // {
+    //     var result = await _subCategoryService.UpdateOneAsync(id, subCategoryId, updateDto);
+    //     if (!result)
+    //     {
+    //         return NotFound();
+    //     }
+    //     return NoContent();
+    // }   
     
     }
 }

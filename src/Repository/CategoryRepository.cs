@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using src.Database;
 using src.Entity;
-using src.Repository;
 
+using src.Utils;
 namespace src.Repository
 {
     public class CategoryRepository
@@ -34,14 +30,25 @@ namespace src.Repository
         {
             return await _categories.ToListAsync();
         }
-        // public async Task<List<Category>> GetByIdAsync()
-        // {
-        //     return await _categories.ToListAsync();
-        // }
-        public async Task<Category> GetByIdAsync(Guid id)
+         public async Task<Category> GetByIdAsync(Guid id)
         {
             return await _categories.FindAsync(id);
         }
+//TRYING TO ADD SUBCATEGORIES UNDER A CATEGORY 
+// public async Task<List<Category>> GetAllAsync()
+// {
+//     // Include subcategories when retrieving categories
+//     return await _categories.Include(c => c.SubCategory).ToListAsync();
+// }
+
+// public async Task<Category> GetByIdAsync(Guid id)
+// {
+//     // Include subcategories when retrieving a category by ID
+//     return await _categories.Include(c => c.SubCategory)
+//                             .FirstOrDefaultAsync(c => c.Id == id);
+// }
+
+
 
         public async Task<bool> DeleteOneAsync(Category category)
         {

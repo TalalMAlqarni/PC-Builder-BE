@@ -14,14 +14,13 @@ namespace src.DTO
         {
             
             public string CategoryName { get ; set;}
-            public List<SubCategoryCreateDto>? SubCategory { get; set; }
+            // public List<SubCategoryCreateDto>? SubCategory { get; set; }
         }
         public class CategoryReadDto
         {
             public Guid Id { get; set; }
             public string CategoryName { get; set; }        
             public List<SubCategoryUpdateDto>? SubCategory { get; set; }
-    
         }
 
         public class CategoryUpdateDto

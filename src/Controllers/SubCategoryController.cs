@@ -6,6 +6,7 @@ using src.Services.product;
 using static src.DTO.SubCategoryDTO;
 using static src.DTO.ProductDTO;
 using Microsoft.EntityFrameworkCore;
+using src.Utils;
 
 namespace src.Controller
 {
@@ -25,60 +26,80 @@ namespace src.Controller
         }
 
        
-    //    [HttpGet]
-    //     public async Task<ActionResult<List<SubCategoryCreateDto>>>GetAllAsync()
-    //     {
-    //         var subCategoryList = await _subCategoryService.GetAllAsync();
-    //         return Ok(subCategoryList);
-    //     }
-        
-    //     [HttpGet("{subCategoryId}")]
-    //     public async Task<ActionResult<SubCategoryReadDto>>GetByIdAsync([FromRoute] Guid subCategoryId)
-    //     {
-    //         var subCategory = await _subCategoryService.GetByIdAsync (subCategoryId);
-    //         return Ok(subCategory);
-    //     }
+       [HttpGet]
+        public async Task<ActionResult<List<SubCategoryReadDto>>>GetAllAsync()
+        {
+            var subCategoryList = await _subCategoryService.GetAllAsync();
+            return Ok(subCategoryList);
+        }
 
+        
+        
+        [HttpGet("{subCategoryId}")]
+        public async Task<ActionResult<SubCategoryReadDto>>GetByIdAsync([FromRoute] Guid subCategoryId)
+        {
+            var subCategory = await _subCategoryService.GetByIdAsync (subCategoryId);
+            return Ok(subCategory);
+        }
+        //get all products that match the search with pagination
+
+        [HttpGet("search")]
+        public async Task<ActionResult<List<SubCategoryReadDto>>> GetAllSubCategpryBySearch(
+            [FromQuery] PaginationOptions paginationOptions
+        )
+        {
+            var subCategpryList = await _subCategoryService.GetAllBySearchAsync(paginationOptions);
+            return Ok(subCategpryList);
+        }
         // [HttpGet("{id}/subcategories")]
         // public async Task<ActionResult<List<SubCategoryReadDto>>> GetSubCategoriesByCategory(Guid id)
         // {
-        //     var subcategories = await _subCategoryService.GetByIdAsync(id);
+        //     var subcategories = await _subCategoryService.GetByIdAsync();
         //     return Ok(subcategories);
         // }
 
-        // [HttpPost]
-        // public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
-        // {
-        //     var subCategoryCreated = await _subCategoryService.CreateOneAsync(createDto);
-        //     return Ok(subCategoryCreated);
-        //     // return Created($"api/v1/category/{subCategoryCreated.SubCategoryId}",subCategoryCreated);
-        // }
-
-        // [HttpPut("{id}/subcategories/{subCategoryId}")]
-        // public async Task<ActionResult<SubCategoryReadDto>> UpdateSubCategory(Guid id, Guid subCategoryId, [FromBody] SubCategoryUpdateDto updateDto)
-        // {
-        //     var result = await _subCategoryService.UpdateOneAsync(id, subCategoryId, updateDto);
-        //     if (!result)
-        //     {
-        //         return NotFound($"Subcategory with ID = {subCategoryId} not found.");
-        //     }
-            
-        //     var updatedSubCategory = await _subCategoryService.GetByIdAsync(subCategoryId);
-        //     return Ok(updatedSubCategory);
-        // }
-
-        [HttpDelete("{id}/subcategories/{subCategoryId}")]
-        public async Task<IActionResult> DeleteSubCategory(Guid id, Guid subCategoryId)
+        [HttpPost]
+        public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
         {
-            var result = await _subCategoryService.DeleteOneAsync(id, subCategoryId);
+            var subCategoryCreated = await _subCategoryService.CreateOneAsync(createDto);
+            
+            if (subCategoryCreated == null)
+            {
+                return BadRequest("SubCategory creation failed. Category might not exist.");
+            }
+
+            return Ok(subCategoryCreated); // Or use the CreatedAtAction method if you prefer
+        }
+
+
+        [HttpPut("{subCategoryId}")]
+        public async Task<ActionResult<SubCategoryReadDto>> UpdateSubCategory( [FromRoute] Guid subCategoryId, [FromBody] SubCategoryUpdateDto updateDto)
+        {
+            var result = await _subCategoryService.UpdateOneAsync(subCategoryId, updateDto);
+
+            if (result==null)
+            {
+                return NotFound($"Subcategory with ID = {subCategoryId} not found.");
+            }
+
+            // Optionally, return the updated SubCategory data
+            var updatedSubCategory = await _subCategoryService.GetByIdAsync(subCategoryId);
+            return Ok(updatedSubCategory);
+        }
+
+
+        [HttpDelete("{subCategoryId}")]
+        public async Task<IActionResult> DeleteSubCategory( Guid subCategoryId)
+        {
+            var result = await _subCategoryService.DeleteOneAsync(subCategoryId);
             if (!result)
             {
                 return NotFound($"Subcategory with ID = {subCategoryId} not found.");
             }
-            return NoContent();
+            return NoContent(); 
         }
 
-         // view all the products
+        //  view all the products
         [HttpGet]
         public async Task<ActionResult<List<GetProductDto>>> GetAllProductsAsync()
         {

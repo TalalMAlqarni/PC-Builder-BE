@@ -15,17 +15,21 @@ namespace src.DTO
             // public Guid Id;
 
             public string Name { get ; set;}
-            // public Guid Id { get ; set;}
+            public Guid CategoryId { get ; set;}
             // public List <Product>? products { get; set; }
 
         }
+  
         public class SubCategoryReadDto
         {
-            // public Guid SubCategoryId { get; set; }
+            public Guid SubCategoryId { get; set; }
             public string Name { get; set; }
+
+            public Guid CategoryId{ get; set; }
+            // public Category Category { get; set; }
+            public string CategoryName { get; set; } // Add CategoryName property
+// if i would like to see all category details
             // public List<GetProductDto?> Products { get; set; }
-
-
         }
 
         public class SubCategoryUpdateDto
