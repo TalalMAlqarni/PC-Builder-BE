@@ -19,7 +19,7 @@ namespace src.DTO
 
         public class ReadReviewDto
         {
-            public Guid Id { get; set; }
+            public Guid ReviewId { get; set; }
             public Guid ProductId { get; set; }
             public Guid UserId { get; set; }
             public int Rating { get; set; }
