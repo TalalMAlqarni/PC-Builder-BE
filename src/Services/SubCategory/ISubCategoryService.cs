@@ -10,7 +10,7 @@ namespace src.Services.SubCategory
 {
     public interface ISubCategoryService
     {
-        Task<SubCategoryReadDto> CreateOneAsync(SubCategoryCreateDto createDto);
+        Task<SubCategoryReadDto> CreateOneAsync(SubCategoryCreateDto newSubCategory);
         Task<List<SubCategoryReadDto>> GetAllAsync();
         Task<SubCategoryReadDto> GetByIdAsync(Guid subCategoryId);
         Task<List<SubCategoryReadDto>>GetAllBySearchAsync(PaginationOptions paginationOptions);

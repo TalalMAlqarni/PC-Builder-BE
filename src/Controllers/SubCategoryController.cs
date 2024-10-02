@@ -41,27 +41,27 @@ namespace src.Controller
             var subCategory = await _subCategoryService.GetByIdAsync (subCategoryId);
             return Ok(subCategory);
         }
-        //get all products that match the search with pagination
+        //Get all subcategories that match the search using pagination
 
-        [HttpGet("search")]
-        public async Task<ActionResult<List<SubCategoryReadDto>>> GetAllSubCategpryBySearch(
-            [FromQuery] PaginationOptions paginationOptions
-        )
-        {
-            var subCategpryList = await _subCategoryService.GetAllBySearchAsync(paginationOptions);
-            return Ok(subCategpryList);
-        }
+        // [HttpGet("search")]
+        // public async Task<ActionResult<List<SubCategoryReadDto>>> GetAllSubCategpryBySearch(
+        //     [FromQuery] PaginationOptions paginationOptions
+        // )
+        // {
+        //     var subCategpryList = await _subCategoryService.GetAllBySearchAsync(paginationOptions);
+        //     return Ok(subCategpryList);
+        // }
         // [HttpGet("{id}/subcategories")]
         // public async Task<ActionResult<List<SubCategoryReadDto>>> GetSubCategoriesByCategory(Guid id)
         // {
         //     var subcategories = await _subCategoryService.GetByIdAsync();
         //     return Ok(subcategories);
         // }
-
-        [HttpPost]
-        public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
+[Authorize]
+     [HttpPost]
+        public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto subCategory)
         {
-            var subCategoryCreated = await _subCategoryService.CreateOneAsync(createDto);
+            var subCategoryCreated = await _subCategoryService.CreateOneAsync(subCategory);
             
             if (subCategoryCreated == null)
             {
@@ -70,7 +70,7 @@ namespace src.Controller
 
             return Ok(subCategoryCreated); // Or use the CreatedAtAction method if you prefer
         }
-
+  
 
         [HttpPut("{subCategoryId}")]
         public async Task<ActionResult<SubCategoryReadDto>> UpdateSubCategory( [FromRoute] Guid subCategoryId, [FromBody] SubCategoryUpdateDto updateDto)
@@ -100,12 +100,12 @@ namespace src.Controller
         }
 
         //  view all the products
-        [HttpGet]
-        public async Task<ActionResult<List<GetProductDto>>> GetAllProductsAsync()
-        {
-            var products = await _productService.GetAllProductsAsync();
-            return Ok(products);
-        }
+        // [HttpGet]
+        // public async Task<ActionResult<List<GetProductDto>>> GetAllProductsAsync()
+        // {
+        //     var products = await _productService.GetAllProductsAsync();
+        //     return Ok(products);
+        // }
 
         //get product by id
 

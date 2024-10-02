@@ -8,6 +8,8 @@ using src.Utils;
 using src.Services.user;
 using static src.DTO.UserDTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using static src.Entity.User;
 
 namespace src.Controllers
 {   [ApiController]
@@ -46,12 +48,36 @@ namespace src.Controllers
                 throw CustomException.BadRequest("You cant leave Last name empty");
               
             }
-            
-                return Ok(userCreated);
+                // if(userCreated.Email.Contains("@admin.com"))
+                // {
+                //     userCreated.Role = UserRole.Admin;
+                //     return Ok(userCreated);
+                // }
+                // else {
+                    userCreated.Role = UserRole.Customer;
+                    return Ok(userCreated);
+                //}
+                
            
         }
+        //create admin
+        // [HttpPost("signIn/admin")]
+        // [Authorize]
+        // public async Task<ActionResult<string>> SignInUser([FromBody] UserCreateDto createDto)
+        // {
+        //     var token = await _userService.SignInAsync(createDto);
+        //    if(token != null)
+        //    {
+        //         if(createDto.Email == "Admin@gmail.com")
+        //         {
+        //             [HttpPut] 
+        //         }
+        //    }
+        //     return Ok(token);
+        // }
         // log in
         [HttpPost("signIn")]
+        
         public async Task<ActionResult<string>> SignInUser([FromBody] UserCreateDto createDto)
         {
             var token = await _userService.SignInAsync(createDto);
@@ -63,6 +89,7 @@ namespace src.Controllers
             return Ok(token);
         }
         [HttpGet("{userId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserReadDto>> GetOrderById([FromRoute] Guid userId)
         {
             var foundUser = await _userService.GetByIdAsync(userId);
@@ -73,20 +100,15 @@ namespace src.Controllers
             return Ok(foundUser);
         }
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserReadDto>>> GetAll()
         {
             var userList = await _userService.GetAllAsync();
-            if(userList.Count == 0)
-            {
-                throw CustomException.NotFound("User table is empty");
-            }
-            else 
-            {
+           
                 return Ok(userList);
-            }
+            
         }
-         [HttpDelete("{userId}")]
+        [HttpDelete("{userId}")]
         public async Task<ActionResult> CancelOrder(Guid userId)
         {
             var foundUser = await _userService.GetByIdAsync(userId);

@@ -41,7 +41,7 @@ namespace src.Services.SubCategory
         //         Name = newSubCategory.Name,
         //     };
         //     return subCategoryReadDto;
-//         // }
+        // }
 // public async Task<SubCategoryReadDto> CreateOneAsync(SubCategoryCreateDto createDto)
 // {
 //     var category = await _categoryRepo.GetByIdAsync(createDto.CategoryId); // Make sure this works
@@ -83,7 +83,7 @@ public async Task<SubCategoryReadDto> CreateOneAsync(SubCategoryCreateDto create
     };
 
     // Save the new subcategory to the repository
-    await _subCategoryRepo.AddAsync(newSubCategory);
+    var savedSubCategory = await _subCategoryRepo.AddAsync(newSubCategory);
 
     // Map the SubCategory entity to SubCategoryReadDto
     var subCategoryReadDto = new SubCategoryReadDto
@@ -194,17 +194,17 @@ public async Task<List<SubCategoryReadDto>> GetAllAsync()
     return subCategoryReadDto;
 }
 
-  public async Task<List<SubCategoryReadDto>> GetAllBySearchAsync( 
-            PaginationOptions paginationOptions
-        )
-        {
-            var subCategoryList = await _subCategoryRepo.GetAllResults(paginationOptions);
-            if (subCategoryList.Count ==0)
-            {
-                throw CustomException.NotFound($"No results found");
-            }
-            return _mapper.Map<List<src.Entity.SubCategory>, List<SubCategoryReadDto>>(subCategoryList);
-        }
+//   public async Task<List<SubCategoryReadDto>> GetAllBySearchAsync( 
+//             PaginationOptions paginationOptions
+//         )
+//         {
+//             var subCategoryList = await _subCategoryRepo.GetAllResults(paginationOptions);
+//             if (subCategoryList.Count ==0)
+//             {
+//                 throw CustomException.NotFound($"No results found");
+//             }
+//             return _mapper.Map<List<src.Entity.SubCategory>, List<SubCategoryReadDto>>(subCategoryList);
+//         }
 
 public async Task<bool> DeleteOneAsync(Guid subCategoryId)
 {
@@ -264,5 +264,15 @@ public async Task<bool> DeleteOneAsync(Guid subCategoryId)
             throw new NotImplementedException();
         }
 
+        public Task<List<SubCategoryReadDto>> GetAllBySearchAsync(PaginationOptions paginationOptions)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        // public Task<List<SubCategoryReadDto>> GetAllBySearchAsync(PaginationOptions paginationOptions)
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 }

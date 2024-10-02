@@ -17,12 +17,12 @@ namespace src.Repository
             _subCategories =databaseContext.Set<SubCategory>();
         }
 
-        // public async Task<SubCategory> CreateOneAsync(SubCategory newSubCategory)
-        // {
-        //     await _subCategories.AddAsync(newSubCategory);
-        //     await _databaseContext.SaveChangesAsync();
-        //     return newSubCategory;
-        // }
+        public async Task<SubCategory> CreateOneAsync(SubCategory newSubCategory)
+        {
+            await _subCategories.AddAsync(newSubCategory);
+            await _databaseContext.SaveChangesAsync();
+            return newSubCategory;
+        }
         public async Task<SubCategory> AddAsync(SubCategory newSubCategory)
         {
             // Add the subcategory entity to the DbSet
@@ -30,22 +30,11 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return newSubCategory;
         }
-        //         public async Task AddAsync(SubCategory newSubCategory)
-        // {
-        //     // Add the subcategory entity to the DbSet
-        //     await _subCategories.AddAsync(newSubCategory);
-        //     await _databaseContext.SaveChangesAsync();
-        // }
+ 
 
         public async Task<List<SubCategory>> GetAllAsync()
 {
-    // var subCategories = await _subCategories.ToListAsync();
-    //             await _databaseContext.SaveChangesAsync();
 
-    // // Check if data is being retrieved
-    // Console.WriteLine("SubCategory count in repo: " + subCategories.Count);
-    
-    // return subCategories;
         return await _subCategories.Include(sb => sb.Category).ToListAsync();
 
     
@@ -81,15 +70,15 @@ namespace src.Repository
         }
 
         
-        public async Task<List<SubCategory>> GetAllResults(PaginationOptions paginationOptions)
-        { // check the naming 
-            var result = _subCategories.Where(sc =>
-                sc.Name.ToLower().Contains(paginationOptions.Search.ToLower())
-            );
-            return await result
-                .Skip(paginationOptions.Offset)
-                .Take(paginationOptions.Limit)
-                .ToListAsync();
-        }
+        // public async Task<List<SubCategory>> GetAllResults(PaginationOptions paginationOptions)
+        // { // check the naming 
+        //     var result = _subCategories.Where(sc =>
+        //         sc.Name.ToLower().Contains(paginationOptions.Search.ToLower())
+        //     );
+        //     return await result
+        //         .Skip(paginationOptions.Offset)
+        //         .Take(paginationOptions.Limit)
+        //         .ToListAsync();
+        // }
     }
 }   
