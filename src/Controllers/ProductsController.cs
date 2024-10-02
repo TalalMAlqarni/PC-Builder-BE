@@ -35,12 +35,32 @@ namespace src.Controller
         }
 
         // view all the products in specific subcategory:
+        // [AllowAnonymous]
+        // [HttpGet]
+        // public async Task<ActionResult<List<GetProductDto>>> GetAllProducts()
+        // {
+        //     var products = await _productService.GetAllProductsAsync();
+        //     return Ok(products);
+        // }
+        
+        [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<List<GetProductDto>>> GetAllProducts()
+        public async Task<ActionResult<List<GetProductDto>>> GetAllProducts([FromQuery]SearchProcess to_search)
         {
-            var products = await _productService.GetAllProductsAsync();
+            var products = await _productService.GetAllAsync(to_search);
             return Ok(products);
         }
+
+        [AllowAnonymous]
+        [HttpGet("filter")]
+        public async Task<ActionResult<List<Product>>> FilterProducts(
+            [FromQuery] FilterationOptions pf
+        )
+        {
+            var products = await _productService.GetAllByFilterationAsync(pf);
+            return Ok(products);
+        }
+
         //get all products that match the search with pagination
 
         [HttpGet("search")]
@@ -50,6 +70,16 @@ namespace src.Controller
         {
             var productsList = await _productService.GetAllBySearchAsync(paginationOptions);
             return Ok(productsList);
+        }
+
+        //sort
+        [HttpGet("sort")]
+        public async Task<ActionResult<List<GetProductDto>>> GetAllBySort(
+            [FromQuery] SortOptions sortOption
+        )
+        {
+            var products = await _productService.GetAllBySortAsync(sortOption);
+            return Ok(products);
         }
 
         //get product by id
@@ -99,8 +129,6 @@ namespace src.Controller
             var toDelete = await _productService.DeleteProductByIdAsync(productId);
             return Ok();
         }
-
-        
 
         [HttpPut("{productId}")]
         // [Authorize(Roles = "Admin")] //didn't test it yet

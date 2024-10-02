@@ -1,11 +1,6 @@
-using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Npgsql;
 using src.Database;
-using src.Entity;
 using src.Repository;
 using src.Services.Category;
 using src.Services.Payment;

@@ -72,6 +72,7 @@ namespace src.Controllers
             }
             return Ok(foundUser);
         }
+      //  [Authorize]
         [HttpGet]
         
         public async Task<ActionResult<List<UserReadDto>>> GetAll()
