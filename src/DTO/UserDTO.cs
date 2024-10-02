@@ -19,7 +19,12 @@ namespace src.DTO
             public string? PhoneNumber { get; set; }
             public DateOnly? BirthDate { get; set; }
             public string Password { get ; set ; }
-           
+            public UserRole Role { get; internal set; }
+
+            public static implicit operator UserCreateDto(string v)
+            {
+                throw new NotImplementedException();
+            }
         }
         public class UserReadDto
         {

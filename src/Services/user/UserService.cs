@@ -54,7 +54,7 @@ namespace src.Services.user
             }
 
             // string
-            return "Unauthorized";
+           throw CustomException.UnAuthorized($"user with {foundUser.Email} password doesnt match");
         }
         // get by id
         public async Task<UserReadDto> GetByIdAsync(Guid id)

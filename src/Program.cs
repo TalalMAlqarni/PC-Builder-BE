@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using src.Middlewares;
 using static src.Entity.User;
+using src.Services.review;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
@@ -36,9 +37,9 @@ builder
     .AddScoped<ICategoryService, CategoryService>().AddScoped<CategoryRepository, CategoryRepository>()
     .AddScoped<ISubCategoryService, SubCategoryService>().AddScoped<SubCategoryRepository, SubCategoryRepository>()
     .AddScoped<IPaymentService, PaymentService>().AddScoped<PaymentRepository, PaymentRepository>()
-    .AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>();
+    .AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>()
+    .AddScoped<IReviewService, ReviewService>().AddScoped<ReviewRepository, ReviewRepository>();
 
-// add logic for auth
 builder.Services
 .AddAuthentication(options =>
 {
@@ -58,7 +59,7 @@ builder.Services
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
-// auth for admin
+//auth for admin
 // role
 builder.Services.AddAuthorization(options =>
 {
