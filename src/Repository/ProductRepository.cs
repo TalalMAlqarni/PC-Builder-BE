@@ -85,6 +85,21 @@ namespace src.Repository
                             ? query.OrderByDescending(x => x.SKU)
                             : query.OrderBy(x => x.SKU);
                 }
+                  else if (sortOption.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase))
+                {
+                    query =
+                        sortOption.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AverageRating)
+                            : query.OrderBy(x => x.AverageRating);
+                }
+                else if (sortOption.SortBy.Equals("date",StringComparison.OrdinalIgnoreCase)){
+
+                      query =
+                        sortOption.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AddedDate)
+                            : query.OrderBy(x => x.AddedDate);
+
+                }
             }
             return await query.ToListAsync();
         }
