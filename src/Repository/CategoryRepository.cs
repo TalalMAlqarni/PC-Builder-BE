@@ -28,27 +28,18 @@ namespace src.Repository
         
         public async Task<List<Category>> GetAllAsync()
         {
-            return await _categories.ToListAsync();
+            return await _categories.Include(sc=>sc.SubCategory).  
+            ThenInclude(p => p.Products)
+            .ToListAsync();
         }
+
          public async Task<Category> GetByIdAsync(Guid id)
         {
-            return await _categories.FindAsync(id);
+             return await _categories
+                .Include(c => c.SubCategory)
+                .ThenInclude(p => p.Products)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
-//TRYING TO ADD SUBCATEGORIES UNDER A CATEGORY 
-// public async Task<List<Category>> GetAllAsync()
-// {
-//     // Include subcategories when retrieving categories
-//     return await _categories.Include(c => c.SubCategory).ToListAsync();
-// }
-
-// public async Task<Category> GetByIdAsync(Guid id)
-// {
-//     // Include subcategories when retrieving a category by ID
-//     return await _categories.Include(c => c.SubCategory)
-//                             .FirstOrDefaultAsync(c => c.Id == id);
-// }
-
-
 
         public async Task<bool> DeleteOneAsync(Category category)
         {
@@ -57,14 +48,11 @@ namespace src.Repository
             return true;
         }  
         
-        public async Task<bool> UpdateOneAsync(Guid id,Category updateDto)
+        public async Task<bool> UpdateOneAsync(Category updateCategory)
         {
-            _categories.Update(updateDto);
+            _categories.Update(updateCategory);
             await _databaseContext.SaveChangesAsync();
             return true;
         }
-
-
-
     }
 }   

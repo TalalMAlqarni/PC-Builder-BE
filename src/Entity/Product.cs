@@ -1,3 +1,5 @@
+using src.DTO;
+
 namespace src.Entity
 {
     public class Product

@@ -19,7 +19,7 @@ Task<List<GetProductDto>>GetAllBySearchAsync(PaginationOptions paginationOptions
 
 //sort functionality test: 
 
-// Task<List<GetProductDto>>GetAllBySortAsync(SortOptions sortOptions);
+Task<List<GetProductDto>>GetAllBySortAsync(SortOptions sortOptions);
 
 //get product by id
 Task<GetProductDto> GetProductByIdAsync (Guid id);

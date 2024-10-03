@@ -34,8 +34,6 @@ namespace src.Services.Category
             return _mapper.Map<List<src.Entity.Category>, List<CategoryReadDto>>(categoryList);
         }
 
-
-
         public async Task<CategoryReadDto> GetByIdAsync(Guid id)
         {
             var foundCategory = await _categoryRepo.GetByIdAsync(id);
@@ -54,38 +52,23 @@ namespace src.Services.Category
             return await _categoryRepo.DeleteOneAsync(foundCategory); // Proceed to delete
         }
 
-
-    public async Task<bool> UpdateOneAsync(Guid id, CategoryUpdateDto updateDto)
-    {
-        // Retrieve the category by ID from the repository
-        var foundCategory = await _categoryRepo.GetByIdAsync(id);
-
-        if (foundCategory == null)
+        public async Task<bool> UpdateOneAsync(Guid id, CategoryUpdateDto updateDto)
         {
-            return false; // Category not found
+            // Retrieve the category by ID from the repository
+            var foundCategory = await _categoryRepo.GetByIdAsync(id);
+
+            if (foundCategory == null)
+            {
+                return false; // Category not found
+            }
+
+            // Map the update DTO fields to the existing category entity
+            _mapper.Map(updateDto, foundCategory);
+
+            // Save the updated category in the repository
+            return await _categoryRepo.UpdateOneAsync(foundCategory);
         }
-
-        // Map the update DTO to the existing category entity
-        // _mapper.Map(updateDto, foundCategory);
-
-        // Save the updated category in the repository
-        return await _categoryRepo.UpdateOneAsync(id,foundCategory);
-
-    }
-        public Task<CategoryReadDto> GetByNameAsync(string categoryName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteOneAsync(Guid id, string categoryName)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> ICategoryService.UpdateOneAsync(Guid id, CategoryUpdateDto updatedCategory)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
 

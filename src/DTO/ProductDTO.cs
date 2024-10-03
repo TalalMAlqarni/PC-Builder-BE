@@ -1,3 +1,5 @@
+using src.Entity;
+
 namespace src.DTO
 {
     public class ProductDTO
@@ -13,14 +15,18 @@ namespace src.DTO
             public decimal ProductPrice { get; set; }
             public decimal Weight { get; set; }
             //public decimal RatingResult { get; set; }
+            public Guid SubCategoryId { get; set; }
+            public Guid SubCategoryName { get; set; }
+
+ 
         }
 
         //GET ALL RPODUCTS
 
         public class GetProductDto
         {
-            public Guid Id { get; set; }
-
+            public Guid? SubCategoryId { get; set; }
+            public string? SubCategoryName { get; set; } 
             public Guid ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductColor { get; set; }

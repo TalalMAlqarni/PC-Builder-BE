@@ -18,23 +18,35 @@ namespace src.Repository
         }
 
         // add a new product:
-        public async Task<Product> AddProductAsync(Product newProduct)
+        public async Task<Product> AddProductAsync(Product product)
         {
-            await _products.AddAsync(newProduct);
+            await _products.AddAsync(product);
             await _databaseContext.SaveChangesAsync();
-            return newProduct;
+            return product;
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            return await _products.ToListAsync();
+            return await _products
+            .Include(p => p.SubCategory) // Eagerly load the SubCategory
+            .ToListAsync();
         }
 
         //get product by Id:
         public async Task<Product?> GetProductByIdAsync(Guid productId)
         {
-            return await _products.FindAsync(productId);
+            return await _products
+            .Include(p => p.SubCategory) // Eagerly load the SubCategory
+            .FirstOrDefaultAsync(p => p.ProductId == productId); 
         }
+
+        public async Task<List<Product>> GetProductsBySubCategoryIdAsync(Guid subCategoryId)
+        {
+            return await _products
+                .Where(p => p.SubCategoryId == subCategoryId) // Filter by SubCategoryId
+                .ToListAsync();
+        }
+
 
         //delete a product
         public async Task<bool> DeleteProductAsync(Product product)
@@ -62,6 +74,8 @@ namespace src.Repository
                 .Take(paginationOptions.Limit)
                 .ToListAsync();
         }
+
+
 
         // public async Task<List<Product>> GetResultsBySortAsync (SortOptions sortOptions){
 
