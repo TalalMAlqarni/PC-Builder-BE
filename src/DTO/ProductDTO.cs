@@ -12,7 +12,7 @@ namespace src.DTO
             public int SKU { get; set; }
             public decimal ProductPrice { get; set; }
             public decimal Weight { get; set; }
-            //public decimal RatingResult { get; set; }
+
         }
 
         //GET ALL RPODUCTS
@@ -26,7 +26,7 @@ namespace src.DTO
             public int SKU { get; set; }
             public decimal ProductPrice { get; set; }
             public decimal Weight { get; set; }
-            //public decimal RatingResult { get; set; }
+            public decimal AverageRating { get; set; }
         }
 
         //UPDATE PRODUCT INFO
@@ -39,6 +39,9 @@ namespace src.DTO
             public int SKU { get; set; }
             public decimal ProductPrice { get; set; }
             public decimal Weight { get; set; }
+
+            public decimal AverageRating { get; set; }  //will be deleted
+ 
         }
     }
 }

@@ -7,7 +7,8 @@ namespace src.Entity
 
         public Guid ProductId { get; set; }
         public string? ProductName { get; set; }
-        //public string? ProductImage { get; set; } 
+
+        //public string? ProductImage { get; set; } , It will be added during 
 
         public string? ProductColor { get; set; }
 
@@ -21,6 +22,6 @@ namespace src.Entity
         public decimal Weight { get; set; }
 
 
-        //public decimal RatingResult { get; set; } //No plan to do it in the current time
+        public decimal AverageRating { get; set; } 
     }
 }

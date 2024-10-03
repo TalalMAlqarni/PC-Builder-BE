@@ -119,12 +119,16 @@ namespace src.Repository
 
         public async Task<List<Product>> GetAllAsync(SearchProcess to_search)
         {
-            //implement search
+            //implement search []
 
 
 
+            // var search_result = _products.Where(x =>
+            //     x.ProductName.ToLower().Contains(to_search.Search.ToLower())
+            // );
             var search_result = _products.Where(x =>
                 x.ProductName.ToLower().Contains(to_search.Search.ToLower())
+                || x.Description.ToLower().Contains(to_search.Search.ToLower())
             );
 
             //implement filter
@@ -160,13 +164,19 @@ namespace src.Repository
                             ? query.OrderByDescending(x => x.ProductPrice)
                             : query.OrderBy(x => x.ProductPrice);
                 }
-                //if not it will be sku:
                 else if (to_search.SortBy.Equals("sku", StringComparison.OrdinalIgnoreCase))
                 {
                     query =
                         to_search.SortOrder == SortOrder.Descending
                             ? query.OrderByDescending(x => x.SKU)
                             : query.OrderBy(x => x.SKU);
+                }
+                else if (to_search.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase))
+                {
+                    query =
+                        to_search.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AverageRating)
+                            : query.OrderBy(x => x.AverageRating);
                 }
             }
 
