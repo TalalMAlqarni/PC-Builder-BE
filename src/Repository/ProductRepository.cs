@@ -119,13 +119,7 @@ namespace src.Repository
 
         public async Task<List<Product>> GetAllAsync(SearchProcess to_search)
         {
-            //implement search []
-
-
-
-            // var search_result = _products.Where(x =>
-            //     x.ProductName.ToLower().Contains(to_search.Search.ToLower())
-            // );
+            //implement search
             var search_result = _products.Where(x =>
                 x.ProductName.ToLower().Contains(to_search.Search.ToLower())
                 || x.Description.ToLower().Contains(to_search.Search.ToLower())
@@ -178,7 +172,15 @@ namespace src.Repository
                             ? query.OrderByDescending(x => x.AverageRating)
                             : query.OrderBy(x => x.AverageRating);
                 }
-            }
+                else if (to_search.SortBy.Equals("date",StringComparison.OrdinalIgnoreCase)){
+
+                      query =
+                        to_search.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AddedDate)
+                            : query.OrderBy(x => x.AddedDate);
+
+                }
+            } 
 
             //implement pagination
 
