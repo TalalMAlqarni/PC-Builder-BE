@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
 using src.Services.Category;
@@ -21,14 +22,15 @@ namespace src.Controller
             _subCategoryService = subCategoryService;
         }
 
-       [HttpGet]
+        [AllowAnonymous]
+        [HttpGet]
         public async Task<ActionResult<List<CategoryReadDto>>> GetAllCategories()
         {
             var category_list = await _categoryService.GetAllAsync();
             return Ok(category_list);
         }
 
-        //get cart by id: GET api/v1/Category/{id}
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryReadDto>> GetCategoryById(Guid id)
         {
@@ -36,6 +38,7 @@ namespace src.Controller
             return Ok(category);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CategoryReadDto>> CreateCategory(CategoryCreateDto createDto)
         {
@@ -43,7 +46,7 @@ namespace src.Controller
             return Ok(createdCategory);
         }
         
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryReadDto>> UpdateOneAsync([FromRoute] Guid id, [FromBody] CategoryUpdateDto updateDto)
         {
@@ -68,7 +71,7 @@ namespace src.Controller
             return Ok(updatedCategory);
         }
 
-                
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
         {

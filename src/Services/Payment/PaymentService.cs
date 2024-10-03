@@ -37,8 +37,6 @@ namespace src.Services.Payment
             return _mapper.Map<List<src.Entity.Payment>, List<PaymentReadDto>>(paymentList);
         }
 
-
-
         public async Task<PaymentReadDto> GetByIdAsync(Guid paymentId)
         {
             var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
@@ -54,6 +52,7 @@ namespace src.Services.Payment
            {    
                 return true;
            }
+           
            return false;
         }
 
@@ -66,22 +65,9 @@ namespace src.Services.Payment
             {
                 return false;
             }
-
             _mapper.Map(updateDto, foundPayment);
-            return await _paymentRepo.UpdateOneAsync(foundPayment);
-            
+            return await _paymentRepo.UpdateOneAsync(foundPayment);  
         }
-
-        public Task<List<PaymentReadDto>> GetAllAsynac()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public Task<PaymentReadDto> GetByIdAsynac(Guid paymentId)
-        {
-            throw new NotImplementedException();
-        }
-
 
     }
 }

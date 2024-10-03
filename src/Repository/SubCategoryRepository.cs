@@ -11,7 +11,6 @@ namespace src.Repository
     {
         protected DbSet<SubCategory> _subCategories;
         protected DbSet<Product> _products;
-
         protected DatabaseContext _databaseContext;
 
         public SubCategoryRepository( DatabaseContext databaseContext)
@@ -23,7 +22,6 @@ namespace src.Repository
 
         public async Task<SubCategory> AddAsync(SubCategory newSubCategory)
         {
-            // Add the subcategory entity to the DbSet
             await _subCategories.AddAsync(newSubCategory);
             await _databaseContext.SaveChangesAsync();
             return newSubCategory;
@@ -43,14 +41,6 @@ namespace src.Repository
                 .FirstOrDefaultAsync(sb => sb.SubCategoryId == subCategoryId);
         }
 
-        // public async Task<SubCategory?> GetSubCategoryByIdAsync(Guid subCategoryId)
-        // {
-        //     return await _subCategories
-        //         .Include(sc => sc.Products)  // Eagerly load products
-        //         .Include(sc => sc.Category)  // Eagerly load related category
-        //         .FirstOrDefaultAsync(sc => sc.SubCategoryId == subCategoryId);
-        // }
-
         public async Task<bool> DeleteOneAsync(SubCategory subCategory)
         {
             _subCategories.Remove(subCategory);
@@ -68,9 +58,10 @@ namespace src.Repository
         }
 
         public async Task<List<SubCategory>> GetAllResults(PaginationOptions paginationOptions)
-        { // check the naming 
+        { 
             var result = _subCategories
             .Include(sc => sc.Category) // Include the Category
+            .Include(sc => sc.Products) // Include the Products
             .Where(sc =>sc.Name.ToLower().Contains(paginationOptions.Search.ToLower())
             );
             return await result

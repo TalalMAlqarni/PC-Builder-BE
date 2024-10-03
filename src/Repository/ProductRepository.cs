@@ -29,7 +29,7 @@ namespace src.Repository
         public async Task<List<Product>> GetAllProductsAsync()
         {
             return await _products
-            .Include(p => p.SubCategoryName) 
+            // .Include(p => p.SubCategoryName) 
             .ToListAsync();
         }
 
@@ -37,7 +37,7 @@ namespace src.Repository
         public async Task<Product?> GetProductByIdAsync(Guid productId)
         {
             return await _products
-            .Include(p => p.SubCategoryName) // Eagerly load the SubCategory
+            // .Include(p => p.SubCategoryName) // Eagerly load the SubCategory
             .FirstOrDefaultAsync(p => p.ProductId == productId); 
         }
 
@@ -76,10 +76,6 @@ namespace src.Repository
                 .Take(paginationOptions.Limit)
                 .ToListAsync();
         }
-
-
-
-
 
         public async Task<List<Product>> GetAllBySortAsync(SortOptions sortOption)
         {

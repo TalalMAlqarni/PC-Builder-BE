@@ -5,7 +5,7 @@ namespace src.Entity
     public class Product
     {
 
-        public Guid? SubCategoryId { get; set; }
+        public Guid SubCategoryId { get; set; }
         
         public string? SubCategoryName { get; set; }
 
@@ -28,6 +28,6 @@ namespace src.Entity
         public decimal Weight { get; set; }
 
 
-        public decimal AverageRating { get; set; }
+        public decimal? AverageRating { get; set; }
     }
 }

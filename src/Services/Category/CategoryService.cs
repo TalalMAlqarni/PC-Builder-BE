@@ -67,8 +67,7 @@ namespace src.Services.Category
 
             // Save the updated category in the repository
             return await _categoryRepo.UpdateOneAsync(foundCategory);
-        }
-        
+        }  
     }
 }
 

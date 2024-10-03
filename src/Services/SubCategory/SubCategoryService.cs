@@ -4,7 +4,6 @@ using AutoMapper;
 using src.Repository;
 using src.Utils;
 using src.Services;
-
 using static src.DTO.SubCategoryDTO;
 using static src.DTO.ProductDTO;
 using src.Database;
@@ -15,13 +14,12 @@ namespace src.Services.SubCategory
     {
         private readonly SubCategoryRepository _subCategoryRepo;
         private readonly CategoryRepository _categoryRepo;
-        private readonly ProductRepository _productRepository;
-
+        // private readonly ProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public SubCategoryService(ProductRepository productRepository,SubCategoryRepository subCategoryRepo, CategoryRepository categoryRepo, IMapper mapper)
+        public SubCategoryService(SubCategoryRepository subCategoryRepo, CategoryRepository categoryRepo, IMapper mapper)
         { 
-             _productRepository = productRepository;     
+            //  _productRepository = productRepository;     
             _subCategoryRepo = subCategoryRepo;
             _categoryRepo = categoryRepo;
             _mapper = mapper;
@@ -55,15 +53,13 @@ namespace src.Services.SubCategory
                 CategoryId = savedSubCategory.CategoryId,
                 CategoryName = category.CategoryName 
             };
-
             return subCategoryReadDto;
         }
 
         public async Task<List<SubCategoryReadDto>> GetAllAsync()
         {
             var subCategoryList = await _subCategoryRepo.GetAllAsync();
-
-            // Manually map the CategoryName
+            // Map the CategoryName
             var subCategoryReadDtoList = subCategoryList.Select(subCategory => new SubCategoryReadDto
             {
                 SubCategoryId = subCategory.SubCategoryId,
@@ -79,22 +75,21 @@ namespace src.Services.SubCategory
                     SKU = product.SKU,
                     ProductPrice = product.ProductPrice,
                     Weight = product.Weight,
-                    // SubCategoryId = product.SubCategoryId
-                }).ToList() // Map products here
+                    SubCategoryId = product.SubCategoryId,
+                    SubCategoryName= product.SubCategoryName
+                }).ToList()
             }).ToList();
 
             return subCategoryReadDtoList;
         }
+        
         public async Task<SubCategoryReadDto?> GetSubCategoryByIdAsync(Guid subCategoryId)
         {
             var subCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
-
-
             if (subCategory == null)
             {
-                return null; // Handle the case where subcategory is not found
+                return null; 
             }
-            // Map subcategory to SubCategoryReadDto and include the products
             return new SubCategoryReadDto
             {
                 SubCategoryId = subCategory.SubCategoryId,
@@ -110,41 +105,28 @@ namespace src.Services.SubCategory
                     SKU = p.SKU,
                     ProductPrice = p.ProductPrice,
                     Weight = p.Weight,
+                    SubCategoryId = p.SubCategoryId,
+                    SubCategoryName = p.SubCategoryName
                 }).ToList()
             };
         }
 
-        // public async Task<List<SubCategoryReadDto>> GetAllBySearchAsync(PaginationOptions paginationOptions)
-        // {
-        //     var subCategoryList = await _subCategoryRepo.GetAllResults(paginationOptions);
-        //     if (subCategoryList.Count == 0)
-        //     {
-        //         throw CustomException.NotFound($"No results found");
-        //     }
-
-        //     // Mapping to SubCategoryReadDto
-        //     return subCategoryList.Select(sc => new SubCategoryReadDto
-        //     {
-        //         SubCategoryId = sc.SubCategoryId,
-        //         CategoryId = sc.CategoryId,
-        //         Name = sc.Name,
-        //         CategoryName = sc.Category?.CategoryName // Ensure Category is not null
-        //     }).ToList();
-        // }
-
-        public async Task<bool> DeleteOneAsync(Guid subCategoryId)
+        public async Task<List<SubCategoryReadDto>> GetAllBySearchAsync(PaginationOptions paginationOptions)
         {
-            // Retrieve the subcategory by ID
-            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
-
-            // Check if the subcategory exists
-            if (foundSubCategory == null)
+            var subCategoryList = await _subCategoryRepo.GetAllResults(paginationOptions);
+            if (subCategoryList.Count == 0)
             {
-                return false; // Subcategory not found
+                throw CustomException.NotFound($"No results found");
             }
 
-            // Perform the deletion
-            return await _subCategoryRepo.DeleteOneAsync(foundSubCategory);
+            // Mapping to SubCategoryReadDto
+            return subCategoryList.Select(sc => new SubCategoryReadDto
+            {
+                SubCategoryId = sc.SubCategoryId,
+                CategoryId = sc.CategoryId,
+                Name = sc.Name,
+                CategoryName = sc.Category?.CategoryName 
+            }).ToList();
         }
 
         public async Task<bool> UpdateOneAsync(Guid subCategoryId, SubCategoryUpdateDto updateDto)
@@ -153,18 +135,20 @@ namespace src.Services.SubCategory
             var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
             if (foundSubCategory == null)
             {
-                // If the subcategory doesn't exist, return false (not found)
                 return false;
             }
-            // Update the subcategory in the repository
             _mapper.Map(updateDto, foundSubCategory);
-
-            return await _subCategoryRepo.UpdateOneAsync(foundSubCategory); // Just pass the updated entity
+            return await _subCategoryRepo.UpdateOneAsync(foundSubCategory); 
         }
 
-        public Task<List<SubCategoryReadDto>> GetAllBySearchAsync(PaginationOptions paginationOptions)
+        public async Task<bool> DeleteOneAsync(Guid subCategoryId)
         {
-            throw new NotImplementedException();
+            var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
+            if (foundSubCategory == null)
+            {
+                return false; 
+            }
+            return await _subCategoryRepo.DeleteOneAsync(foundSubCategory);
         }
     }
 }

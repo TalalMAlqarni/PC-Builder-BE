@@ -15,7 +15,7 @@ namespace src.DTO
             public int SKU { get; set; }
             public decimal ProductPrice { get; set; }
             public decimal Weight { get; set; }
-            public Guid? SubCategoryId { get; set; }
+            public Guid SubCategoryId { get; set; }
             public string? SubCategoryName { get; set; }
 
  
@@ -49,7 +49,7 @@ namespace src.DTO
             public decimal ProductPrice { get; set; }
             public decimal Weight { get; set; }
 
-            public decimal AverageRating { get; set; } //will be deleted
+            public decimal? AverageRating { get; set; } //will be deleted
         }
     }
 }

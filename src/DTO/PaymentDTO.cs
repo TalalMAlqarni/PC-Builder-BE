@@ -25,14 +25,6 @@ namespace src.DTO
         }
 
         // DTO for updating payments
-        public class PaymentUpdateDto : PaymentBaseDto
-        {
-        }
-
-        // DTO for deleting payments
-        public class PaymentDeleteDto
-        {
-            public Guid PaymentId { get; set; }
-        }
+        public class PaymentUpdateDto : PaymentBaseDto { }
     }
 }

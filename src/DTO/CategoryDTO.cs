@@ -14,6 +14,7 @@ namespace src.DTO
         {
             public string CategoryName { get ; set;}
         }
+        
         public class CategoryReadDto
         {
             public Guid Id { get; set; }

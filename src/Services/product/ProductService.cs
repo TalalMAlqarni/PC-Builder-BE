@@ -34,6 +34,7 @@ namespace src.Services.product
 //Raghad
 public async Task<GetProductDto> CreateProductAsync(CreateProductDto createProductDto)
 {
+    var subCategory = await _subCategories.GetByIdAsync(createProductDto.SubCategoryId);
     // Create a new Product entity
     var product = new Product
     {
@@ -44,7 +45,8 @@ public async Task<GetProductDto> CreateProductAsync(CreateProductDto createProdu
         SKU = createProductDto.SKU,
         ProductPrice = createProductDto.ProductPrice,
         Weight = createProductDto.Weight,
-        SubCategoryId = createProductDto.SubCategoryId,// Link to the correct subcategory
+        SubCategoryId = subCategory.SubCategoryId,
+        SubCategoryName = subCategory.Name // Link to the correct subcategory
 
     };
 
