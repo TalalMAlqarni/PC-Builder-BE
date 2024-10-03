@@ -8,13 +8,13 @@ namespace src.DTO
             public Guid ProductId { get; set; }
             public Guid UserId { get; set; }
             public int Rating { get; set; }
-            public string Comment { get; set; }
+            public string? Comment { get; set; }
         }
 
         public class UpdateReviewDto
         {
             public int Rating { get; set; }
-            public string Comment { get; set; }
+            public string? Comment { get; set; }
         }
 
         public class ReadReviewDto
@@ -23,7 +23,7 @@ namespace src.DTO
             public Guid ProductId { get; set; }
             public Guid UserId { get; set; }
             public int Rating { get; set; }
-            public string Comment { get; set; }
+            public string? Comment { get; set; }
         }
     }
 }
