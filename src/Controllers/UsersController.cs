@@ -99,6 +99,7 @@ namespace src.Controllers
             }
             return Ok(foundUser);
         }
+      //  [Authorize]
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserReadDto>>> GetAll()
