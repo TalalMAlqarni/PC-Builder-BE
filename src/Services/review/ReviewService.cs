@@ -18,6 +18,7 @@ namespace src.Services.review
         }
         public async Task<ReadReviewDto> CreateReviewAsync(CreateReviewDto createDto)
         {
+            //TODO: Create only if user order the product
             var review = _mapper.Map<Review>(createDto);
 
             if (review.Rating < 0 || review.Rating > 5)
@@ -27,7 +28,9 @@ namespace src.Services.review
             if (reviews.Any(r => r.ProductId == review.ProductId) && reviews.Any(r => r.UserId == review.UserId))
                 throw CustomException.BadRequest("You have already reviewed this product");
 
+
             var reviewCreated = await _reviewRepo.CreateReviewAsync(review);
+            await _reviewRepo.UpdateProductReviewAsync(review.ProductId);
             return _mapper.Map<Review, ReadReviewDto>(reviewCreated);
         }
 
@@ -79,8 +82,8 @@ namespace src.Services.review
             otherwise if you don't use "comment": "" this will cause error
             if you want to update comment in json request body type whatever you want in "comment": "here" 
             */
-            if (updateDto.Comment == "")
-                updateDto.Comment = foundReview.Comment;
+            // if (updateDto.Comment == "")
+            //     updateDto.Comment = foundReview.Comment;
 
             _mapper.Map(updateDto, foundReview);
 
@@ -88,6 +91,7 @@ namespace src.Services.review
                 throw CustomException.BadRequest($"Rating must be between 0 and 5 {foundReview.Rating}");
 
             var reviewUpdated = await _reviewRepo.UpdateReviewAsync(foundReview);
+            await _reviewRepo.UpdateProductReviewAsync(foundReview.ProductId);
             return _mapper.Map<Review, ReadReviewDto>(reviewUpdated);
         }
     }
