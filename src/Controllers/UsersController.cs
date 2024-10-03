@@ -24,26 +24,13 @@ namespace src.Controllers
         }
         // create user
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserReadDto>> CreateOne(UserCreateDto createDto)
         {
             var userCreated = await _userService.CreateOneAsync(createDto);
             return Ok(userCreated);
         }
-        //create admin
-        // [HttpPost("signIn/admin")]
-        // [Authorize]
-        // public async Task<ActionResult<string>> SignInUser([FromBody] UserCreateDto createDto)
-        // {
-        //     var token = await _userService.SignInAsync(createDto);
-        //    if(token != null)
-        //    {
-        //         if(createDto.Email == "Admin@gmail.com")
-        //         {
-        //             [HttpPut] 
-        //         }
-        //    }
-        //     return Ok(token);
-        // }
+        
         // log in
         [HttpPost("signIn")]
         
@@ -64,13 +51,13 @@ namespace src.Controllers
             var foundUser = await _userService.GetByIdAsync(userId);
             if (foundUser == null)
             {
-                return NotFound("User not found");
+                throw CustomException.BadRequest("User not found");
             }
             return Ok(foundUser);
         }
       //  [Authorize]
         [HttpGet]
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserReadDto>>> GetAllUsers()
         {
             var userList = await _userService.GetAllAsync();
@@ -86,14 +73,14 @@ namespace src.Controllers
                 throw CustomException.UnAuthorized($"user with {userId}  doesnt exist");
 
             var isDeleted = await _userService.DeleteOneAsync(userId);
-            return isDeleted ? NoContent() : StatusCode(500);
+            return isDeleted ? Ok("user deleted seccsufully") : StatusCode(500);
         }
          
         [HttpPut("{userId}")]
         public async Task<ActionResult<UserReadDto>> UpdateUser(Guid userId, UserUpdateDto updateDto)
         {
             var userRead = await _userService.UpdateOneAsync(userId, updateDto);
-            return Ok(userRead);
+            return Ok("User Updated seccussfuly");
         }
         
     }

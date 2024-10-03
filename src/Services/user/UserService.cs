@@ -9,6 +9,8 @@ using static src.DTO.UserDTO;
 using src.Entity;
 using src.Utils;
 using static src.Entity.User;
+using src.DTO;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace src.Services.user
@@ -70,10 +72,7 @@ namespace src.Services.user
                 throw CustomException.BadRequest("You cant leave Last name empty");
               
             }
-            if(user.BirthDate == null)
-            {
-                user.BirthDate = new DateOnly(1999, 1, 1);
-            }
+           
             user.CartId = Guid.NewGuid();
             user.Password = hashedPassword;
             user.Salt = salt;
@@ -126,8 +125,53 @@ namespace src.Services.user
             {
                 throw CustomException.UnAuthorized($"user with {foundUser.UserId}  doesnt exist");
             }
-            _mapper.Map(updateDto, foundUser);
-            return await _userRepo.UpdateOneAsync(foundUser);
+            else
+            {
+                if(updateDto.Email == null)
+                {
+                    updateDto.Email = foundUser.Email;
+                }
+                if(updateDto.Username == null)
+                {
+                    updateDto.Username = foundUser.Username;
+                }
+                if(updateDto.FirstName == null)
+                {
+                    updateDto.FirstName = foundUser.FirstName;
+                }
+                if(updateDto.LastName == null)
+                {
+                    updateDto.LastName = foundUser.LastName;
+                }
+                if(updateDto.PhoneNumber == null)
+                {
+                    updateDto.PhoneNumber = foundUser.PhoneNumber;
+                }
+                if(updateDto.Password == null)
+                {
+                    updateDto.Password = foundUser.Password;
+                }
+            
+                if(updateDto.CartId == null)
+                {
+                    updateDto.CartId = foundUser.CartId;
+                }
+                if(foundUser.Email.Contains("@admin.com"))
+                {
+                    updateDto.Role = UserRole.Admin;
+                }
+                else 
+                {
+                    updateDto.Role = UserRole.Customer;
+                }
+                if (updateDto.BirthDate.Equals(DateOnly.Parse("0001-01-01")))
+                {
+                    updateDto.BirthDate = foundUser.BirthDate;
+                }
+                _mapper.Map(updateDto, foundUser);
+                return await _userRepo.UpdateOneAsync(foundUser);
+            }
+           
         }
         public async Task<List<UserReadDto>> GetAllAsync()
         {
