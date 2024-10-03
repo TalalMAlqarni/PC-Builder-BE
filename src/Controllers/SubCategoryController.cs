@@ -40,14 +40,13 @@ namespace src.Controller
         
         [HttpPost]
         // [Authorize(Roles = "Admin")]
-
         public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
         {
             var subCategoryCreated = await _subCategoryService.CreateOneAsync(createDto);
             return Ok(subCategoryCreated); 
         }
 
-      [HttpPut("{subCategoryId}")]
+        [HttpPut("{subCategoryId}")]
         public async Task<ActionResult<SubCategoryReadDto>> UpdateSubCategory( [FromRoute] Guid subCategoryId, [FromBody] SubCategoryUpdateDto updateDto)
         {
             // Optionally, return the updated SubCategory data
@@ -55,7 +54,7 @@ namespace src.Controller
             return Ok(updatedSubCategory);
         }
 
-     [HttpDelete("{subCategoryId}")]
+        [HttpDelete("{subCategoryId}")]
         public async Task<IActionResult> DeleteSubCategory( Guid subCategoryId)
         {
             var result = await _subCategoryService.DeleteOneAsync(subCategoryId);

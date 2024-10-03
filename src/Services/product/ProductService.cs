@@ -18,7 +18,7 @@ namespace src.Services.product
         public ProductService(ProductRepository productRepository, SubCategoryRepository subCategoryRepository,IMapper mapper)
         { 
             _productRepository = productRepository;    
-            _subCategories =subCategoryRepository;
+            _subCategories = subCategoryRepository;
             _mapper = mapper;
         }
 
@@ -50,7 +50,7 @@ public async Task<GetProductDto> CreateProductAsync(CreateProductDto createProdu
 
     // Save the product using the repository
     var newProduct = await _productRepository.AddProductAsync(product);
-    var subCategory = await _subCategories.GetByIdAsync(newProduct.SubCategoryId);
+    // var subCategory = await _subCategories.GetByIdAsync(newProduct.SubCategoryId);
 
     return new GetProductDto
     {
@@ -61,7 +61,7 @@ public async Task<GetProductDto> CreateProductAsync(CreateProductDto createProdu
         SKU = newProduct.SKU,
         ProductPrice = newProduct.ProductPrice,
         Weight = newProduct.Weight,
-        SubCategoryName = subCategory.Name,
+        SubCategoryName = newProduct.SubCategoryName,
         SubCategoryId = newProduct.SubCategoryId
     };
 }
@@ -79,7 +79,7 @@ public async Task<List<GetProductDto>> GetProductsBySubCategoryIdAsync(Guid subC
         SKU = product.SKU,
         ProductPrice = product.ProductPrice,
         Weight = product.Weight,
-        SubCategoryName = product.SubCategory.Name, // Access the SubCategory name here
+        SubCategoryName = product.SubCategoryName, // Access the SubCategory name here
         SubCategoryId = product.SubCategoryId
     }).ToList();
 }

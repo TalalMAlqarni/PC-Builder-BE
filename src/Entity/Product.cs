@@ -5,8 +5,9 @@ namespace src.Entity
     public class Product
     {
 
-        public Guid SubCategoryId { get; set; }
-        public SubCategory SubCategory { get; set; }
+        public Guid? SubCategoryId { get; set; }
+        
+        public string? SubCategoryName { get; set; }
 
         public Guid ProductId { get; set; }
         public string? ProductName { get; set; }
