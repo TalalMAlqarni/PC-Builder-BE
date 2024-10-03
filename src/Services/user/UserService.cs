@@ -28,14 +28,59 @@ namespace src.Services.user
         {
            PasswordUtils.HashPassword(createDto.Password , out string hashedPassword , out byte[] salt);
             var user = _mapper.Map<UserCreateDto, User>(createDto);
+            var userTable = await _userRepo.GetAllAsync();
+            if(userTable.Any(x => x.Email == user.Email) )
+            {
+                throw CustomException.BadRequest("Email already registed please try another one");
+            }
+            if(userTable.Any(x => x.PhoneNumber == user.PhoneNumber))
+            {
+                throw CustomException.BadRequest("Phone number already registed please try another one");
+            }
+            if(userTable.Any(x => x.Username == user.Username))
+            {
+                throw CustomException.BadRequest("Username already registed please try another one");
+            }
+            if(user.Email.Contains("@admin.com"))
+            {
+                user.Role = UserRole.Admin;
+            }
+            else
+            {
+                user.Role = UserRole.Customer;
+            }
+            if(user.Email == null)
+            {
+                throw CustomException.BadRequest("You cant leave Email empty");
+            }
+            if(user.PhoneNumber == null)
+            {
+                throw CustomException.BadRequest("You cant leave phone number empty");
+            }
+            if(user.Username == null)
+            {
+                throw CustomException.BadRequest("You cant leave Username empty");
+            }
+            if(user.FirstName == null)
+            {
+                throw CustomException.BadRequest("You cant leave First name empty");
+            }
+            if(user.LastName == null)
+            {
+                throw CustomException.BadRequest("You cant leave Last name empty");
+              
+            }
+            if(user.BirthDate == null)
+            {
+                user.BirthDate = new DateOnly(1999, 1, 1);
+            }
+            user.CartId = Guid.NewGuid();
             user.Password = hashedPassword;
             user.Salt = salt;
-            user.Role = UserRole.Customer;
-
-
             var savedUser = await _userRepo.CreateOneAsync(user);
             return _mapper.Map<User, UserReadDto>(savedUser);
         }
+
         //sign in
         public async Task<string> SignInAsync(UserCreateDto createDto)
         {
@@ -79,7 +124,7 @@ namespace src.Services.user
             var foundUser = await _userRepo.GetByIdAsync(id);
             if(foundUser == null)
             {
-                return false;
+                throw CustomException.UnAuthorized($"user with {foundUser.UserId}  doesnt exist");
             }
             _mapper.Map(updateDto, foundUser);
             return await _userRepo.UpdateOneAsync(foundUser);
