@@ -18,8 +18,19 @@ namespace src.Services.review
         }
         public async Task<ReadReviewDto> CreateReviewAsync(CreateReviewDto createDto)
         {
+            //TODO: Create only if user order the product
             var review = _mapper.Map<Review>(createDto);
+
+            if (review.Rating < 0 || review.Rating > 5)
+                throw CustomException.BadRequest("Rating must be between 0 and 5");
+
+            var reviews = await _reviewRepo.GetAllReviewsAsync();
+            if (reviews.Any(r => r.ProductId == review.ProductId) && reviews.Any(r => r.UserId == review.UserId))
+                throw CustomException.BadRequest("You have already reviewed this product");
+
+
             var reviewCreated = await _reviewRepo.CreateReviewAsync(review);
+            await _reviewRepo.UpdateProductReviewAsync(review.ProductId);
             return _mapper.Map<Review, ReadReviewDto>(reviewCreated);
         }
 
@@ -51,15 +62,36 @@ namespace src.Services.review
             return _mapper.Map<Review, ReadReviewDto>(foundReview);
         }
 
-        public async Task<ReadReviewDto> UpdateReviewAsync(Guid id, UpdateReviewDto updateDto)
+        public async Task<ReadReviewDto> UpdateReviewAsync(Guid id, UpdateReviewDto updateDto)// must enter both comment and rating
         {
             var foundReview = await _reviewRepo.GetReviewByIdAsync(id);
 
             if (foundReview == null)
                 throw CustomException.NotFound("Review not found");
 
-            _mapper.Map(updateDto, foundReview);//! this was causing an error in cart need testing
+            //if rating is not updated
+            // you can enter zero for rating or don't write rating in json request body
+            if (updateDto.Rating == 0)
+                updateDto.Rating = foundReview.Rating;
+
+            /*if you do not want to update comment in json request body,use this code
+            {
+                "rating": 5,
+                "comment": ""
+            }
+            otherwise if you don't use "comment": "" this will cause error
+            if you want to update comment in json request body type whatever you want in "comment": "here" 
+            */
+            // if (updateDto.Comment == "")
+            //     updateDto.Comment = foundReview.Comment;
+
+            _mapper.Map(updateDto, foundReview);
+
+            if (updateDto.Rating < 1 || updateDto.Rating > 5)
+                throw CustomException.BadRequest($"Rating must be between 0 and 5 {foundReview.Rating}");
+
             var reviewUpdated = await _reviewRepo.UpdateReviewAsync(foundReview);
+            await _reviewRepo.UpdateProductReviewAsync(foundReview.ProductId);
             return _mapper.Map<Review, ReadReviewDto>(reviewUpdated);
         }
     }

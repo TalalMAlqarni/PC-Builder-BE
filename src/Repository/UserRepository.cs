@@ -27,7 +27,7 @@ namespace src.Repository
         }
 
         public async Task<List<User>> GetAllAsync()
-        {
+        {   
             return await _user.ToListAsync();
         }
         public async Task<User> GetByIdAsync(Guid id)

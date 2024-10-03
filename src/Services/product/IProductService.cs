@@ -2,36 +2,33 @@ using src.Entity;
 using src.Utils;
 using static src.DTO.ProductDTO;
 
-namespace src.Services.product {
+namespace src.Services.product
+{
+    public interface IProductService
+    {
+        //create product
+        Task<GetProductDto> CreateProductAsync(CreateProductDto createProductDto);
 
-    public interface IProductService {
+        //get all products
+        Task<List<GetProductDto>> GetAllProductsAsync();
+
+        //search for a product with pagination
+        Task<List<GetProductDto>> GetAllBySearchAsync(PaginationOptions paginationOptions);
 
 
-//create product
-Task<GetProductDto> CreateProductAsync (CreateProductDto createProductDto);
+        //get product by id
+        Task<GetProductDto> GetProductByIdAsync(Guid id);
 
+        //update product info
+        Task<GetProductDto> UpdateProductInfoAsync(Guid id, UpdateProductInfoDto product);
 
-//get all products 
-Task<List<GetProductDto>> GetAllProductsAsync();
+        //delete product
+        Task<bool> DeleteProductByIdAsync(Guid id);
 
-//search for a product with pagination 
-Task<List<GetProductDto>>GetAllBySearchAsync(PaginationOptions paginationOptions);
+        Task<List<GetProductDto>> GetAllByFilterationAsync(FilterationOptions productf);
 
-//sort functionality test: 
+        Task<List<GetProductDto>> GetAllBySortAsync (SortOptions sortOption);
 
-Task<List<GetProductDto>>GetAllBySortAsync(SortOptions sortOptions);
-
-//get product by id
-Task<GetProductDto> GetProductByIdAsync (Guid id);
-
-//update product info
- Task<GetProductDto> UpdateProductInfoAsync(Guid id, UpdateProductInfoDto product);
-
-//delete product 
-Task<bool> DeleteProductByIdAsync (Guid id);
-
-// Task<bool>UpdateProductDescAsync(Guid id , UpdateProdouctDescDto updateProductDescDto);
-
-        
+        Task<List<GetProductDto>> GetAllAsync (SearchProcess to_search);
     }
 }

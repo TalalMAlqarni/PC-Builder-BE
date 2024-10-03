@@ -90,12 +90,12 @@ public async Task<List<GetProductDto>> GetProductsBySubCategoryIdAsync(Guid subC
             return _mapper.Map<List<Product>, List<GetProductDto>>(productsList);
         }
 
-        public async Task<List<GetProductDto>> GetAllBySearchAsync( 
+        public async Task<List<GetProductDto>> GetAllBySearchAsync(
             PaginationOptions paginationOptions
         )
         {
             var productsList = await _productRepository.GetAllResults(paginationOptions);
-            if (productsList.Count ==0)
+            if (productsList.Count == 0)
             {
                 throw CustomException.NotFound($"No results found");
             }
@@ -104,8 +104,8 @@ public async Task<List<GetProductDto>> GetProductsBySubCategoryIdAsync(Guid subC
 
         public async Task<GetProductDto> GetProductByIdAsync(Guid id)
         {
-            var isFound= await _productRepository.GetProductByIdAsync(id);
-            if (isFound is null) 
+            var isFound = await _productRepository.GetProductByIdAsync(id);
+            if (isFound is null)
             {
                 throw CustomException.NotFound($"Product with id {id} not found");
             }
@@ -143,33 +143,28 @@ public async Task<List<GetProductDto>> GetProductsBySubCategoryIdAsync(Guid subC
             return true;
         }
 
+ 
 
-        public Task<List<GetProductDto>> GetAllBySortAsync(SortOptions sortOptions)
+        public async Task<List<GetProductDto>> GetAllByFilterationAsync(FilterationOptions productf)
         {
-            throw new NotImplementedException();
+            var productsList = await _productRepository.GetAllByFilteringAsync(productf);
+
+            return _mapper.Map<List<Product>, List<GetProductDto>>(productsList);
         }
 
-        //test sort functionality:
-        // public async Task<List<GetProductDto>>GetAllBySortAsync(SortOptions sortOptions){
-
-        //     var result = await _productRepository.
-
-
-        // }
-
-        // public async Task<bool>UpdateProductDescAsync(Guid id , UpdateProdouctDescDto updateProductDescDto){
-
-        //     var isFound = await _productRepository.GetProductByIdAsync(id);
-        //     if (isFound is null){
-
-        //         return false;
-        //     }
-
-        //   await _productRepository.UpdateProductDescAsync(updateProductDescDto);
-
-        //   return true;
+        public async Task<List<GetProductDto>> GetAllBySortAsync(SortOptions sortOption)
+        {
+            var productsList = await _productRepository.GetAllBySortAsync(sortOption);
+            return _mapper.Map<List<Product>, List<GetProductDto>>(productsList);
+        }
 
 
-        // }
+      public async Task<List<GetProductDto>> GetAllAsync (SearchProcess to_search) {
+
+           var productsList = await _productRepository.GetAllAsync(to_search);
+            return _mapper.Map<List<Product>, List<GetProductDto>>(productsList);
+
+
+      }
     }
 }

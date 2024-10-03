@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,10 +13,13 @@ namespace src.DTO
             public Guid UserId { get; set; }
             public Guid CartId { get; set; }
             public Guid PaymentId { get; set; }
-
+            [MaxLength(100)]
             public string? Address { get; set; }
+            [MaxLength(50), MinLength(2)]
             public string? City { get; set; }
+            [MaxLength(50), MinLength(2)]
             public string? State { get; set; }
+            [Range(10000, 99999)]
             public int PostalCode { get; set; }
         }
         public class OrderReadDTO
