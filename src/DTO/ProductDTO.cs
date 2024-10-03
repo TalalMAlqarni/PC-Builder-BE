@@ -16,7 +16,7 @@ namespace src.DTO
             public decimal ProductPrice { get; set; }
             public decimal Weight { get; set; }
             public Guid SubCategoryId { get; set; }
-            public Guid SubCategoryName { get; set; }
+            public string SubCategoryName { get; set; }
 
  
         }
