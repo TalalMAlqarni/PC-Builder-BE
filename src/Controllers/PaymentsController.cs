@@ -18,7 +18,7 @@ namespace src.Controller
             _paymentService = service;
         }
       
-        [Authorize]     
+        // [Authorize]     
         [HttpGet]
         public async Task<ActionResult<List< PaymentCreateDto>>>GetAllAsync()
         {
@@ -26,7 +26,7 @@ namespace src.Controller
             return Ok(paymentList);
         }
 
-        [Authorize(Roles = "Admin")] // Only Admins can view specific payments
+        // [Authorize(Roles = "Admin")] // Only Admins can view specific payments
         [HttpGet("{paymentId}")]
         public async Task<ActionResult<PaymentReadDto>>GetByIdAsync([FromRoute] Guid paymentId)
         {
@@ -34,7 +34,7 @@ namespace src.Controller
             return Ok(payment);
         }
 
-        [Authorize(Roles = "Admin, User")] // Only Admins or Users can make payments
+        // [Authorize(Roles = "Admin, User")] // Only Admins or Users can make payments
         [HttpPost]
         public async Task<ActionResult<PaymentReadDto>> CreateOne([FromBody] PaymentCreateDto createDto)
         {
@@ -43,7 +43,7 @@ namespace src.Controller
             return Created($"api/v1//payments/{paymentCreated.PaymentId}",paymentCreated);
         }
 
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [HttpPut("{paymentId}")]
         public async Task<ActionResult<PaymentReadDto>> UpdateOneAsync([FromRoute] Guid paymentId,[FromBody] PaymentUpdateDto updateDto)
         {
