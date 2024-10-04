@@ -9,11 +9,11 @@ namespace src.Controller
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class CartController : ControllerBase
+    public class CartsController : ControllerBase
 
     {
         protected readonly ICartService _cartService;
-        public CartController(ICartService service)
+        public CartsController(ICartService service)
         {
             _cartService = service;
         }

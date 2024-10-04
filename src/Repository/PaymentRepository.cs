@@ -52,5 +52,12 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task UpdateAsync(Payment payment)
+        {
+            _payments.Update(payment);
+            await _databaseContext.SaveChangesAsync();
+        }
+
     }
 }
