@@ -1,6 +1,4 @@
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using src.Database;
 using src.Entity;
 using src.Utils;
@@ -29,18 +27,11 @@ namespace src.Repository
         public async Task<List<Product>> GetAllProductsAsync()
         {
             return await _products
-            // .Include(p => p.SubCategoryName) 
+            // .Include(p => p.SubCategoryName)
             .ToListAsync();
         }
 
-        //get product by Id:
-        public async Task<Product?> GetProductByIdAsync(Guid productId)
-        {
-            return await _products
-            // .Include(p => p.SubCategoryName) // Eagerly load the SubCategory
-            .FirstOrDefaultAsync(p => p.ProductId == productId); 
-        }
-
+        //get all products in specific subcategory
         public async Task<List<Product>> GetProductsBySubCategoryIdAsync(Guid subCategoryId)
         {
             return await _products
@@ -48,24 +39,7 @@ namespace src.Repository
                 .ToListAsync();
         }
 
-
-        //delete a product
-        public async Task<bool> DeleteProductAsync(Product product)
-        {
-            _products.Remove(product);
-            await _databaseContext.SaveChangesAsync();
-            return true;
-        }
-
-        //edit on a product
-        public async Task<Product?> UpdateProductInfoAsync(Product product)
-        {
-            _products.Update(product);
-            await _databaseContext.SaveChangesAsync();
-            return product;
-        }
-
-        //get all with applying the pagination & search
+        //get all products by using the search name & pagination
         public async Task<List<Product>> GetAllResults(PaginationOptions paginationOptions)
         { // check the naming convention
             var result = _products.Where(x =>
@@ -77,45 +51,7 @@ namespace src.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<Product>> GetAllBySortAsync(SortOptions sortOption)
-        {
-            IQueryable<Product> query = _products;
-
-            if (!string.IsNullOrEmpty(sortOption.SortBy))
-            {
-                if (sortOption.SortBy.Equals("price", StringComparison.OrdinalIgnoreCase))
-                {
-                    query =
-                        sortOption.SortOrder == SortOrder.Descending
-                            ? query.OrderByDescending(x => x.ProductPrice)
-                            : query.OrderBy(x => x.ProductPrice);
-                }
-                else if (sortOption.SortBy.Equals("sku", StringComparison.OrdinalIgnoreCase))
-                {
-                    query =
-                        sortOption.SortOrder == SortOrder.Descending
-                            ? query.OrderByDescending(x => x.SKU)
-                            : query.OrderBy(x => x.SKU);
-                }
-                  else if (sortOption.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase))
-                {
-                    query =
-                        sortOption.SortOrder == SortOrder.Descending
-                            ? query.OrderByDescending(x => x.AverageRating)
-                            : query.OrderBy(x => x.AverageRating);
-                }
-                else if (sortOption.SortBy.Equals("date",StringComparison.OrdinalIgnoreCase)){
-
-                      query =
-                        sortOption.SortOrder == SortOrder.Descending
-                            ? query.OrderByDescending(x => x.AddedDate)
-                            : query.OrderBy(x => x.AddedDate);
-
-                }
-            }
-            return await query.ToListAsync();
-        }
-
+        //get all products by using filter feature
         public async Task<List<Product>> GetAllByFilteringAsync(FilterationOptions criteria)
         {
             IQueryable<Product> query = _products;
@@ -144,6 +80,46 @@ namespace src.Repository
             return await query.ToListAsync();
         }
 
+        //get all products by using sort feature
+        public async Task<List<Product>> GetAllBySortAsync(SortOptions sortOption)
+        {
+            IQueryable<Product> query = _products;
+
+            if (!string.IsNullOrEmpty(sortOption.SortBy))
+            {
+                if (sortOption.SortBy.Equals("price", StringComparison.OrdinalIgnoreCase))
+                {
+                    query =
+                        sortOption.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.ProductPrice)
+                            : query.OrderBy(x => x.ProductPrice);
+                }
+                else if (sortOption.SortBy.Equals("sku", StringComparison.OrdinalIgnoreCase))
+                {
+                    query =
+                        sortOption.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.SKU)
+                            : query.OrderBy(x => x.SKU);
+                }
+                else if (sortOption.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase))
+                {
+                    query =
+                        sortOption.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AverageRating)
+                            : query.OrderBy(x => x.AverageRating);
+                }
+                else if (sortOption.SortBy.Equals("date", StringComparison.OrdinalIgnoreCase))
+                {
+                    query =
+                        sortOption.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AddedDate)
+                            : query.OrderBy(x => x.AddedDate);
+                }
+            }
+            return await query.ToListAsync();
+        }
+
+        //get all products by using the search by name & pagination & filer & sort
         public async Task<List<Product>> GetAllAsync(SearchProcess to_search)
         {
             //implement search
@@ -165,12 +141,12 @@ namespace src.Repository
                 query = query.Where(x => x.ProductColor.ToLower() == to_search.Color.ToLower());
             }
 
-            if (to_search.MinPrice.HasValue)
+            if (to_search.MinPrice.HasValue && to_search.MinPrice.Value > 0)
             {
                 query = query.Where(x => x.ProductPrice >= to_search.MinPrice.Value);
             }
 
-            if (to_search.MaxPrice.HasValue)
+            if (to_search.MaxPrice.HasValue && to_search.MaxPrice.Value > 0)
             {
                 query = query.Where(x => x.ProductPrice <= to_search.MaxPrice.Value);
             }
@@ -199,21 +175,44 @@ namespace src.Repository
                             ? query.OrderByDescending(x => x.AverageRating)
                             : query.OrderBy(x => x.AverageRating);
                 }
-                else if (to_search.SortBy.Equals("date",StringComparison.OrdinalIgnoreCase)){
-
-                      query =
+                else if (to_search.SortBy.Equals("date", StringComparison.OrdinalIgnoreCase))
+                {
+                    query =
                         to_search.SortOrder == SortOrder.Descending
                             ? query.OrderByDescending(x => x.AddedDate)
                             : query.OrderBy(x => x.AddedDate);
-
                 }
-            } 
+            }
 
             //implement pagination
 
             query = query.Skip(to_search.Offset).Take(to_search.Limit);
 
             return await query.ToListAsync();
+        }
+
+        //get product by Id:
+        public async Task<Product?> GetProductByIdAsync(Guid productId)
+        {
+            return await _products
+            // .Include(p => p.SubCategoryName) // Eagerly load the SubCategory
+            .FirstOrDefaultAsync(p => p.ProductId == productId);
+        }
+
+        //update product info
+        public async Task<Product?> UpdateProductInfoAsync(Product product)
+        {
+            _products.Update(product);
+            await _databaseContext.SaveChangesAsync();
+            return product;
+        }
+
+        //delete a product
+        public async Task<bool> DeleteProductAsync(Product product)
+        {
+            _products.Remove(product);
+            await _databaseContext.SaveChangesAsync();
+            return true;
         }
     }
 }

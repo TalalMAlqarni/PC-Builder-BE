@@ -1,4 +1,3 @@
-using src.Entity;
 using src.Utils;
 using static src.DTO.ProductDTO;
 
@@ -12,9 +11,20 @@ namespace src.Services.product
         //get all products
         Task<List<GetProductDto>> GetAllProductsAsync();
 
-        //search for a product with pagination
+        //get all products in specific subcategory
+        Task<List<GetProductDto>> GetProductsBySubCategoryIdAsync(Guid subCategoryId);
+
+        //get all products by using the search by name & pagination
         Task<List<GetProductDto>> GetAllBySearchAsync(PaginationOptions paginationOptions);
 
+        //get all products by using filter feature
+        Task<List<GetProductDto>> GetAllByFilterationAsync(FilterationOptions productf);
+
+        //get all products by using sort feature
+        Task<List<GetProductDto>> GetAllBySortAsync(SortOptions sortOption);
+
+        //get all products by using the search by name & pagination & filer & sort
+        Task<List<GetProductDto>> GetAllAsync(SearchProcess to_search);
 
         //get product by id
         Task<GetProductDto> GetProductByIdAsync(Guid id);
@@ -22,13 +32,7 @@ namespace src.Services.product
         //update product info
         Task<GetProductDto> UpdateProductInfoAsync(Guid id, UpdateProductInfoDto product);
 
-        //delete product
+        //delete product by id
         Task<bool> DeleteProductByIdAsync(Guid id);
-
-        Task<List<GetProductDto>> GetAllByFilterationAsync(FilterationOptions productf);
-
-        Task<List<GetProductDto>> GetAllBySortAsync (SortOptions sortOption);
-
-        Task<List<GetProductDto>> GetAllAsync (SearchProcess to_search);
     }
 }
