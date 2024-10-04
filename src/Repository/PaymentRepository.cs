@@ -52,5 +52,22 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return true;
         }
+
+
+        public async Task<Cart?> GetCart(Guid CartId)
+        {
+            return await _databaseContext.Cart
+                .Include(c => c.CartDetails)
+                .ThenInclude(cd => cd.Product)
+                .FirstOrDefaultAsync(c => c.Id == CartId);
+        }
+        public async Task<Coupon?> GetCoupon(Guid? CouponId)
+        {
+            if(CouponId == null) 
+                return null;
+                
+            var coupon = await _databaseContext.Coupon.FindAsync(CouponId);
+            return coupon;
+        }
     }
 }

@@ -13,7 +13,5 @@ namespace src.Services
         Task<bool> DeleteOneAsync(Guid id);
 
         Task<bool> UpdateOneAsync(Guid id, OrderUpdateDTO updateDTO);
-
-
     }
 }

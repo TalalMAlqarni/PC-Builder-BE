@@ -10,15 +10,15 @@ namespace src.Controller
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class PaymentController : ControllerBase
+    public class PaymentsController : ControllerBase
     {
         protected readonly IPaymentService _paymentService;
-        public PaymentController(IPaymentService service)
+        public PaymentsController(IPaymentService service)
         {
             _paymentService = service;
         }
       
-        [Authorize]     
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List< PaymentCreateDto>>>GetAllAsync()
         {

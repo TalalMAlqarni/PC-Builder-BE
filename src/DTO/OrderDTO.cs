@@ -21,6 +21,10 @@ namespace src.DTO
             public string? State { get; set; }
             [Range(10000, 99999)]
             public int PostalCode { get; set; }
+            [Required]
+            public double CoordinateX { get; set; }
+            [Required]
+            public double CoordinateY { get; set; }
         }
         public class OrderReadDTO
         {
@@ -37,6 +41,8 @@ namespace src.DTO
             public string? City { get; set; }
             public string? State { get; set; }
             public int PostalCode { get; set; }
+            public double CoordinateX { get; set; }
+            public double CoordinateY { get; set; }
         }
         public class OrderUpdateDTO
         {
