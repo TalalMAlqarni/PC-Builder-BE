@@ -16,6 +16,7 @@ using System.Text;
 using src.Middlewares;
 using static src.Entity.User;
 using src.Services.review;
+using src.Services.Coupon;
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
@@ -38,7 +39,8 @@ builder
     .AddScoped<ISubCategoryService, SubCategoryService>().AddScoped<SubCategoryRepository, SubCategoryRepository>()
     .AddScoped<IPaymentService, PaymentService>().AddScoped<PaymentRepository, PaymentRepository>()
     .AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>()
-    .AddScoped<IReviewService, ReviewService>().AddScoped<ReviewRepository, ReviewRepository>();
+    .AddScoped<IReviewService, ReviewService>().AddScoped<ReviewRepository, ReviewRepository>()
+    .AddScoped<ICouponService, CouponService>().AddScoped<CouponRepository, CouponRepository>();
 
 builder.Services
 .AddAuthentication(options =>

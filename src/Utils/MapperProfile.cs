@@ -13,6 +13,7 @@ using static src.DTO.CartDTO;
 using static src.DTO.SubCategoryDTO;
 using Microsoft.Extensions.Options;
 using static src.DTO.ReviewDTO;
+using static src.DTO.CouponDTO;
 
 namespace src.Utils
 {
@@ -87,6 +88,14 @@ namespace src.Utils
             CreateMap<Review, ReadReviewDto>();
             CreateMap<CreateReviewDto, Review>();
             CreateMap<UpdateReviewDto, Review>()
+            .ForAllMembers(options =>
+                options.Condition((src, dest, srcProperty) => srcProperty != null)
+            );
+
+            //Coupon mappings
+            CreateMap<Coupon, CouponReadDto>();
+            CreateMap<CouponCreateDto, Coupon>();
+            CreateMap<CouponUpdateDto, Coupon>()
             .ForAllMembers(options =>
                 options.Condition((src, dest, srcProperty) => srcProperty != null)
             );

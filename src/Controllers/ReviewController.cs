@@ -5,10 +5,10 @@ namespace src.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class ReviewController : ControllerBase
+    public class ReviewsController : ControllerBase
     {
         protected IReviewService _reviewService;
-        public ReviewController(IReviewService reviewService)
+        public ReviewsController(IReviewService reviewService)
         {
             _reviewService = reviewService;
         }
