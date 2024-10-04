@@ -41,7 +41,7 @@ namespace src.Controller
             return Ok(subCategory);
         }
         
-       // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost] // Add a subcategory
         public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
         {
@@ -89,7 +89,7 @@ namespace src.Controller
             return Ok(await _productService.GetProductByIdAsync(productId));
         }
 
-      //  [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")] 
         [HttpPost("{subCategoryId}/products")] // Add products under a subcategory
         public async Task<ActionResult<GetProductDto>> CreateProductAsync(Guid subCategoryId, [FromBody] CreateProductDto productDto)
         {
