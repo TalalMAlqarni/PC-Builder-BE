@@ -12,19 +12,14 @@ namespace src.Entity
         [Required]
         public Guid UserId { get; set; }
         [Required]
-
         public Guid CartId { get; set; }
         [Required]
-
         public Guid PaymentId { get; set; }
         [Required]
-
         public DateTime OrderDate { get; set; }
         [Required]
-
         public DateTime ShipDate { get; set; }
         [Required]
-
         public string? OrderStatus { get; set; }
         public bool IsDelivered { get; set; }
         [Required]
@@ -38,5 +33,9 @@ namespace src.Entity
         public string? State { get; set; }
         [Range(10000, 99999)]
         public int PostalCode { get; set; }
+        [Required]
+        public double CoordinateX { get; set; }
+        [Required]
+        public double CoordinateY { get; set; }
     }
 }
