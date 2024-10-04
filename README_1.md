@@ -7,9 +7,15 @@ This is a backend solution for an e-commerce platform built with .NET 8. The pro
 ## Features
 
 - **User Management**:
-  - Register new user
+  - Create new user
   - User authentication with JWT token
   - Role-based access control (Admin, Customer)
+  - Display all users
+  - Display specific user
+  - Update user information
+  - Check for user Username , Email and phone number 
+  - Check null values
+  - Delete specific user
 - **Product Management**:
 - **Order Management**:
 
@@ -76,7 +82,7 @@ The API will be available at: `http://localhost:5228`
 ## Project structure
 
 ```bash
-|-- Controllers: API controllers with request and response
+|-- Controllers # API controllers with request and response
 |-- Database # DbContext and Database Configurations
 |-- DTOs # Data Transfer Objects
 |-- Entities # Database Entities (User, Product, Category, Order)
@@ -92,8 +98,12 @@ The API will be available at: `http://localhost:5228`
 
 ### User
 
-- **POST** `/api/users/register` – Register a new user.
-- **POST** `/api/users/login` – Login and get JWT token.
+- **POST** `/api/v1/Users` – Creat a new user.
+- **POST** `/api/v1/Users/signIn` – Login and get JWT token.
+- **GET** `/api/v1/Users` - Display all users
+- **GET** `/api/v1/Users/{id}` - Display specific user by Id
+- **PUT** `/api/v1/Users/{id}` - Update user information by Id
+- **DELETE** `api/v1/Users/{id}` - Delete user by Id
 
 ### Category
 #### Subcategory
