@@ -111,7 +111,7 @@ namespace src.Services.SubCategory
             };
         }
 
-        public async Task<List<SubCategoryReadDto>> GetAllBySearchAsync(PaginationOptions paginationOptions)
+        public async Task<List<SubCategoryReadDto>> GetAllBySearchAsync(PaginationOptions paginationOptions) 
         {
             var subCategoryList = await _subCategoryRepo.GetAllResults(paginationOptions);
             if (subCategoryList.Count == 0)

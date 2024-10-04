@@ -38,7 +38,7 @@ namespace src.Controller
             return Ok(category);
         }
 
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CategoryReadDto>> CreateCategory(CategoryCreateDto createDto)
         {
