@@ -24,7 +24,6 @@ namespace src.Controllers
         }
         // create user
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserReadDto>> CreateOne(UserCreateDto createDto)
         {
             var userCreated = await _userService.CreateOneAsync(createDto);
@@ -33,16 +32,19 @@ namespace src.Controllers
         
         // log in
         [HttpPost("signIn")]
-        
         public async Task<ActionResult<string>> SignInUser([FromBody] UserCreateDto createDto)
         {
             var token = await _userService.SignInAsync(createDto);
-            //return Created($"api/v1/users/{UserCreated.Id}", UserCreated);
-            // if(token )
-            // {
-            //     throw CustomException.UnAuthorized("Unauthorized access");
-            // }
             return Ok(token);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<UserReadDto>>> GetAllUsers()
+        {
+            var userList = await _userService.GetAllAsync();
+           
+                return Ok(userList);
+            
         }
         [HttpGet("{userId}")]
         [Authorize(Roles = "Admin")]
@@ -54,16 +56,6 @@ namespace src.Controllers
                 throw CustomException.BadRequest("User not found");
             }
             return Ok(foundUser);
-        }
-      //  [Authorize]
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<UserReadDto>>> GetAllUsers()
-        {
-            var userList = await _userService.GetAllAsync();
-           
-                return Ok(userList);
-            
         }
         [HttpDelete("{userId}")]
         public async Task<ActionResult> DeleteUser(Guid userId)
@@ -80,7 +72,7 @@ namespace src.Controllers
         public async Task<ActionResult<UserReadDto>> UpdateUser(Guid userId, UserUpdateDto updateDto)
         {
             var userRead = await _userService.UpdateOneAsync(userId, updateDto);
-            return Ok("User Updated seccussfuly");
+            return Ok($"{userRead} Updated seccussfuly");
         }
         
     }

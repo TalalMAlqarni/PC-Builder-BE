@@ -7,7 +7,6 @@ namespace src.Database
 
     public class DatabaseContext : DbContext
     {
-
         public DbSet<Cart> Cart { get; set; }
         public DbSet<CartDetails> CartDetails { get; set; }
         public DbSet<Category> Category { get; set; }
@@ -17,7 +16,6 @@ namespace src.Database
         public DbSet<Review> Review { get; set; }
         public DbSet<SubCategory> SubCategory { get; set; }
         public DbSet<User> User { get; set; }
-
         public DatabaseContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
