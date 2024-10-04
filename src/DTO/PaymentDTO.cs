@@ -10,9 +10,10 @@ namespace src.DTO
             public DateTime PaymentDate { get; set; }
             
             public bool PaymentStatus { get; set; }
-            public decimal TotalPrice { get; set; }
+            public decimal? TotalPrice { get; set; }
             public Guid CartId { get; set; }
             public Guid OrderId { get; set; }
+            public Guid? CouponId { get; set; }
         }
 
         // DTO for creating payments

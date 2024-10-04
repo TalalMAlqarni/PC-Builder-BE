@@ -14,12 +14,12 @@ namespace src.Controller
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class SubCategoryController : ControllerBase
+    public class SubCategoriesController : ControllerBase
     {
         protected readonly ISubCategoryService _subCategoryService;
         protected readonly IProductService _productService;
 
-        public SubCategoryController(ISubCategoryService service,IProductService productService)
+        public SubCategoriesController(ISubCategoryService service,IProductService productService)
         {
             _subCategoryService = service;
             _productService = productService;
@@ -73,9 +73,10 @@ namespace src.Controller
         //  view all the products
         [AllowAnonymous]
         [HttpGet("products")] // Gat all products inside subcategories
-        public async Task<ActionResult<List<GetProductDto>>> GetAllProductsAsync()
+        public async Task<ActionResult<List<GetProductDto>>> GetAllProductsAsync([FromQuery] SearchProcess to_search)
         {
-            var products = await _productService.GetAllProductsAsync();
+          //  var products = await _productService.GetAllProductsAsync();
+          var products = await _productService.GetAllAsync(to_search);
             return Ok(products);
         }
 
@@ -130,4 +131,4 @@ namespace src.Controller
             return Ok(subCategpryList);
         }
     }
-}
+} 

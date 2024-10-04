@@ -11,12 +11,12 @@ namespace src.Controller
     
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class CategoryController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         protected readonly ICategoryService _categoryService;
         private readonly ISubCategoryService _subCategoryService;
 
-        public CategoryController(ICategoryService categoryService, ISubCategoryService subCategoryService)
+        public CategoriesController(ICategoryService categoryService, ISubCategoryService subCategoryService)
         {
             _categoryService = categoryService;
             _subCategoryService = subCategoryService;
@@ -38,7 +38,7 @@ namespace src.Controller
             return Ok(category);
         }
 
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CategoryReadDto>> CreateCategory(CategoryCreateDto createDto)
         {
