@@ -57,7 +57,7 @@ namespace src.Repository
             // return updateSubCategory;
         }
 
-        public async Task<List<SubCategory>> GetAllResults(PaginationOptions paginationOptions)
+        public async Task<List<SubCategory>> GetAllResults(PaginationOptions paginationOptions) //this method will apply the basic search functionality with the pagination only
         { 
             var result = _subCategories
             .Include(sc => sc.Category) // Include the Category
@@ -69,5 +69,19 @@ namespace src.Repository
                 .Take(paginationOptions.Limit)
                 .ToListAsync();
         }
+
+        //All the search functionalities should be here (search & pagination & sort & filter)
+        // public async Task<List<SubCategory>>GetAllResultsBySearch (SearchProcess to_search){ 
+
+
+
+
+        // }
+
+
+
+
+
+
     }
 }   

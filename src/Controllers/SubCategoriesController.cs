@@ -41,7 +41,7 @@ namespace src.Controller
             return Ok(subCategory);
         }
         
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [HttpPost] // Add a subcategory
         public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
         {
@@ -73,9 +73,10 @@ namespace src.Controller
         //  view all the products
         [AllowAnonymous]
         [HttpGet("products")] // Gat all products inside subcategories
-        public async Task<ActionResult<List<GetProductDto>>> GetAllProductsAsync()
+        public async Task<ActionResult<List<GetProductDto>>> GetAllProductsAsync([FromQuery] SearchProcess to_search)
         {
-            var products = await _productService.GetAllProductsAsync();
+          //  var products = await _productService.GetAllProductsAsync();
+          var products = await _productService.GetAllAsync(to_search);
             return Ok(products);
         }
 
@@ -88,7 +89,7 @@ namespace src.Controller
             return Ok(await _productService.GetProductByIdAsync(productId));
         }
 
-        [Authorize(Roles = "Admin")] 
+      //  [Authorize(Roles = "Admin")] 
         [HttpPost("{subCategoryId}/products")] // Add products under a subcategory
         public async Task<ActionResult<GetProductDto>> CreateProductAsync(Guid subCategoryId, [FromBody] CreateProductDto productDto)
         {
