@@ -96,16 +96,18 @@ The API will be available at: `http://localhost:5228`
 - **POST** `/api/users/login` – Login and get JWT token.
 
 ### Category
+#### Subcategory
+#### Product
 
 ### Subcategory
 
 ### Product 
 
 ### Cart
-##  
+ 
 
 ### Payment 
-### Coupon
+#### Coupon
 
 ### Order 
 

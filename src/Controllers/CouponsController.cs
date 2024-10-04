@@ -20,6 +20,7 @@ namespace src.Controller
         }
         
         // Get all coupon: GET api/v1/coupons
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<CouponReadDto>>> GetAllCoupons()
         {
@@ -27,7 +28,8 @@ namespace src.Controller
             return Ok(coupon_list);
         }
     
-    // get coupon by id: GET api/v1/coupons/{id}
+        // get coupon by id: GET api/v1/coupons/{id}
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<CouponReadDto>> GetCouponById(Guid id)
         {
@@ -35,35 +37,38 @@ namespace src.Controller
             return Ok(coupon);
         }
     
-    
-    // create coupon: POST api/v1/coupons
-    [HttpPost]
-    public async Task<ActionResult<CouponReadDto>> CreateCoupon(CouponCreateDto coupon){
+        // create coupon: POST api/v1/coupons
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult<CouponReadDto>> CreateCoupon(CouponCreateDto coupon){
 
-        var created_coupon = await _couponService.CreateOneAsync(coupon);
+            var created_coupon = await _couponService.CreateOneAsync(coupon);
 
-        return Ok(created_coupon);
-    }
-    
-    // update coupon: PUT api/v1/coupons/{id}
-    [HttpPut("{id}")]
-    public async Task<ActionResult<CouponReadDto>> UpdateCoupon(Guid id, CouponUpdateDto coupon){
+            return Ok(created_coupon);
+        }
+  
+        // update coupon: PUT api/v1/coupons/{id}
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<CouponReadDto>> UpdateCoupon(Guid id, CouponUpdateDto coupon){
 
-        var updated_coupon = await _couponService.UpdateOneAsync(id,coupon);
+            var updated_coupon = await _couponService.UpdateOneAsync(id,coupon);
 
-        return Ok(updated_coupon);
-    }
-    // delete coupon: DELETE api/v1/coupons/{id}
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
-    {
-        var result = await _couponService.DeleteOneAsync(id);
-        if (!result)
+            return Ok(updated_coupon);
+        }
+        
+        // delete coupon: DELETE api/v1/coupons/{id}
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
         {
-            return NotFound($"Coupon with ID = {id} not found.");
-        }
-        return NoContent(); // 204 No Content
-        }
+            var result = await _couponService.DeleteOneAsync(id);
+            if (!result)
+            {
+                return NotFound($"Coupon with ID = {id} not found.");
+            }
+            return NoContent(); // 204 No Content
+            }
     }
 }
       
