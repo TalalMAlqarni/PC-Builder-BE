@@ -16,7 +16,9 @@ using System.Text;
 using src.Middlewares;
 using static src.Entity.User;
 using src.Services.review;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using src.Services.Coupon;
+
 
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
@@ -26,6 +28,7 @@ dataSourceBuilder.MapEnum<UserRole>();
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseNpgsql(dataSourceBuilder.Build());
+    options.ConfigureWarnings(x => x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
 }
 );
 // add utomapper
