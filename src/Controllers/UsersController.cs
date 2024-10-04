@@ -29,33 +29,22 @@ namespace src.Controllers
             var userCreated = await _userService.CreateOneAsync(createDto);
             return Ok(userCreated);
         }
-        //create admin
-        // [HttpPost("signIn/admin")]
-        // [Authorize]
-        // public async Task<ActionResult<string>> SignInUser([FromBody] UserCreateDto createDto)
-        // {
-        //     var token = await _userService.SignInAsync(createDto);
-        //    if(token != null)
-        //    {
-        //         if(createDto.Email == "Admin@gmail.com")
-        //         {
-        //             [HttpPut] 
-        //         }
-        //    }
-        //     return Ok(token);
-        // }
+        
         // log in
         [HttpPost("signIn")]
-        
         public async Task<ActionResult<string>> SignInUser([FromBody] UserCreateDto createDto)
         {
             var token = await _userService.SignInAsync(createDto);
-            //return Created($"api/v1/users/{UserCreated.Id}", UserCreated);
-            // if(token )
-            // {
-            //     throw CustomException.UnAuthorized("Unauthorized access");
-            // }
             return Ok(token);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<UserReadDto>>> GetAllUsers()
+        {
+            var userList = await _userService.GetAllAsync();
+           
+                return Ok(userList);
+            
         }
         [HttpGet("{userId}")]
         [Authorize(Roles = "Admin")]
@@ -64,19 +53,9 @@ namespace src.Controllers
             var foundUser = await _userService.GetByIdAsync(userId);
             if (foundUser == null)
             {
-                return NotFound("User not found");
+                throw CustomException.BadRequest("User not found");
             }
             return Ok(foundUser);
-        }
-      //  [Authorize]
-        [HttpGet]
-        // [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<UserReadDto>>> GetAllUsers()
-        {
-            var userList = await _userService.GetAllAsync();
-           
-                return Ok(userList);
-            
         }
         [HttpDelete("{userId}")]
         public async Task<ActionResult> DeleteUser(Guid userId)
@@ -86,14 +65,14 @@ namespace src.Controllers
                 throw CustomException.UnAuthorized($"user with {userId}  doesnt exist");
 
             var isDeleted = await _userService.DeleteOneAsync(userId);
-            return isDeleted ? NoContent() : StatusCode(500);
+            return isDeleted ? Ok("user deleted seccsufully") : StatusCode(500);
         }
          
         [HttpPut("{userId}")]
         public async Task<ActionResult<UserReadDto>> UpdateUser(Guid userId, UserUpdateDto updateDto)
         {
             var userRead = await _userService.UpdateOneAsync(userId, updateDto);
-            return Ok(userRead);
+            return Ok($"{userRead} Updated seccussfuly");
         }
         
     }

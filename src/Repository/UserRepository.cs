@@ -8,7 +8,6 @@ using src.Entity;
 
 namespace src.Repository
 {
-
     public class UserRepository
     {
         // user table
@@ -25,7 +24,6 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return newUser;
         }
-
         public async Task<List<User>> GetAllAsync()
         {   
             return await _user.ToListAsync();
@@ -46,9 +44,7 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return true;
         }
-
-         // find user by email
-
+        // find user by email
         public async Task<User> FindByEmailAsync(string email)
         {
             return await _user.FirstOrDefaultAsync(u => u.Email == email);
