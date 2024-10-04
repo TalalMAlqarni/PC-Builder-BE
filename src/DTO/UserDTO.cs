@@ -36,7 +36,6 @@ namespace src.DTO
             public string? PhoneNumber { get; set; }
             public DateOnly BirthDate { get; set; }
             public UserRole Role { get; set; }
-            public string? Password { get ; set ; }
             public Guid CartId { get; set; }
         }
         public class UserUpdateDto
