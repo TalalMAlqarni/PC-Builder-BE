@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using src.Database;
 using src.Entity;
-using src.Repository;
 
+using src.Utils;
 namespace src.Repository
 {
     public class CategoryRepository
@@ -31,15 +28,17 @@ namespace src.Repository
         
         public async Task<List<Category>> GetAllAsync()
         {
-            return await _categories.ToListAsync();
+            return await _categories.Include(sc=>sc.SubCategory).  
+            ThenInclude(p => p.Products)
+            .ToListAsync();
         }
-        // public async Task<List<Category>> GetByIdAsync()
-        // {
-        //     return await _categories.ToListAsync();
-        // }
-        public async Task<Category?> GetByIdAsync(Guid id)
+
+         public async Task<Category> GetByIdAsync(Guid id)
         {
-            return await _categories.FindAsync(id);
+             return await _categories
+                .Include(c => c.SubCategory)
+                .ThenInclude(p => p.Products)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<bool> DeleteOneAsync(Category category)
@@ -48,13 +47,12 @@ namespace src.Repository
             await _databaseContext.SaveChangesAsync();
             return true;
         }  
-         public async Task<bool> UpdateOneAsync(Category updateCategory)
-        // public async Task<Category> UpdateOneAsync(Category updateCategory)
+        
+        public async Task<bool> UpdateOneAsync(Category updateCategory)
         {
             _categories.Update(updateCategory);
             await _databaseContext.SaveChangesAsync();
             return true;
-            // return updateCategory;
         }
     }
 }   

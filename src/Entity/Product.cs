@@ -1,9 +1,13 @@
+using src.DTO;
+
 namespace src.Entity
 {
     public class Product
     {
 
-
+        public Guid SubCategoryId { get; set; }
+        
+        public string? SubCategoryName { get; set; }
 
         public Guid ProductId { get; set; }
         public string? ProductName { get; set; }
@@ -24,6 +28,6 @@ namespace src.Entity
         public decimal Weight { get; set; }
 
 
-        public decimal AverageRating { get; set; }
+        public decimal? AverageRating { get; set; }
     }
 }

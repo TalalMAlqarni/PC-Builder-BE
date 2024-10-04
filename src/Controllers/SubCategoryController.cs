@@ -1,9 +1,14 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
 using src.Services.Category;
 using src.Services.SubCategory;
+using src.Services.product;
 using static src.DTO.SubCategoryDTO;
+using static src.DTO.ProductDTO;
+using Microsoft.EntityFrameworkCore;
+using src.Utils;
+using Microsoft.AspNetCore.Authorization;
+// using Microsoft.AspNetCore.Authorization;
 
 namespace src.Controller
 {
@@ -12,107 +17,117 @@ namespace src.Controller
     public class SubCategoryController : ControllerBase
     {
         protected readonly ISubCategoryService _subCategoryService;
-        public SubCategoryController(ISubCategoryService Service)
-        {
-            _subCategoryService = Service;
-        }
+        protected readonly IProductService _productService;
 
-       [HttpGet]
-        public async Task<ActionResult<List< SubCategoryCreateDto>>>GetAll()
+        public SubCategoryController(ISubCategoryService service,IProductService productService)
         {
-            var subCategoryList = await _subCategoryService.GetAllAsynac();
-            return Ok(subCategoryList);
+            _subCategoryService = service;
+            _productService = productService;
         }
         
-        [HttpGet("{subCategoryId}")]
-        public async Task<ActionResult<SubCategoryReadDto>>GetById([FromRoute] Guid subCategoryId)
+        [AllowAnonymous]
+        [HttpGet] // Get all subcategories
+        public async Task<ActionResult<List<SubCategoryCreateDto>>>GetAllAsync()
         {
-            var subCategory = await _subCategoryService.GetByIdAsynac (subCategoryId);
+            var subCategoryList = await _subCategoryService.GetAllAsync();
+            return Ok(subCategoryList);
+        }
+
+        [AllowAnonymous] 
+        [HttpGet("{subCategoryId}")] // Get a specific category by Id
+        public async Task<ActionResult<SubCategoryReadDto>>GetSubCategoryByIdWithProductsAsync([FromRoute] Guid subCategoryId)
+        {
+            var subCategory = await _subCategoryService.GetSubCategoryByIdAsync (subCategoryId);
             return Ok(subCategory);
         }
-
-        [HttpDelete("{subCategoryId}")]
+        
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteOne([FromRoute] Guid subCategoryId)
-        {
-            var result = await _subCategoryService.DeleteOneAsync(subCategoryId);
-            
-            if (!result)
-            {
-                return NotFound($"Subcategory with Id = {subCategoryId} not found.");
-            }
-            
-            return NoContent(); // 204 No Content
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<SubCategoryReadDto>> CreateOne([FromBody] SubCategoryCreateDto createDto)
+        [HttpPost] // Add a subcategory
+        public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
         {
             var subCategoryCreated = await _subCategoryService.CreateOneAsync(createDto);
-            return Created($"api/v1/subcategories/{subCategoryCreated.SubCategoryId}", subCategoryCreated);
+            return Ok(subCategoryCreated); 
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{subCategoryId}")] // Update a specific subcategory using its Id
+        public async Task<ActionResult<SubCategoryReadDto>> UpdateSubCategory( [FromRoute] Guid subCategoryId, [FromBody] SubCategoryUpdateDto updateDto)
+        {
+            // Optionally, return the updated SubCategory data
+            var updatedSubCategory = await _subCategoryService.UpdateOneAsync(subCategoryId,updateDto);
+            return Ok(updatedSubCategory);
+        }
 
-        // GET method to retrieve all subcategories 
-        // [HttpGet]
-        // public ActionResult GetSubCategories()
-        // {
-        //     return Ok(subCategories);
-        // }
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{subCategoryId}")] // Delete a specific subcategory using its Id
+        public async Task<IActionResult> DeleteSubCategory( Guid subCategoryId)
+        {
+            var result = await _subCategoryService.DeleteOneAsync(subCategoryId);
+            if (!result)
+            {
+                return NotFound($"Subcategory with ID = {subCategoryId} not found.");
+            }
+            return NoContent(); 
+        }
 
-        // // GET method to retrieve all subcategories for a specific category
-        // [HttpGet("{categoryName}")]
-        // public ActionResult GetSubCategoriesByCategory(string categoryName)
-        // {
-        //     var category = categories.FirstOrDefault(c => c.categoryName.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
-        //     if (category == null)
-        //     {
-        //         return NotFound($"Category '{categoryName}' not found.");
-        //     }
+        //  view all the products
+        [AllowAnonymous]
+        [HttpGet("products")] // Gat all products inside subcategories
+        public async Task<ActionResult<List<GetProductDto>>> GetAllProductsAsync()
+        {
+            var products = await _productService.GetAllProductsAsync();
+            return Ok(products);
+        }
 
-        //     var subs = subCategories.Where(sc => sc.Id == category.Id).ToList();
-        //     if (subs.Count == 0)
-        //     {
-        //         return NotFound($"No subcategories found for category '{categoryName}'.");
-        //     }
-        //     return Ok(subs);
-        // }
+        //get product by id
+        [AllowAnonymous] // Get product details by using its id
+        [HttpGet("products/{productId}")] // Get all products of all subcategories
+        public async Task<ActionResult<GetProductDto>> GetProductById(Guid productId)
+        {
+            //var isFound = await _productService.GetProductByIdAsync(productId);
+            return Ok(await _productService.GetProductByIdAsync(productId));
+        }
 
-        // // POST method to add a new subcategory
-        // [HttpPost("{categoryName}")]
-        // public ActionResult AddSubCategory(string categoryName, [FromBody] SubCategory newSubCategory)
-        // {
-        //     newSubCategory.Id = Guid.NewGuid();
-        //     newSubCategory.Name = categoryName;
-        //     subCategories.Add(newSubCategory);
-        //     return CreatedAtAction(nameof(GetSubCategoriesByCategory), new { categoryName = categoryName }, newSubCategory);
-        // }
+        [Authorize(Roles = "Admin")] 
+        [HttpPost("{subCategoryId}/products")] // Add products under a subcategory
+        public async Task<ActionResult<GetProductDto>> CreateProductAsync(Guid subCategoryId, [FromBody] CreateProductDto productDto)
+        {
+            // Ensure that the product is linked to the correct subcategory
+            productDto.SubCategoryId = subCategoryId;
 
-        // // PUT method to update a subcategory
-        // [HttpPut("{categoryName}/{subCategoryName}")]
-        // public ActionResult UpdateSubCategory(string categoryName, string subCategoryName, [FromBody] SubCategory updatedSubCategory)
-        // {
-        //     var existingSubCategory = subCategories.FirstOrDefault(sc => sc.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase) && sc.Name.Equals(subCategoryName, StringComparison.OrdinalIgnoreCase));
-        //     if (existingSubCategory == null)
-        //     {
-        //         return NotFound($"SubCategory '{subCategoryName}' not found under category '{categoryName}'.");
-        //     }
-        //     existingSubCategory.Name = updatedSubCategory.Name;
-        //     return NoContent();
-        // }
+            // Create product via the service
+            var newProduct = await _productService.CreateProductAsync(productDto);
 
-        // // DELETE method to remove a subcategory
-        // [HttpDelete("{categoryName}/{subCategoryName}")]
-        // public ActionResult DeleteSubCategory(string categoryName, string subCategoryName)
-        // {
-        //     var subCategory = subCategories.FirstOrDefault(sc => sc.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase) && sc.Name.Equals(subCategoryName, StringComparison.OrdinalIgnoreCase));
-        //     if (subCategory == null)
-        //     {
-        //         return NotFound($"SubCategory '{subCategoryName}' not found under category '{categoryName}'.");
-        //     }
-        //     subCategories.Remove(subCategory);
-        //     return NoContent();
-        // }
+            return Ok(newProduct);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("products/{productId}")] // Update a product under a subcategroy by using prodcut id
+        public async Task<ActionResult<GetProductDto>> UpdateProductInfo(
+        Guid productId,
+        UpdateProductInfoDto productInfoDto)
+        {
+            var updatedInfo = await _productService.UpdateProductInfoAsync(
+                productId,
+                productInfoDto
+            );
+            return Ok(updatedInfo);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("products/{productId}")] // Delete a product under a subcategroy by using prodcut id
+            public async Task<ActionResult<bool>> DeleteProductByIdAsync(Guid productId)
+        {
+            var isDeleted= await _productService.DeleteProductByIdAsync(productId);
+            return Ok(isDeleted);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("search")] // Get all subcategories that match the search using pagination
+        public async Task<ActionResult<List<SubCategoryReadDto>>> GetAllSubCategpryBySearch( [FromQuery] PaginationOptions paginationOptions)
+        {
+            var subCategpryList = await _subCategoryService.GetAllBySearchAsync(paginationOptions);
+            return Ok(subCategpryList);
+        }
     }
 }
