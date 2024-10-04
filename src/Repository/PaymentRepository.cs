@@ -18,7 +18,6 @@ namespace src.Repository
             _payments = databaseContext.Set<Payment>();
         }
 
-        // Create a new payment record
         public async Task<Payment> CreateOneAsync(Payment newPayment)
         {
             await _payments.AddAsync(newPayment);

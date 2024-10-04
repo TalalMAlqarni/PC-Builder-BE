@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using src.Entity;
+using src.Controller;
 using static src.Entity.User;
 
 namespace src.Database

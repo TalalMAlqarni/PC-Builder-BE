@@ -19,23 +19,35 @@ namespace src.Repository
         }
 
         // add a new product:
-        public async Task<Product> AddProductAsync(Product newProduct)
+        public async Task<Product> AddProductAsync(Product product)
         {
-            await _products.AddAsync(newProduct);
+            await _products.AddAsync(product);
             await _databaseContext.SaveChangesAsync();
-            return newProduct;
+            return product;
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            return await _products.ToListAsync();
+            return await _products
+            // .Include(p => p.SubCategoryName) 
+            .ToListAsync();
         }
 
         //get product by Id:
         public async Task<Product?> GetProductByIdAsync(Guid productId)
         {
-            return await _products.FindAsync(productId);
+            return await _products
+            // .Include(p => p.SubCategoryName) // Eagerly load the SubCategory
+            .FirstOrDefaultAsync(p => p.ProductId == productId); 
         }
+
+        public async Task<List<Product>> GetProductsBySubCategoryIdAsync(Guid subCategoryId)
+        {
+            return await _products
+                .Where(p => p.SubCategoryId == subCategoryId) // Filter by SubCategoryId
+                .ToListAsync();
+        }
+
 
         //delete a product
         public async Task<bool> DeleteProductAsync(Product product)
@@ -85,6 +97,21 @@ namespace src.Repository
                             ? query.OrderByDescending(x => x.SKU)
                             : query.OrderBy(x => x.SKU);
                 }
+                  else if (sortOption.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase))
+                {
+                    query =
+                        sortOption.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AverageRating)
+                            : query.OrderBy(x => x.AverageRating);
+                }
+                else if (sortOption.SortBy.Equals("date",StringComparison.OrdinalIgnoreCase)){
+
+                      query =
+                        sortOption.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AddedDate)
+                            : query.OrderBy(x => x.AddedDate);
+
+                }
             }
             return await query.ToListAsync();
         }
@@ -120,11 +147,9 @@ namespace src.Repository
         public async Task<List<Product>> GetAllAsync(SearchProcess to_search)
         {
             //implement search
-
-
-
             var search_result = _products.Where(x =>
                 x.ProductName.ToLower().Contains(to_search.Search.ToLower())
+                || x.Description.ToLower().Contains(to_search.Search.ToLower())
             );
 
             //implement filter
@@ -160,7 +185,6 @@ namespace src.Repository
                             ? query.OrderByDescending(x => x.ProductPrice)
                             : query.OrderBy(x => x.ProductPrice);
                 }
-                //if not it will be sku:
                 else if (to_search.SortBy.Equals("sku", StringComparison.OrdinalIgnoreCase))
                 {
                     query =
@@ -168,7 +192,22 @@ namespace src.Repository
                             ? query.OrderByDescending(x => x.SKU)
                             : query.OrderBy(x => x.SKU);
                 }
-            }
+                else if (to_search.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase))
+                {
+                    query =
+                        to_search.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AverageRating)
+                            : query.OrderBy(x => x.AverageRating);
+                }
+                else if (to_search.SortBy.Equals("date",StringComparison.OrdinalIgnoreCase)){
+
+                      query =
+                        to_search.SortOrder == SortOrder.Descending
+                            ? query.OrderByDescending(x => x.AddedDate)
+                            : query.OrderBy(x => x.AddedDate);
+
+                }
+            } 
 
             //implement pagination
 

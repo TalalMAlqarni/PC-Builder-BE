@@ -6,10 +6,10 @@ namespace src.Entity
 {
     public class SubCategory
     {
-        // Category forigen key 
-        public Guid Id { get; set; }
-        // SubCategory primary id 
-        public Guid SubCategoryId  { get; set; }
-        public string? Name { get; set; }
+        public Guid SubCategoryId  { get; set; } // SubCategory primary id 
+        public Guid CategoryId { get; set; } // Category forigen key 
+        public string Name { get; set; }
+        public Category? Category { get; set; }  // Navigation property
+        public List<Product>? Products { get; set; }
     }
 }    

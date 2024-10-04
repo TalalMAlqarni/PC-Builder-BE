@@ -9,12 +9,11 @@ namespace src.Services.Category
 {
     public interface ICategoryService
     {
-        Task<CategoryReadDto> CreateOneAsync(CategoryCreateDto createDto);
-        Task<List<CategoryReadDto>> GetAllAsynac();
+        Task<CategoryReadDto> CreateOneAsync(CategoryCreateDto creaDto);
+        Task<List<CategoryReadDto>> GetAllAsync();
 
-        Task<CategoryReadDto> GetByIdAsynac(Guid id);
-
-        Task<bool> DeleteOneAsync(Guid id, string categoryName);
-        Task<bool> UpdateOneAsync(Guid id, string categoryName,CategoryUpdateDto updateDto);
+        Task<CategoryReadDto> GetByIdAsync(Guid id);
+        Task<bool> DeleteOneAsync(Guid id);
+        Task<bool> UpdateOneAsync(Guid id,CategoryUpdateDto updateDto);
     }
 }

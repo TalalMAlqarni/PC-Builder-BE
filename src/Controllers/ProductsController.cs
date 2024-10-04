@@ -1,3 +1,4 @@
+// using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using src.Entity;
@@ -96,7 +97,7 @@ namespace src.Controller
 
         //add product : it'll moved to the subcategory class
         [HttpPost] // had to check the endopoint
-        [Authorize(Roles = "Admin")] //didn't test it yet
+        //[Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult<GetProductDto>> CreateProduct(CreateProductDto productDto)
         {
             var newProduct = await _productService.CreateProductAsync(productDto);
@@ -107,26 +108,10 @@ namespace src.Controller
             );
         }
 
-        // //search on a specific product byname
-        // [HttpGet("{name}")] //?
-        // public ActionResult GetProductByName(string name)
-        // {
-        //     List<Product>? result = products
-        //          .Where(x => x.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase))
-        //          .ToList();
-
-        //     if (result is null)
-        //     {
-        //         return NotFound("No Results Found");
-        //     }
-
-        //     return Ok(result);
-        // }
-
-
+      
         //delete a product, it'll moved to the subcategory class
         [HttpDelete("{productId}")]
-        [Authorize(Roles = "Admin")] //didn't test it yet
+       // [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult> DeleteProductById(Guid productId)
         {
             var toDelete = await _productService.DeleteProductByIdAsync(productId);
@@ -134,7 +119,7 @@ namespace src.Controller
         }
 
         [HttpPut("{productId}")]
-        [Authorize(Roles = "Admin")] //didn't test it yet
+        // [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult<GetProductDto>> UpdateProductInfo(
             Guid productId,
             UpdateProductInfoDto productInfoDto
@@ -147,42 +132,6 @@ namespace src.Controller
             return Ok(updatedInfo);
         }
 
-        // public ActionResult UpdateProductInfo(
-        //     string attributeName,
-        //     string newValue,
-        //     Product product,
-        //     Guid id
-        // )
-        // {
-        //     // Add the condition (if user_role is admin, otherwise it will not be allowed)
-        //     Product? isFound = products.FirstOrDefault(x => x.ProductId == id);
-
-        //     if (isFound == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     // is switch case a good choice here? like what info you want to update?
-        //     switch (attributeName)
-        //     {
-        //         case "Name": // I want to add ignore case
-        //             isFound.ProductName = newValue;
-        //             product.ProductName = isFound.ProductName;
-        //             break;
-        //         case "Color":
-        //             isFound.ProductColor = newValue;
-        //             product.ProductColor = isFound.ProductColor;
-        //             break;
-        //         case "Price":
-        //             isFound.ProductPrice = Convert.ToDecimal(newValue);
-        //             product.ProductPrice = isFound.ProductPrice;
-        //             break;
-        //         case "Weight":
-        //             isFound.Weight = Convert.ToDecimal(newValue);
-        //             product.Weight = isFound.Weight;
-        //             break;
-        //     }
-        //     return Ok(isFound);
-        // }
+       
     }
 }

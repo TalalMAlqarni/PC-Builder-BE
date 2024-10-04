@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+
 using src.Entity;
 using src.Services.cart;
 using src.Utils;
@@ -16,7 +17,7 @@ namespace src.Controller
         {
             _cartService = service;
         }
-        //get all carts: GET api/v1/cart
+        // get all carts: GET api/v1/cart
         [HttpGet]
         public async Task<ActionResult<List<CartReadDto>>> GetAllCarts()
         {
@@ -58,5 +59,4 @@ namespace src.Controller
         }
     }
 }
-
 
