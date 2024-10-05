@@ -24,16 +24,7 @@ namespace src.Services.product
             _mapper = mapper;
         }
 
-        // public async Task<GetProductDto> CreateProductAsync(CreateProductDto createProductDto)
-        // {
-        //     var product = _mapper.Map<CreateProductDto, Product>(createProductDto);
-
-        //     var newProduct = await _productRepository.AddProductAsync(product);
-
-        //     return _mapper.Map<Product, GetProductDto>(newProduct);
-        // }
-
-        //create product
+        //Raghad
         public async Task<GetProductDto> CreateProductAsync(CreateProductDto createProductDto)
         {
             var subCategory = await _subCategories.GetByIdAsync(createProductDto.SubCategoryId);
@@ -48,13 +39,15 @@ namespace src.Services.product
                 ProductPrice = createProductDto.ProductPrice,
                 Weight = createProductDto.Weight,
                 SubCategoryId = subCategory.SubCategoryId,
-                SubCategoryName =
-                    subCategory.Name // Link to the correct subcategory
-                ,
+                SubCategoryName = subCategory.Name // Link to the correct subcategory
+
             };
 
             // Save the product using the repository
             var newProduct = await _productRepository.AddProductAsync(product);
+            // var subCategory = await _subCategories.GetByIdAsync(newProduct.SubCategoryId);
+            // Save the product using the repository
+            // var newProduct = await _productRepository.AddProductAsync(product);
             // var subCategory = await _subCategories.GetByIdAsync(newProduct.SubCategoryId);
 
             return new GetProductDto

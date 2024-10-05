@@ -19,7 +19,6 @@ namespace src.Services.SubCategory
 
         public SubCategoryService(SubCategoryRepository subCategoryRepo, CategoryRepository categoryRepo, IMapper mapper)
         { 
-            //  _productRepository = productRepository;     
             _subCategoryRepo = subCategoryRepo;
             _categoryRepo = categoryRepo;
             _mapper = mapper;
@@ -27,11 +26,10 @@ namespace src.Services.SubCategory
 
         public async Task<SubCategoryReadDto> CreateOneAsync(SubCategoryCreateDto createDto)
         {
-            // Check if the category exists
             var category = await _categoryRepo.GetByIdAsync(createDto.CategoryId);
             if (category == null)
             {
-                throw new Exception("Category does not exist."); //TRYING TO USE CUSTOME Ex
+                throw CustomException.NotFound("Category does not exist."); //TRYING TO USE CUSTOME Ex
             }
 
             // Create a new SubCategory entity
@@ -42,10 +40,7 @@ namespace src.Services.SubCategory
                 Products= createDto.Products
             };
 
-            // Save the new subcategory to the repository
             var savedSubCategory = await _subCategoryRepo.AddAsync(newSubCategory);
-
-            // Map the entity to SubCategoryReadDto
             var subCategoryReadDto = new SubCategoryReadDto
             {
                 SubCategoryId = savedSubCategory.SubCategoryId,
@@ -82,20 +77,20 @@ namespace src.Services.SubCategory
 
             return subCategoryReadDtoList;
         }
-        
+
         public async Task<SubCategoryReadDto?> GetSubCategoryByIdAsync(Guid subCategoryId)
         {
             var subCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
             if (subCategory == null)
             {
-                return null; 
+                throw CustomException.NotFound($"SubCategory with Id: {subCategoryId} is not found");
             }
             return new SubCategoryReadDto
             {
                 SubCategoryId = subCategory.SubCategoryId,
                 Name = subCategory.Name,
                 CategoryId = subCategory.CategoryId,
-                CategoryName = subCategory.Category?.CategoryName, // Safeguard null references
+                CategoryName = subCategory.Category?.CategoryName, 
                 Products = subCategory.Products.Select(p => new GetProductDto
                 {
                     ProductId = p.ProductId,
@@ -135,7 +130,7 @@ namespace src.Services.SubCategory
             var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
             if (foundSubCategory == null)
             {
-                return false;
+                throw CustomException.NotFound($"SubCategory with Id: {subCategoryId} is not found");
             }
             _mapper.Map(updateDto, foundSubCategory);
             return await _subCategoryRepo.UpdateOneAsync(foundSubCategory); 
@@ -146,7 +141,7 @@ namespace src.Services.SubCategory
             var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
             if (foundSubCategory == null)
             {
-                return false; 
+                throw CustomException.NotFound($"SubCategory with Id: {subCategoryId} is not found");
             }
             return await _subCategoryRepo.DeleteOneAsync(foundSubCategory);
         }

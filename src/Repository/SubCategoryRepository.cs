@@ -38,9 +38,9 @@ namespace src.Repository
         public async Task<SubCategory> GetByIdAsync(Guid subCategoryId)
         {
             return await _subCategories
-                .Include(sb => sb.Category) // Include the Category
-                .Include(sb => sb.Products) // Include the Products
-                .FirstOrDefaultAsync(sb => sb.SubCategoryId == subCategoryId);
+                .Include(sb => sb.Category)  
+                .Include(sb => sb.Products)  
+                .FirstOrDefaultAsync(sb => sb.SubCategoryId == subCategoryId);   
         }
 
         public async Task<bool> DeleteOneAsync(SubCategory subCategory)
@@ -50,21 +50,20 @@ namespace src.Repository
             return true;
         }
 
-        public async Task<bool> UpdateOneAsync(SubCategory updateSubCategory)
-        // public async Task<SubCategory> UpdateOneAsync(SubCategory updateSubCategory)
+         public async Task<bool> UpdateOneAsync(SubCategory updateSubCategory)
         {
             _subCategories.Update(updateSubCategory);
             await _databaseContext.SaveChangesAsync();
             return true;
-            // return updateSubCategory;
         }
 
         public async Task<List<SubCategory>> GetAllResults(PaginationOptions paginationOptions) //this method will apply the basic search functionality with the pagination only
         {
             var result = _subCategories
-                .Include(sc => sc.Category) // Include the Category
-                .Include(sc => sc.Products) // Include the Products
-                .Where(sc => sc.Name.ToLower().Contains(paginationOptions.Search.ToLower()));
+            .Include(sc => sc.Category) 
+            .Include(sc => sc.Products) 
+            .Where(sc =>sc.Name.ToLower().Contains(paginationOptions.Search.ToLower())
+            );
             return await result
                 .Skip(paginationOptions.Offset)
                 .Take(paginationOptions.Limit)

@@ -34,7 +34,7 @@ namespace src.Repository
         // Retrieve a payment by its ID
         public async Task<Payment?> GetByIdAsync(Guid paymentId)
         {
-            return await _payments.FindAsync(paymentId);
+            return await _payments.FirstOrDefaultAsync(p=>p.PaymentId == paymentId);
         }
 
         // Update an existing payment record
@@ -53,7 +53,7 @@ namespace src.Repository
             return true;
         }
 
-
+        // Retrieves a cart by its ID from the database, including its related cart details and products
         public async Task<Cart?> GetCart(Guid CartId)
         {
             return await _databaseContext.Cart
@@ -61,10 +61,13 @@ namespace src.Repository
                 .ThenInclude(cd => cd.Product)
                 .FirstOrDefaultAsync(c => c.Id == CartId);
         }
+        
+        // Retrieves a coupon by its ID from the database, if the ID is not null.
         public async Task<Coupon?> GetCoupon(Guid? CouponId)
         {
             if(CouponId == null) 
-                return null;
+                
+                return null; // Return null if no coupon ID is provided.
                 
             var coupon = await _databaseContext.Coupon.FindAsync(CouponId);
             return coupon;
