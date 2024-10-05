@@ -54,25 +54,8 @@ namespace src.Controller
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryReadDto>> UpdateOneAsync([FromRoute] Guid id, [FromBody] CategoryUpdateDto updateDto)
         {
-            // if (!ModelState.IsValid)
-            // {
-            //     return BadRequest(ModelState);  // Return validation errors
-            // }
-
-            //var categoryExists = 
             await _categoryService.GetByIdAsync(id);
-            // if (categoryExists == null)
-            // {
-            //     return NotFound($"Category with ID = {id} not found.");
-            // }
-
-            //var isUpdated =
-             await _categoryService.UpdateOneAsync(id, updateDto);
-            // if (!isUpdated)
-            // {
-            //     return StatusCode(500, "An error occurred while updating the category.");
-            // }
-
+            await _categoryService.UpdateOneAsync(id, updateDto);
             var updatedCategory = await _categoryService.GetByIdAsync(id);
             return Ok(updatedCategory);
         }
@@ -82,13 +65,8 @@ namespace src.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
         {
-            //var result = 
             await _categoryService.DeleteOneAsync(id);
-            // if (!result)
-            // {
-            //     return NotFound($"Category with ID = {id} not found.");
-            // }
-            return NoContent(); // 204 No Content
+            return NoContent(); 
         }
     
     }

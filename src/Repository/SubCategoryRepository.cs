@@ -20,6 +20,7 @@ namespace src.Repository
             _subCategories = databaseContext.Set<SubCategory>();
         }
 
+        // Add a subcategory
         public async Task<SubCategory> AddAsync(SubCategory newSubCategory)
         {
             await _subCategories.AddAsync(newSubCategory);
@@ -27,6 +28,7 @@ namespace src.Repository
             return newSubCategory;
         }
 
+        // Get all subcategories
         public async Task<List<SubCategory>> GetAllAsync()
         {
             return await _subCategories
@@ -35,6 +37,7 @@ namespace src.Repository
                 .ToListAsync();
         }
 
+        // Get a subcategory by id
         public async Task<SubCategory> GetByIdAsync(Guid subCategoryId)
         {
             return await _subCategories
@@ -43,6 +46,7 @@ namespace src.Repository
                 .FirstOrDefaultAsync(sb => sb.SubCategoryId == subCategoryId);   
         }
 
+        // Delete a subcategory
         public async Task<bool> DeleteOneAsync(SubCategory subCategory)
         {
             _subCategories.Remove(subCategory);
@@ -50,13 +54,15 @@ namespace src.Repository
             return true;
         }
 
-         public async Task<bool> UpdateOneAsync(SubCategory updateSubCategory)
+        // Update a subcategory
+        public async Task<bool> UpdateOneAsync(SubCategory updateSubCategory)
         {
             _subCategories.Update(updateSubCategory);
             await _databaseContext.SaveChangesAsync();
             return true;
         }
 
+        // Get subcategories by using the search 
         public async Task<List<SubCategory>> GetAllResults(PaginationOptions paginationOptions) //this method will apply the basic search functionality with the pagination only
         {
             var result = _subCategories

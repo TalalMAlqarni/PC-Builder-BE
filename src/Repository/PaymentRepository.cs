@@ -18,6 +18,7 @@ namespace src.Repository
             _payments = databaseContext.Set<Payment>();
         }
 
+        // Create a new payment
         public async Task<Payment> CreateOneAsync(Payment newPayment)
         {
             await _payments.AddAsync(newPayment);
@@ -67,7 +68,7 @@ namespace src.Repository
         {
             if(CouponId == null) 
                 
-                return null; // Return null if no coupon ID is provided.
+                return null;
                 
             var coupon = await _databaseContext.Coupon.FindAsync(CouponId);
             return coupon;

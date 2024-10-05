@@ -25,20 +25,18 @@ namespace src.Services.Payment
             _mapper = mapper;
         }
 
+        // Create a payment
         public async Task <PaymentReadDto> CreateOneAsync(PaymentCreateDto createDto)
         {
             Cart cart = await _paymentRepo.GetCart(createDto.CartId);
-
             if (cart == null)
             {
                 CustomException.NotFound("Cart not found.");           
-            
             }
 
             if (createDto.CouponId != null) 
             {
                 src.Entity.Coupon coupon = await _paymentRepo.GetCoupon(createDto.CouponId);
-
                 if (coupon != null && coupon.IsActive)
                 {
                     createDto.TotalPrice = cart.TotalPrice * (1 - coupon.DiscountPercentage);// update total price with coupon
@@ -52,42 +50,29 @@ namespace src.Services.Payment
             {
                 createDto.TotalPrice = cart.TotalPrice; // update total price without coupon 
             }
-
             var payment = _mapper.Map<PaymentCreateDto, src.Entity.Payment>(createDto);
             var paymentCreated = await _paymentRepo.CreateOneAsync(payment);
             return _mapper.Map<src.Entity.Payment,PaymentReadDto>(paymentCreated);
         }
 
+        // Get all payments
         public async Task<List<PaymentReadDto>> GetAllAsync()
         {
             var paymentList= await _paymentRepo.GetAllAsync();
             return _mapper.Map<List<src.Entity.Payment>, List<PaymentReadDto>>(paymentList);
         }
 
+        // Get a payment by id 
         public async Task<PaymentReadDto> GetByIdAsync(Guid paymentId)
         {
             var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
             return _mapper.Map<src.Entity.Payment, PaymentReadDto> (foundPayment);
         }
 
-        public async Task<bool> DeleteOneAsync(Guid paymentId)
-        {
-            var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
-           bool IsDeleted = await _paymentRepo.DeleteOneAsync(foundPayment);
-
-           if(IsDeleted)
-            {        
-                return true;
-            }
-           
-           return false;
-        }
-
+        // Update a payment
         public async Task<bool> UpdateOneAsync(Guid paymentId, PaymentUpdateDto updateDto)
         {
-            
             Cart cart = await _paymentRepo.GetCart(updateDto.CartId);
-
             var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
             if (foundPayment is null)
             {
@@ -97,7 +82,6 @@ namespace src.Services.Payment
             if (updateDto.CouponId != null) 
             {
                 src.Entity.Coupon coupon = await _paymentRepo.GetCoupon(updateDto.CouponId);
-
                 if (coupon != null && coupon.IsActive)
                 {
                     updateDto.TotalPrice = cart.TotalPrice * (1 - coupon.DiscountPercentage);// update total price with coupon
@@ -115,7 +99,18 @@ namespace src.Services.Payment
             var isUpdated = await _paymentRepo.UpdateOneAsync(foundPayment);
             return isUpdated;
         }
- 
+
+        // Delete a payment by id
+        public async Task<bool> DeleteOneAsync(Guid paymentId)
+        {
+        var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
+           bool IsDeleted = await _paymentRepo.DeleteOneAsync(foundPayment);
+           if(IsDeleted)
+            {        
+                return true;
+            }
+           return false;
+        }
     }
 }
 

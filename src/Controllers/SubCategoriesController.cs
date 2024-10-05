@@ -45,7 +45,7 @@ namespace src.Controller
 
         // Add a new subcategory
         [Authorize(Roles = "Admin")]
-        [HttpPost] // Add a subcategory
+        [HttpPost] 
         public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
         {
             var subCategoryCreated = await _subCategoryService.CreateOneAsync(createDto);
@@ -54,7 +54,7 @@ namespace src.Controller
 
         // Update a subcategory using its id
         [Authorize(Roles = "Admin")]
-        [HttpPut("{subCategoryId}")] // Update a specific subcategory using its Id
+        [HttpPut("{subCategoryId}")] 
         public async Task<ActionResult<SubCategoryReadDto>> UpdateSubCategory( [FromRoute] Guid subCategoryId, [FromBody] SubCategoryUpdateDto updateDto)
         {
             var updatedSubCategory = await _subCategoryService.UpdateOneAsync(subCategoryId,updateDto);
@@ -63,15 +63,10 @@ namespace src.Controller
 
         // Delete a subcategory using it id
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{subCategoryId}")] // Delete a specific subcategory using its Id
+        [HttpDelete("{subCategoryId}")] 
         public async Task<IActionResult> DeleteSubCategory( Guid subCategoryId)
         {
-           // var result = 
             await _subCategoryService.DeleteOneAsync(subCategoryId);
-            // if (!result)
-            // {
-            //     return NotFound($"Subcategory with ID = {subCategoryId} not found.");
-            // }
             return NoContent(); 
         }
 
@@ -80,8 +75,7 @@ namespace src.Controller
         [HttpGet("products")] 
         public async Task<ActionResult<List<GetProductDto>>> GetAllProductsAsync([FromQuery] SearchProcess to_search)
         {
-          //  var products = await _productService.GetAllProductsAsync();
-          var products = await _productService.GetAllAsync(to_search);
+            var products = await _productService.GetAllAsync(to_search);
             return Ok(products);
         }
 
@@ -94,17 +88,13 @@ namespace src.Controller
             return Ok(await _productService.GetProductByIdAsync(productId));
         }
 
-        // Add products under a subcategory
+        // Add a product under a subcategory
         [Authorize(Roles = "Admin")] 
         [HttpPost("{subCategoryId}/products")] 
         public async Task<ActionResult<GetProductDto>> CreateProductAsync(Guid subCategoryId, [FromBody] CreateProductDto productDto)
         {
-            // Ensure that the product is linked to the correct subcategory
             productDto.SubCategoryId = subCategoryId;
-
-            // Create product via the service
             var newProduct = await _productService.CreateProductAsync(productDto);
-
             return Ok(newProduct);
         }
 
