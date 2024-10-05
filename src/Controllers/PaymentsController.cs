@@ -28,7 +28,7 @@ namespace src.Controller
         }
 
         // Get a payment by its id
-        [Authorize(Roles = "Admin")] // Only Admins can view specific payments
+        [Authorize(Roles = "Admin")] 
         [HttpGet("{paymentId}")]
         public async Task<ActionResult<PaymentReadDto>>GetByIdAsync([FromRoute] Guid paymentId)
         {
@@ -37,7 +37,7 @@ namespace src.Controller
         }
 
         // Add a new payment       
-        [Authorize(Roles = "Admin, User")] // Only Admins or Users can make payments
+        [Authorize(Roles = "Admin, User")] 
         [HttpPost]
         public async Task<ActionResult<PaymentReadDto>> CreateOne([FromBody] PaymentCreateDto createDto)
         {
@@ -50,12 +50,7 @@ namespace src.Controller
         [HttpPut("{paymentId}")]
         public async Task<ActionResult<PaymentReadDto>> UpdateOneAsync([FromRoute] Guid paymentId,[FromBody] PaymentUpdateDto updateDto)
         {
-            // var result =
              await _paymentService.UpdateOneAsync(paymentId, updateDto);
-            // if (result == null)
-            // {
-            //     return NotFound($"Payment with ID = {paymentId} not found.");
-            // }
             var updatedPayment = await _paymentService.GetByIdAsync(paymentId); // Assuming you have a method to fetch the updated category
             return Ok(updatedPayment);
         }
@@ -65,13 +60,8 @@ namespace src.Controller
         [HttpDelete("{paymentId}")]
         public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid paymentId)
         {
-            // var result = 
             await _paymentService.DeleteOneAsync(paymentId);
-            // if (!result)
-            // {
-            //     return NotFound($"Payment with ID = {paymentId} not found.");
-            // }
-            return NoContent(); // 204 No Content
+            return NoContent(); 
         }
     }
 

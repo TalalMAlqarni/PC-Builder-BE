@@ -22,6 +22,7 @@ namespace src.Services.Category
             _mapper = mapper;
         }
 
+        // Create a category
         public async Task <CategoryReadDto> CreateOneAsync(CategoryCreateDto createDto)
         {
             var category = _mapper.Map<CategoryCreateDto, src.Entity.Category>(createDto);
@@ -29,30 +30,21 @@ namespace src.Services.Category
             return _mapper.Map<src.Entity.Category,CategoryReadDto>(categoryCreated);
         }
 
+        // Get all categories
         public async Task<List<CategoryReadDto>> GetAllAsync()
         {
             var categoryList= await _categoryRepo.GetAllAsync();
             return _mapper.Map<List<src.Entity.Category>, List<CategoryReadDto>>(categoryList);
         }
-
+        
+        // Get a categroy by id
         public async Task<CategoryReadDto> GetByIdAsync(Guid id)
         {
             var foundCategory = await _categoryRepo.GetByIdAsync(id);
             return _mapper.Map<src.Entity.Category, CategoryReadDto> (foundCategory);
         }
 
-        public async Task<bool> DeleteOneAsync(Guid id)
-        {
-            var foundCategory = await _categoryRepo.GetByIdAsync(id);
-            
-            if (foundCategory == null)
-            {
-                throw CustomException.NotFound($"Category with Id: {id} is not found");
-            }
-            
-            return await _categoryRepo.DeleteOneAsync(foundCategory); // Proceed to delete
-        }
-
+        // Update a categroy by id
         public async Task<bool> UpdateOneAsync(Guid id, CategoryUpdateDto updateDto)
         {
             // Retrieves the category by ID from the repository
@@ -68,7 +60,20 @@ namespace src.Services.Category
 
             // Save the updated category in the repository
             return await _categoryRepo.UpdateOneAsync(foundCategory);
-        }   
+        }  
+
+        // Delete a categroy by id
+        public async Task<bool> DeleteOneAsync(Guid id)
+        {
+            var foundCategory = await _categoryRepo.GetByIdAsync(id);
+            
+            if (foundCategory == null)
+            {
+                throw CustomException.NotFound($"Category with Id: {id} is not found");
+            }
+            
+            return await _categoryRepo.DeleteOneAsync(foundCategory); // Proceed to delete
+        } 
     }
 }
 
