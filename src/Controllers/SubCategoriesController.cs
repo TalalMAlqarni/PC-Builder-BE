@@ -41,7 +41,7 @@ namespace src.Controller
             return Ok(subCategory);
         }
         
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [HttpPost] // Add a subcategory
         public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
         {
