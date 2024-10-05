@@ -20,7 +20,7 @@ namespace src.Controller
         }
         
         // Get all coupon: GET api/v1/coupons
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<CouponReadDto>>> GetAllCoupons()
         {
@@ -28,8 +28,8 @@ namespace src.Controller
             return Ok(coupon_list);
         }
     
-        // get coupon by id: GET api/v1/coupons/{id}
-        // [Authorize(Roles = "Admin")]
+        // Get coupon by id: GET api/v1/coupons/{id}
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<CouponReadDto>> GetCouponById(Guid id)
         {
@@ -37,8 +37,8 @@ namespace src.Controller
             return Ok(coupon);
         }
     
-        // create coupon: POST api/v1/coupons
-        // [Authorize(Roles = "Admin")]
+        // Create coupon: POST api/v1/coupons
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CouponReadDto>> CreateCoupon(CouponCreateDto coupon){
 
@@ -47,8 +47,8 @@ namespace src.Controller
             return Ok(created_coupon);
         }
   
-        // update coupon: PUT api/v1/coupons/{id}
-        // [Authorize(Roles = "Admin")]
+        // Update coupon: PUT api/v1/coupons/{id}
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<CouponReadDto>> UpdateCoupon(Guid id, CouponUpdateDto coupon){
 
@@ -57,8 +57,8 @@ namespace src.Controller
             return Ok(updated_coupon);
         }
 
-        // delete coupon: DELETE api/v1/coupons/{id}
-        // [Authorize(Roles = "Admin")]
+        // Delete coupon: DELETE api/v1/coupons/{id}
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
         {

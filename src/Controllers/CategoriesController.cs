@@ -22,6 +22,7 @@ namespace src.Controller
             _subCategoryService = subCategoryService;
         }
 
+        // Get all categories with their details
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<List<CategoryReadDto>>> GetAllCategories()
@@ -30,6 +31,7 @@ namespace src.Controller
             return Ok(category_list);
         }
 
+        // Get a category with its details
         [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryReadDto>> GetCategoryById(Guid id)
@@ -38,7 +40,8 @@ namespace src.Controller
             return Ok(category);
         }
 
-        // [Authorize(Roles = "Admin")]
+        // Add a category 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CategoryReadDto>> CreateCategory(CategoryCreateDto createDto)
         {
@@ -46,7 +49,8 @@ namespace src.Controller
             return Ok(createdCategory);
         }
         
-        // [Authorize(Roles = "Admin")]
+        // Update a category by its id
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryReadDto>> UpdateOneAsync([FromRoute] Guid id, [FromBody] CategoryUpdateDto updateDto)
         {
@@ -73,7 +77,8 @@ namespace src.Controller
             return Ok(updatedCategory);
         }
 
-        // [Authorize(Roles = "Admin")]
+        // Delete a category by its id
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
         {

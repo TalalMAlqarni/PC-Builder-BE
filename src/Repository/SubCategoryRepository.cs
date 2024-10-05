@@ -49,7 +49,6 @@ namespace src.Repository
         }  
 
          public async Task<bool> UpdateOneAsync(SubCategory updateSubCategory)
-        // public async Task<SubCategory> UpdateOneAsync(SubCategory updateSubCategory)
         {
             _subCategories.Update(updateSubCategory);
             await _databaseContext.SaveChangesAsync();

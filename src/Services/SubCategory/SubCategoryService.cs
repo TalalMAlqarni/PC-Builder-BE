@@ -19,7 +19,6 @@ namespace src.Services.SubCategory
 
         public SubCategoryService(SubCategoryRepository subCategoryRepo, CategoryRepository categoryRepo, IMapper mapper)
         { 
-            //  _productRepository = productRepository;     
             _subCategoryRepo = subCategoryRepo;
             _categoryRepo = categoryRepo;
             _mapper = mapper;
@@ -27,7 +26,6 @@ namespace src.Services.SubCategory
 
         public async Task<SubCategoryReadDto> CreateOneAsync(SubCategoryCreateDto createDto)
         {
-            // Check if the category exists
             var category = await _categoryRepo.GetByIdAsync(createDto.CategoryId);
             if (category == null)
             {
@@ -42,10 +40,7 @@ namespace src.Services.SubCategory
                 Products= createDto.Products
             };
 
-            // Save the new subcategory to the repository
             var savedSubCategory = await _subCategoryRepo.AddAsync(newSubCategory);
-
-            // Map the entity to SubCategoryReadDto
             var subCategoryReadDto = new SubCategoryReadDto
             {
                 SubCategoryId = savedSubCategory.SubCategoryId,
@@ -95,7 +90,7 @@ namespace src.Services.SubCategory
                 SubCategoryId = subCategory.SubCategoryId,
                 Name = subCategory.Name,
                 CategoryId = subCategory.CategoryId,
-                CategoryName = subCategory.Category?.CategoryName, // Safeguard null references
+                CategoryName = subCategory.Category?.CategoryName, 
                 Products = subCategory.Products.Select(p => new GetProductDto
                 {
                     ProductId = p.ProductId,
