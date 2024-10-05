@@ -19,6 +19,8 @@ namespace src.Repository
             _databaseContext = databaseContext;
             _categories =databaseContext.Set<Category>();
         }
+
+        // Create a category
         public async Task<Category> CreateOneAsync(Category newCategory)
         {
             await _categories.AddAsync(newCategory);
@@ -26,6 +28,7 @@ namespace src.Repository
             return newCategory;
         }
         
+        // Get all categories
         public async Task<List<Category>> GetAllAsync()
         {
             return await _categories.Include(sc=>sc.SubCategory).  
@@ -33,6 +36,7 @@ namespace src.Repository
             .ToListAsync();
         }
 
+        // Get a category by id
          public async Task<Category> GetByIdAsync(Guid id)
         {
              return await _categories
@@ -41,6 +45,7 @@ namespace src.Repository
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
+        // Delete a catgeory
         public async Task<bool> DeleteOneAsync(Category category)
         {
             _categories.Remove(category);
@@ -48,6 +53,7 @@ namespace src.Repository
             return true;
         }  
         
+        // Update a category
         public async Task<bool> UpdateOneAsync(Category updateCategory)
         {
             _categories.Update(updateCategory);

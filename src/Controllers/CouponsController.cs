@@ -19,7 +19,7 @@ namespace src.Controller
             _couponService = service;
         }
         
-        // Get all coupon: GET api/v1/coupons
+        // Get all coupons: GET api/v1/coupons
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<CouponReadDto>>> GetAllCoupons()
@@ -28,7 +28,7 @@ namespace src.Controller
             return Ok(coupon_list);
         }
     
-        // Get coupon by id: GET api/v1/coupons/{id}
+        // Get a coupon by id: GET api/v1/coupons/{id}
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<CouponReadDto>> GetCouponById(Guid id)
@@ -37,39 +37,30 @@ namespace src.Controller
             return Ok(coupon);
         }
     
-        // Create coupon: POST api/v1/coupons
+        // Create a coupon: POST api/v1/coupons
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CouponReadDto>> CreateCoupon(CouponCreateDto coupon){
-
             var created_coupon = await _couponService.CreateOneAsync(coupon);
-
             return Ok(created_coupon);
         }
   
-        // Update coupon: PUT api/v1/coupons/{id}
+        // Update a coupon by id: PUT api/v1/coupons/{id}
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<CouponReadDto>> UpdateCoupon(Guid id, CouponUpdateDto coupon){
-
             var updated_coupon = await _couponService.UpdateOneAsync(id,coupon);
-
             return Ok(updated_coupon);
         }
 
-        // Delete coupon: DELETE api/v1/coupons/{id}
+        // Delete a coupon by id: DELETE api/v1/coupons/{id}
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
         {
-            //var result = 
             await _couponService.DeleteOneAsync(id);
-            // if (!result)
-            // {
-            //     return NotFound($"Coupon with ID = {id} not found.");
-            // }
             return NoContent(); 
-            }
+        }
     }
 }
       

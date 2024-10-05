@@ -14,7 +14,6 @@ namespace src.Services.SubCategory
     {
         private readonly SubCategoryRepository _subCategoryRepo;
         private readonly CategoryRepository _categoryRepo;
-        // private readonly ProductRepository _productRepository;
         private readonly IMapper _mapper;
 
         public SubCategoryService(SubCategoryRepository subCategoryRepo, CategoryRepository categoryRepo, IMapper mapper)
@@ -24,6 +23,7 @@ namespace src.Services.SubCategory
             _mapper = mapper;
         }
 
+        // Create a subcategory
         public async Task<SubCategoryReadDto> CreateOneAsync(SubCategoryCreateDto createDto)
         {
             var category = await _categoryRepo.GetByIdAsync(createDto.CategoryId);
@@ -31,7 +31,6 @@ namespace src.Services.SubCategory
             {
                 throw CustomException.NotFound("Category does not exist."); //TRYING TO USE CUSTOME Ex
             }
-
             // Create a new SubCategory entity
             var newSubCategory = new src.Entity.SubCategory
             {
@@ -51,6 +50,7 @@ namespace src.Services.SubCategory
             return subCategoryReadDto;
         }
 
+        // Get all subcategories
         public async Task<List<SubCategoryReadDto>> GetAllAsync()
         {
             var subCategoryList = await _subCategoryRepo.GetAllAsync();
@@ -79,6 +79,7 @@ namespace src.Services.SubCategory
             return subCategoryReadDtoList;
         }
 
+        // Get a subcategory by id
         public async Task<SubCategoryReadDto?> GetSubCategoryByIdAsync(Guid subCategoryId)
         {
             var subCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
@@ -107,6 +108,7 @@ namespace src.Services.SubCategory
             };
         }
 
+        // Get subcategories based on the search
         public async Task<List<SubCategoryReadDto>> GetAllBySearchAsync(PaginationOptions paginationOptions) 
         {
             var subCategoryList = await _subCategoryRepo.GetAllResults(paginationOptions);
@@ -114,7 +116,6 @@ namespace src.Services.SubCategory
             {
                 throw CustomException.NotFound($"No results found");
             }
-
             // Mapping to SubCategoryReadDto
             return subCategoryList.Select(sc => new SubCategoryReadDto
             {
@@ -125,6 +126,7 @@ namespace src.Services.SubCategory
             }).ToList();
         }
 
+        // Update a subcategory by id
         public async Task<bool> UpdateOneAsync(Guid subCategoryId, SubCategoryUpdateDto updateDto)
         {
             // Retrieve the existing subcategory by its ID
@@ -137,6 +139,7 @@ namespace src.Services.SubCategory
             return await _subCategoryRepo.UpdateOneAsync(foundSubCategory); 
         }
 
+        // Delete a subcategory by id
         public async Task<bool> DeleteOneAsync(Guid subCategoryId)
         {
             var foundSubCategory = await _subCategoryRepo.GetByIdAsync(subCategoryId);
