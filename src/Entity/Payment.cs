@@ -13,7 +13,7 @@ namespace src.Entity
         public decimal TotalPrice { get; set;}
         public Guid CartId { get; set; } // Foreign key to Cart
         public Guid OrderId { get; set; } // Foreign key to Order
-        public Guid? CouponId { get; set; }
+        public Guid? CouponId { get; set; } // Foreign key to Coupon
 
     }
 }

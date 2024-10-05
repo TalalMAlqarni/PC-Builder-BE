@@ -19,11 +19,17 @@ This hierarchical structure allows customers to easily navigate the catalog, dri
 
 ## Features
 
-- **User Management**:
-  - Register new user
+- **User Management**
+  - Create new user
   - User authentication with JWT token
   - Role-based access control (Admin, Customer)
-
+  - Display all users
+  - Display specific user
+  - Update user information
+  - Check for user Username , Email and phone number 
+  - Check null values
+  - Delete specific user
+ 
 - **Product Management**:
    - Products can be searched by its names. 
    - Products can be filtered based on price range , color , and product name.
@@ -34,8 +40,16 @@ This hierarchical structure allows customers to easily navigate the catalog, dri
 
 - **Order Management**:
 
+- **SubCategory**
+  - Search Subcategories with Pagination.
+  - Retrieve all Products within a Subcategory.
+  - Add/Update/Delete Products within a Subcategory.
+  
+- **Payment**
+  - Adding a payment with active coupon(isActive: ture). 
+  - Adding a payment with unactive coupon(isActive: false). (e.g. using outdated/wrong coupon)  
 
-//cartDetails & the cupon will be written in the feature section
+//cartDetails & the coupon will be written in the feature section
 
 
 ## Technologies Used
@@ -97,7 +111,7 @@ The API will be available at: `http://localhost:5228`
 ## Project structure
 
 ```bash
-|-- Controllers: API controllers with request and response
+|-- Controllers # API controllers with request and response
 |-- Database # DbContext and Database Configurations
 |-- DTOs # Data Transfer Objects
 |-- Entities # Database Entities (User, Product, Category, Order)
@@ -113,12 +127,36 @@ The API will be available at: `http://localhost:5228`
 
 ### User
 
-- **POST** `/api/users/register` – Register a new user.
-- **POST** `/api/users/login` – Login and get JWT token.
+- **POST** `/api/v1/Users` – Creat a new user.
+- **POST** `/api/v1/Users/signIn` – Login and get JWT token.
+- **GET** `/api/v1/Users` - Display all users
+- **GET** `/api/v1/Users/{id}` - Display specific user by Id
+- **PUT** `/api/v1/Users/{id}` - Update user information by Id
+- **DELETE** `api/v1/Users/{id}` - Delete user by Id
 
 ### Category
-#### Subcategory
-#### Product 
+
+- **POST** `/api/v1/Categories` – Creat a new category.
+- **GET** `/api/v1/Categories` - Retrieve all categories.
+- **GET** `/api/v1/Categories/{id}` - Retrieve a specific category by its ID, including its details.
+- **PUT** `/api/v1/Categories/{id}` - Update an existing category by its ID.
+- **DELETE** `/api/v1/Categories/{id}` - Delete a category by its ID.
+
+### Subcategory
+
+- **POST** `/api/v1/SubCategories` – Creat a new subcategory.
+- **POST** `/api/v1/SubCategories/{subCategoryId}/products` - Create and add a new product under a subcategory.
+- **GET** `/api/v1/SubCategories` - Retrieve all subcategories.
+- **GET** `/api/v1/SubCategories/{id}` - Retrieve a specific subcategory by its ID, including its details.
+- **GET** `/api/v1/SubCategories/products` - Retrieve all products inside subcategories. 
+- **GET** `/api/v1/SubCategories/products/{productId}` - Retrieve a specific product by its ID inside a subcategory.
+ - **GET** `/api/v1/SubCategories/search` - Search for subcategories with pagination.
+- **PUT** `/api/v1/SubCategories/{subCategoryId` - Update an existing subcategory by its ID.
+- **PUT** `/api/v1/SubCategories/products/{productId}` - Update an existing product by its ID inside a subcategory.
+- **DELETE** `/api/v1/SubCategories/{subCategoryId}` - Delete a subcategory by its ID.
+- **DELETE** `/api/v1/SubCategories/products/{productId}` - Delete a product by its ID inside a subcategory.
+
+#### Product
 - **POST** `/api/v1/products` - Create new product.
 - **GET** `/api/v1/products` - Get all products that matches the sort & filter & search query ,If no query provided, it will return all the products.
 - **GET** `/api/v1/{productId}` - Get a specific product by id.
@@ -126,13 +164,23 @@ The API will be available at: `http://localhost:5228`
 - **DELETE** `/api/v1/products/{productId}` - Delete product info by id.
 
 
- 
-
 ### Cart
  
 
-### Payment 
-#### Coupon
+### Payment
+
+- **POST** `/api/v1/payments` - Create a new payment.
+- **GET** `/api/v1/payments/{paymentId}` - Retrieve a specific payment by ID
+- **POST** `/api/v1/payments `Create a new payment.
+- **PUT** `/api/v1/payments/{paymentId}` - Update a payment by ID.
+- **DELETE** `/api/v1/payments/{paymentId}` - Delete a payment by ID.
+
+### Coupon
+**POST** `/api/v1/coupons` - Create a new coupon.
+**GET** `/api/v1/coupons` - Retrieve all coupons.
+**GET** `/api/v1/coupons/{id}` - Retrive a specific coupon by ID.
+**PUT** `/api/v1/coupons/{id}` - Update a coupon by ID.
+**DELETE** `/api/v1/coupons/{id}` - Delete a coupon by ID.
 
 ### Order 
 

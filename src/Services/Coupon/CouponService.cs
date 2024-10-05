@@ -9,6 +9,7 @@ using src.Repository;
 using src.Database;
 using src.Entity;
 using static src.DTO.CouponDTO;
+using src.Utils;
 
 namespace src.Services.Coupon
 {
@@ -35,7 +36,7 @@ namespace src.Services.Coupon
             
             if (foundCoupon== null)
             {
-                return false;
+                throw CustomException.NotFound($"Coupon with Id: {id} is not found");
             }
             
             return await _couponRepo.DeleteOneAsync(foundCoupon); 
@@ -59,7 +60,7 @@ namespace src.Services.Coupon
 
             if (foundCoupon == null)
             {
-                return false;
+                throw CustomException.NotFound($"Coupon with Id: {id} is not found");
             }
 
             _mapper.Map(updateDto, foundCoupon);

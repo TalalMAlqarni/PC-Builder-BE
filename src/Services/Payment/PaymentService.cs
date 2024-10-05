@@ -10,6 +10,8 @@ using src.Entity;
 
 
 using static src.DTO.PaymentDTO;
+using Microsoft.AspNetCore.Http.HttpResults;
+using src.Utils;
 
 namespace src.Services.Payment
 {
@@ -29,7 +31,8 @@ namespace src.Services.Payment
 
             if (cart == null)
             {
-                throw new Exception("Cart not found");//costom exception
+                CustomException.NotFound("Cart not found.");           
+            
             }
 
             if (createDto.CouponId != null) 
@@ -57,7 +60,6 @@ namespace src.Services.Payment
 
         public async Task<List<PaymentReadDto>> GetAllAsync()
         {
-            
             var paymentList= await _paymentRepo.GetAllAsync();
             return _mapper.Map<List<src.Entity.Payment>, List<PaymentReadDto>>(paymentList);
         }
@@ -74,9 +76,9 @@ namespace src.Services.Payment
            bool IsDeleted = await _paymentRepo.DeleteOneAsync(foundPayment);
 
            if(IsDeleted)
-           {    
+            {        
                 return true;
-           }
+            }
            
            return false;
         }
@@ -87,9 +89,9 @@ namespace src.Services.Payment
             Cart cart = await _paymentRepo.GetCart(updateDto.CartId);
 
             var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
-            if (foundPayment == null)
+            if (foundPayment is null)
             {
-                throw new Exception("Payment not found"); // Handle not found scenario
+                CustomException.NotFound("Payment not found"); 
             }
             
             if (updateDto.CouponId != null) 
@@ -109,17 +111,9 @@ namespace src.Services.Payment
             {
                 updateDto.TotalPrice = cart.TotalPrice; // update total price without coupon 
             }
-            
-            // var foundPayment = _mapper.Map<PaymentUpdateDto, src.Entity.Payment>(updateDto);
-            // var isUpdated = await _paymentRepo.UpdateOneAsync(foundPayment);
-            // return _mapper.Map<src.Entity.Payment,PaymentReadDto>(isUpdated);    
-
-            // var foundPayment = await _paymentRepo.GetByIdAsync(paymentId);
-            // var isUpdated = await _paymentRepo.UpdateOneAsync(foundPayment);
             _mapper.Map(updateDto, foundPayment);
             var isUpdated = await _paymentRepo.UpdateOneAsync(foundPayment);
             return isUpdated;
-
         }
  
     }

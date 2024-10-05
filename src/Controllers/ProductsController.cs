@@ -88,7 +88,7 @@ namespace src.Controller
         //delete a product,probably will be deleted in the future, the endpoint in the subcategory will be used instead
 
         [HttpDelete("{productId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult> DeleteProductById(Guid productId)
         {
             var toDelete = await _productService.DeleteProductByIdAsync(productId);
