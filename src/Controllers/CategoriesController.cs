@@ -14,7 +14,7 @@ namespace src.Controller
     public class CategoriesController : ControllerBase
     {
         protected readonly ICategoryService _categoryService;
-        private readonly ISubCategoryService _subCategoryService;
+        protected readonly ISubCategoryService _subCategoryService;
 
         public CategoriesController(ICategoryService categoryService, ISubCategoryService subCategoryService)
         {
@@ -38,7 +38,7 @@ namespace src.Controller
             return Ok(category);
         }
 
-       // [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CategoryReadDto>> CreateCategory(CategoryCreateDto createDto)
         {
@@ -46,40 +46,43 @@ namespace src.Controller
             return Ok(createdCategory);
         }
         
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryReadDto>> UpdateOneAsync([FromRoute] Guid id, [FromBody] CategoryUpdateDto updateDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);  // Return validation errors
-            }
+            // if (!ModelState.IsValid)
+            // {
+            //     return BadRequest(ModelState);  // Return validation errors
+            // }
 
-            var categoryExists = await _categoryService.GetByIdAsync(id);
-            if (categoryExists == null)
-            {
-                return NotFound($"Category with ID = {id} not found.");
-            }
+            //var categoryExists = 
+            await _categoryService.GetByIdAsync(id);
+            // if (categoryExists == null)
+            // {
+            //     return NotFound($"Category with ID = {id} not found.");
+            // }
 
-            var isUpdated = await _categoryService.UpdateOneAsync(id, updateDto);
-            if (!isUpdated)
-            {
-                return StatusCode(500, "An error occurred while updating the category.");
-            }
+            //var isUpdated =
+             await _categoryService.UpdateOneAsync(id, updateDto);
+            // if (!isUpdated)
+            // {
+            //     return StatusCode(500, "An error occurred while updating the category.");
+            // }
 
             var updatedCategory = await _categoryService.GetByIdAsync(id);
             return Ok(updatedCategory);
         }
 
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
         {
-            var result = await _categoryService.DeleteOneAsync(id);
-            if (!result)
-            {
-                return NotFound($"Category with ID = {id} not found.");
-            }
+            //var result = 
+            await _categoryService.DeleteOneAsync(id);
+            // if (!result)
+            // {
+            //     return NotFound($"Category with ID = {id} not found.");
+            // }
             return NoContent(); // 204 No Content
         }
     

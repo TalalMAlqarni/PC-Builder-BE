@@ -41,7 +41,7 @@ namespace src.Controller
             return Ok(subCategory);
         }
         
-       // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost] // Add a subcategory
         public async Task<ActionResult<SubCategoryReadDto>> CreateSubCategory([FromBody] SubCategoryCreateDto createDto)
         {
@@ -53,7 +53,6 @@ namespace src.Controller
         [HttpPut("{subCategoryId}")] // Update a specific subcategory using its Id
         public async Task<ActionResult<SubCategoryReadDto>> UpdateSubCategory( [FromRoute] Guid subCategoryId, [FromBody] SubCategoryUpdateDto updateDto)
         {
-            // Optionally, return the updated SubCategory data
             var updatedSubCategory = await _subCategoryService.UpdateOneAsync(subCategoryId,updateDto);
             return Ok(updatedSubCategory);
         }
@@ -62,11 +61,12 @@ namespace src.Controller
         [HttpDelete("{subCategoryId}")] // Delete a specific subcategory using its Id
         public async Task<IActionResult> DeleteSubCategory( Guid subCategoryId)
         {
-            var result = await _subCategoryService.DeleteOneAsync(subCategoryId);
-            if (!result)
-            {
-                return NotFound($"Subcategory with ID = {subCategoryId} not found.");
-            }
+           // var result = 
+            await _subCategoryService.DeleteOneAsync(subCategoryId);
+            // if (!result)
+            // {
+            //     return NotFound($"Subcategory with ID = {subCategoryId} not found.");
+            // }
             return NoContent(); 
         }
 
@@ -80,7 +80,7 @@ namespace src.Controller
             return Ok(products);
         }
 
-        //get product by id
+        // get product by id
         [AllowAnonymous] // Get product details by using its id
         [HttpGet("products/{productId}")] // Get all products of all subcategories
         public async Task<ActionResult<GetProductDto>> GetProductById(Guid productId)
@@ -89,7 +89,7 @@ namespace src.Controller
             return Ok(await _productService.GetProductByIdAsync(productId));
         }
 
-      //  [Authorize(Roles = "Admin")] 
+        // [Authorize(Roles = "Admin")] 
         [HttpPost("{subCategoryId}/products")] // Add products under a subcategory
         public async Task<ActionResult<GetProductDto>> CreateProductAsync(Guid subCategoryId, [FromBody] CreateProductDto productDto)
         {
@@ -102,7 +102,7 @@ namespace src.Controller
             return Ok(newProduct);
         }
 
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [HttpPut("products/{productId}")] // Update a product under a subcategroy by using prodcut id
         public async Task<ActionResult<GetProductDto>> UpdateProductInfo(
         Guid productId,
@@ -115,7 +115,7 @@ namespace src.Controller
             return Ok(updatedInfo);
         }
 
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [HttpDelete("products/{productId}")] // Delete a product under a subcategroy by using prodcut id
             public async Task<ActionResult<bool>> DeleteProductByIdAsync(Guid productId)
         {

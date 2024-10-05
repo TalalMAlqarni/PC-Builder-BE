@@ -34,7 +34,7 @@ namespace src.Repository
         // Retrieve a payment by its ID
         public async Task<Payment?> GetByIdAsync(Guid paymentId)
         {
-            return await _payments.FindAsync(paymentId);
+            return await _payments.FirstOrDefaultAsync(p=>p.PaymentId == paymentId);
         }
 
         // Update an existing payment record
@@ -60,10 +60,12 @@ namespace src.Repository
                 .Include(c => c.CartDetails)
                 .ThenInclude(cd => cd.Product)
                 .FirstOrDefaultAsync(c => c.Id == CartId);
+                
         }
         public async Task<Coupon?> GetCoupon(Guid? CouponId)
         {
             if(CouponId == null) 
+                
                 return null;
                 
             var coupon = await _databaseContext.Coupon.FindAsync(CouponId);

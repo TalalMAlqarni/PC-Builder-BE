@@ -8,6 +8,7 @@ using src.Repository;
 using src.Database;
 using src.Entity;
 using static src.DTO.CategoryDTO;
+using src.Utils;
 
 namespace src.Services.Category
 {
@@ -46,7 +47,7 @@ namespace src.Services.Category
             
             if (foundCategory == null)
             {
-                return false; // Category not found, return false
+                throw CustomException.NotFound($"Category with Id: {id} is not found");
             }
             
             return await _categoryRepo.DeleteOneAsync(foundCategory); // Proceed to delete
@@ -59,7 +60,7 @@ namespace src.Services.Category
 
             if (foundCategory == null)
             {
-                return false; // Category not found
+                throw CustomException.NotFound($"Category with Id: {id} is not found");
             }
 
             // Map the update DTO fields to the existing category entity
@@ -67,7 +68,7 @@ namespace src.Services.Category
 
             // Save the updated category in the repository
             return await _categoryRepo.UpdateOneAsync(foundCategory);
-        }  
+        }   
     }
 }
 
