@@ -47,7 +47,7 @@ namespace src.Services.product
             var newProduct = await _productRepository.AddProductAsync(product);
             // var subCategory = await _subCategories.GetByIdAsync(newProduct.SubCategoryId);
             // Save the product using the repository
-            var newProduct = await _productRepository.AddProductAsync(product);
+            // var newProduct = await _productRepository.AddProductAsync(product);
             // var subCategory = await _subCategories.GetByIdAsync(newProduct.SubCategoryId);
 
             return new GetProductDto
