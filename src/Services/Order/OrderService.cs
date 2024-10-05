@@ -35,8 +35,10 @@ namespace src.Services
             order.OrderStatus = "Ordered";
             order.IsDelivered = false;
 
-            // validate if products has stock
+            // validate if products has enough SKU
             var cart = await _cartRepository.GetCartByIdAsync(order.CartId);
+            if (cart == null)
+                throw CustomException.NotFound($"Cart ID {order.CartId} of order not found");
             foreach (var cartdetail in cart.CartDetails)
             {
                 var product = cartdetail.Product;
@@ -99,6 +101,18 @@ namespace src.Services
             var foundOrder = await _orderRepository.GetByIdAsync(id);
             if (foundOrder == null)
                 throw CustomException.NotFound($"Order with ID {id} not found");
+            if (!foundOrder.OrderStatus.Equals("Ordered", StringComparison.OrdinalIgnoreCase))
+                throw CustomException.BadRequest($"Order with ID {id} cannot be deleted since its already shipped");
+
+            // increase the SKU back.
+            var cart = await _cartRepository.GetCartByIdAsync(foundOrder.CartId);
+            foreach (var cartdetail in cart.CartDetails)
+            {
+                var product = cartdetail.Product;
+                product.SKU += cartdetail.Quantity;
+                await _productRepository.UpdateProductInfoAsync(product);
+            }
+
             return await _orderRepository.DeleteOneAsync(foundOrder);
         }
     }

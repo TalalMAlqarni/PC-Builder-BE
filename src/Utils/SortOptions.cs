@@ -10,11 +10,11 @@ namespace src.Utils
     PRODUCT_PRICE DESC = HIGHEST TO LOWEST PRICE
     PRODUCT_PRICE ASC = LOWEST TO HIGHEST PRICE
     PRODUCT_SKU ASC = RUNNING OUT OF STORAGE SOON
-    PRODUCT_REVIEW DESC = HIGH REVIEWS
     
     ---------------------------------------------
     2. The Sort options to applied in the future:
-    PRODUCT_ADDED_DATE DESC = NEW ARRIVALS
+    PRODUCT_ADDED_DATE DESC = NEW ARRIVALS => Done
+    PRODUCT_REVIEW DESC = HIGH REVIEWS => Done
     
     */
 

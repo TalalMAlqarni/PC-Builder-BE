@@ -15,35 +15,12 @@ namespace src.Controller
     {
         protected readonly IProductService _productService;
 
-        /*The standard user privileges:
-        view the product/products
-        search for product by name
-        sort products by range/price/...etc
-        add the product to the cart
-         */
-
-        /* the admin user privileges:
-       view the product/products
-       add a new product
-       delete a product
-       edit/update on the product info
-*/
-
-
         public ProductsController(IProductService productService)
         {
             _productService = productService;
         }
 
-        // view all the products in specific subcategory:
-        // [AllowAnonymous]
-        // [HttpGet]
-        // public async Task<ActionResult<List<GetProductDto>>> GetAllProducts()
-        // {
-        //     var products = await _productService.GetAllProductsAsync();
-        //     return Ok(products);
-        // }
-
+        //get all products by using the search by name & pagination & filer & sort
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<List<GetProductDto>>> GetAllProducts(
@@ -54,6 +31,7 @@ namespace src.Controller
             return Ok(products);
         }
 
+        //get all products by using fiter feature
         [AllowAnonymous]
         [HttpGet("filter")]
         public async Task<ActionResult<List<Product>>> FilterProducts(
@@ -64,7 +42,7 @@ namespace src.Controller
             return Ok(products);
         }
 
-        //get all products that match the search with pagination
+        //get all products using the search by name & pagination
         [AllowAnonymous]
         [HttpGet("search")]
         public async Task<ActionResult<List<GetProductDto>>> GetAllProductsBySearch(
@@ -75,7 +53,7 @@ namespace src.Controller
             return Ok(productsList);
         }
 
-        //sort
+        //get all products by using sort feature
         [AllowAnonymous]
         [HttpGet("sort")]
         public async Task<ActionResult<List<GetProductDto>>> GetAllBySort(
@@ -87,16 +65,16 @@ namespace src.Controller
         }
 
         //get product by id
-        [HttpGet("{productId}")] //check it again
+
+        [HttpGet("{productId}")]
         public async Task<ActionResult<GetProductDto>> GetProductById(Guid productId)
         {
-            //var isFound = await _productService.GetProductByIdAsync(productId);
             return Ok(await _productService.GetProductByIdAsync(productId));
         }
 
-        //add product : it'll moved to the subcategory class
-        [HttpPost] // had to check the endopoint
-        [Authorize(Roles = "Admin")] //didn't test it yet
+        //add product, probably will be deleted in the future, the endpoint in the subcategory will be used instead
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GetProductDto>> CreateProduct(CreateProductDto productDto)
         {
             var newProduct = await _productService.CreateProductAsync(productDto);
@@ -107,18 +85,19 @@ namespace src.Controller
             );
         }
 
-      
-        //delete a product, it'll moved to the subcategory class
+        //delete a product,probably will be deleted in the future, the endpoint in the subcategory will be used instead
+
         [HttpDelete("{productId}")]
         [Authorize(Roles = "Admin")] //didn't test it yet
         public async Task<ActionResult> DeleteProductById(Guid productId)
         {
             var toDelete = await _productService.DeleteProductByIdAsync(productId);
-            return Ok();
+            return Ok(toDelete);
         }
 
+        //update product info, probably will be deleted in the future, the endpoint in the subcategory will be used instead
         [HttpPut("{productId}")]
-        [Authorize(Roles = "Admin")] //didn't test it yet
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GetProductDto>> UpdateProductInfo(
             Guid productId,
             UpdateProductInfoDto productInfoDto
@@ -130,7 +109,5 @@ namespace src.Controller
             );
             return Ok(updatedInfo);
         }
-
-       
     }
 }
