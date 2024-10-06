@@ -125,12 +125,14 @@ namespace src.Repository
             Guid? SubCategoryId = null
         )
         {
+            //implement search
+            //all products in all subcategories
             var search_result = _products.Where(x =>
                 x.ProductName.ToLower().Contains(to_search.Search.ToLower())
-                || x.Description.ToLower().Contains(to_search.Search.ToLower())
+                || x.Description.ToLower().Contains(to_search.Search.ToLower()) 
             );
 
-            //implement search
+            //or all products in specific subcategory:
             if (SubCategoryId != null)
             {
                 search_result = _products.Where(x =>
@@ -149,7 +151,7 @@ namespace src.Repository
                 query = query.Where(x => x.ProductName.ToLower() == to_search.Name.ToLower());
             }
 
-            if (!string.IsNullOrEmpty(to_search.Color))
+            if (!string.IsNullOrEmpty(to_search.Color)) 
             {
                 query = query.Where(x => x.ProductColor.ToLower() == to_search.Color.ToLower());
             }
@@ -181,7 +183,7 @@ namespace src.Repository
                             ? query.OrderByDescending(x => x.SKU)
                             : query.OrderBy(x => x.SKU);
                 }
-                else if (to_search.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase))
+                else if (to_search.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase)) 
                 {
                     query =
                         to_search.SortOrder == SortOrder.Descending

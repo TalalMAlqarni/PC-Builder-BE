@@ -152,6 +152,7 @@ The API will be available at: `http://localhost:5228`
 - **GET** `/api/v1/SubCategories` - Retrieve all subcategories.
 - **GET** `/api/v1/SubCategories/{id}` - Retrieve a specific subcategory by its ID, including its details.
 - **GET** `/api/v1/SubCategories/products` - Retrieve all products inside subcategories. 
+-
 - **GET** `/api/v1/SubCategories/products/{productId}` - Retrieve a specific product by its ID inside a subcategory.
  - **GET** `/api/v1/SubCategories/search` - Search for subcategories with pagination.
 - **PUT** `/api/v1/SubCategories/{subCategoryId` - Update an existing subcategory by its ID.
@@ -193,6 +194,7 @@ The API will be available at: `http://localhost:5228`
 - **GET** `/api/v1/Orders/user/{userid}/ordershistory` - Retrieve all delivered orders from a specific user ID.
 - **PUT** `/api/v1/Orders/{orderid}` - Update an order by ID.
 - **DELETE** `/api/v1/Orders/{orderid}` - Delete an order by ID.
+
 ### Review 
 
 
