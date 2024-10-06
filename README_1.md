@@ -161,9 +161,10 @@ The API will be available at: `http://localhost:5228`
 
 - **POST** `/api/v1/subcategories` – Create a new subcategory.
 - **POST** `/api/v1/subcategories/{subCategoryId}/products` – Add a new product to a subcategory.
-- **GET** `/api/v1/subcategories` – Retrieve all subcategories.
+- **GET** `/api/v1/subcategories` – Retrieve all subcategories including its products.
 - **GET** `/api/v1/subcategories/{id}` – Retrieve a specific subcategory by ID.
-- **GET** `/api/v1/subcategories/products` – Retrieve all products in subcategories.
+- **GET** `/api/v1/subcategories/products` – Retrieve all products in all subcategories.
+- **GET** `/api/v1/subcategories/{subCategoryId}/products` – Retrieve all products in all specific subcategory.
 - **GET** `/api/v1/subcategories/products/{productId}` – Retrieve a specific product by ID within a subcategory.
 - **GET** `/api/v1/subcategories/search` – Search for subcategories with pagination.
 - **PUT** `/api/v1/subcategories/{subCategoryId}` – Update a subcategory by ID.
