@@ -80,6 +80,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// for deployment part:
+app.UseRouting();
+app.MapGet("/" , ()=> "Server is running");
+//
 // test database connection
 using (var scope = app.Services.CreateScope())
 {

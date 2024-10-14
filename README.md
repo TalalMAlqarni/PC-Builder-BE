@@ -224,7 +224,7 @@ The API will be available at: `http://localhost:5228`
 
 ## Deployment
 
-The application is deployed and can be accessed at: [https://your-deploy-link.com](https://your-deploy-link.com)
+The application is deployed and can be accessed at: [ http://aeki-store.onrender.com/ ]
 
 ## Team Members
 
