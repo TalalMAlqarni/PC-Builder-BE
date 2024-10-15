@@ -86,8 +86,9 @@ This hierarchical structure allows customers to easily navigate the catalog and 
 
 ### 1. Clone the repository:
 
-```bash
-git clone https://github.com/your-username/e-commerce-backend.git
+
+```bash 
+git clone git@github.com:your-username/sda-3-online-Backend_Teamwork.git
 ```
 
 ### 2. Setup database
