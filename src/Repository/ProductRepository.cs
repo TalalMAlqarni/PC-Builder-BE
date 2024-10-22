@@ -129,7 +129,7 @@ namespace src.Repository
             //all products in all subcategories
             var search_result = _products.Where(x =>
                 x.ProductName.ToLower().Contains(toSearch.Search.ToLower())
-                || x.Description.ToLower().Contains(toSearch.Search.ToLower()) 
+                || x.Description.ToLower().Contains(toSearch.Search.ToLower())
             );
 
             //or all products in specific subcategory:
@@ -151,9 +151,10 @@ namespace src.Repository
                 query = query.Where(x => x.ProductName.ToLower() == toSearch.Name.ToLower());
             }
 
-            if (!string.IsNullOrEmpty(toSearch.Color)) 
+            // if (!string.IsNullOrEmpty(toSearch.Color))
+            if (toSearch.Colors != null && toSearch.Colors.Count > 0)
             {
-                query = query.Where(x => x.ProductColor.ToLower() == toSearch.Color.ToLower());
+                query = query.Where(x => toSearch.Colors.Any(color => color.ToLower()==x.ProductColor.ToLower()));
             }
 
             if (toSearch.MinPrice.HasValue && toSearch.MinPrice.Value > 0)
@@ -183,7 +184,7 @@ namespace src.Repository
                             ? query.OrderByDescending(x => x.SKU)
                             : query.OrderBy(x => x.SKU);
                 }
-                else if (toSearch.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase)) 
+                else if (toSearch.SortBy.Equals("rating", StringComparison.OrdinalIgnoreCase))
                 {
                     query =
                         toSearch.SortOrder == SortOrder.Descending

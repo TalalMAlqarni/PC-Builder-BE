@@ -15,7 +15,6 @@ namespace src.Utils
     2. The Sort options to applied in the future:
     PRODUCT_ADDED_DATE DESC = NEW ARRIVALS => Done
     PRODUCT_REVIEW DESC = HIGH REVIEWS => Done
-    
     */
 
 
