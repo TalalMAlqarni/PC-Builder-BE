@@ -19,7 +19,7 @@ using src.Services.review;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using src.Services.Coupon;
 
-
+//Talal Alqarni
 var builder = WebApplication.CreateBuilder(args);
 //connect to database
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
@@ -83,7 +83,7 @@ var app = builder.Build();
 
 // for deployment part:
 app.UseRouting();
-app.MapGet("/" , ()=> 
+app.MapGet("/", () =>
 "Hello! You may notice that the website appears empty at the moment. This is because we are currently focused on developing the backend functionality. The front-end will be completed individually by each team member, transforming the project into a complete full-stack application. Thank you for your understanding! Team members: Abdulaziz, Razan, Raghad, Jomana, and Talal.");
 //
 // test database connection
