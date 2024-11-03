@@ -8,7 +8,7 @@ using static src.DTO.SubCategoryDTO;
 
 namespace src.Controller
 {
-    
+
     [ApiController]
     [Route("api/v1/[controller]")]
     public class CategoriesController : ControllerBase
@@ -46,7 +46,7 @@ namespace src.Controller
             var createdCategory = await _categoryService.CreateOneAsync(createDto);
             return Ok(createdCategory);
         }
-        
+
         // Update a category by its id
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
@@ -64,8 +64,8 @@ namespace src.Controller
         public async Task<IActionResult> DeleteOneAsync([FromRoute] Guid id)
         {
             await _categoryService.DeleteOneAsync(id);
-            return NoContent(); 
+            return NoContent();
         }
-    
+
     }
 }

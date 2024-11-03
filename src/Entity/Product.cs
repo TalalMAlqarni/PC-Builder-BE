@@ -6,15 +6,15 @@ namespace src.Entity
     {
 
         public Guid SubCategoryId { get; set; }
-        
+
         public string? SubCategoryName { get; set; }
 
         public Guid ProductId { get; set; }
         public string? ProductName { get; set; }
 
-        public DateTime AddedDate {get;set;} = DateTime.UtcNow; // An error will occur in post man if the timestamp not in utc
+        public DateTime AddedDate { get; set; } = DateTime.UtcNow; // An error will occur in post man if the timestamp not in utc
 
-        //public string? ProductImage { get; set; } , It will be added during front-end 
+        public string? ProductImage { get; set; }
 
         public string? ProductColor { get; set; }
 

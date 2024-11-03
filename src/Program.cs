@@ -19,11 +19,14 @@ using src.Services.review;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using src.Services.Coupon;
 
-//Talal Alqarni
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
 //connect to database
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
 dataSourceBuilder.MapEnum<UserRole>();
+
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
@@ -31,6 +34,8 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.ConfigureWarnings(x => x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
 }
 );
+
+
 // add utomapper
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 // add DI service
@@ -44,6 +49,21 @@ builder
     .AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>()
     .AddScoped<IReviewService, ReviewService>().AddScoped<ReviewRepository, ReviewRepository>()
     .AddScoped<ICouponService, CouponService>().AddScoped<CouponRepository, CouponRepository>();
+
+//CORS
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowed((host) => true)
+            .AllowCredentials();
+        });
+});
 
 builder.Services
 .AddAuthentication(options =>
@@ -111,6 +131,8 @@ app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+//CORS
+app.UseCors(MyAllowSpecificOrigins);
 
 
 app.MapControllers();
