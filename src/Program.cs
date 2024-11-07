@@ -27,10 +27,13 @@ builder.Services.AddControllersWithViews();
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
 dataSourceBuilder.MapEnum<UserRole>();
 
+var dataSource = dataSourceBuilder.Build();
+builder.Services.AddSingleton(dataSource);
+
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    options.UseNpgsql(dataSourceBuilder.Build());
+    options.UseNpgsql(dataSource);
     options.ConfigureWarnings(x => x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning));
 }
 );

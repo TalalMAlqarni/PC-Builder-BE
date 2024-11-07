@@ -22,6 +22,7 @@ namespace src.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresEnum<UserRole>();
+
         }
     }
 }

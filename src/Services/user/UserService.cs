@@ -20,7 +20,7 @@ namespace src.Services.user
         protected readonly UserRepository _userRepo;
         protected readonly IMapper _mapper;
         protected readonly IConfiguration _config;
-        public UserService(UserRepository userRepo , IMapper mapper , IConfiguration config)
+        public UserService(UserRepository userRepo, IMapper mapper, IConfiguration config)
         {
             _userRepo = userRepo;
             _mapper = mapper;
@@ -30,25 +30,29 @@ namespace src.Services.user
         {
             var user = _mapper.Map<UserCreateDto, User>(createDto);
             var userTable = await _userRepo.GetAllAsync();
-            if(userTable.Any(x => x.Email == user.Email) )
+            if (userTable.Any(x => x.Email == user.Email))
             {
                 throw CustomException.BadRequest("Email already registed please try another one");
             }
-            if(userTable.Any(x => x.PhoneNumber == user.PhoneNumber))
+            if (userTable.Any(x => x.PhoneNumber == user.PhoneNumber))
             {
                 throw CustomException.BadRequest("Phone number already registed please try another one");
             }
-            if(userTable.Any(x => x.Username == user.Username))
+            if (userTable.Any(x => x.Username == user.Username))
             {
                 throw CustomException.BadRequest("Username already registed please try another one");
             }
-            if(user.Email == null)
+            if (char.IsDigit(user.Username[0]))
+            {
+                throw CustomException.BadRequest("Username cannot start with number");
+            }
+            if (user.Email == null)
             {
                 throw CustomException.BadRequest("You cant leave Email empty");
             }
-            else 
+            else
             {
-                if(user.Email.Contains("@admin.com"))
+                if (user.Email.Contains("@admin.com"))
                 {
                     user.Role = UserRole.Admin;
                 }
@@ -57,46 +61,46 @@ namespace src.Services.user
                     user.Role = UserRole.Customer;
                 }
             }
-            if(user.PhoneNumber == null)
+            if (user.PhoneNumber == null)
             {
                 throw CustomException.BadRequest("You cant leave phone number empty");
             }
-            if(user.Username == null)
+            if (user.Username == null)
             {
                 throw CustomException.BadRequest("You cant leave Username empty");
             }
-            if(user.FirstName == null)
+            if (user.FirstName == null)
             {
                 throw CustomException.BadRequest("You cant leave First name empty");
             }
-            if(user.LastName == null)
+            if (user.LastName == null)
             {
                 throw CustomException.BadRequest("You cant leave Last name empty");
             }
-            if(user.BirthDate.Equals(DateOnly.Parse("0001-01-01")))
+            if (user.BirthDate.Equals(DateOnly.Parse("0001-01-01")))
             {
                 throw CustomException.BadRequest("You cant leave birthdate empty");
             }
-            if(user.Password == null)
+            if (user.Password == null)
             {
                 throw CustomException.BadRequest("You cant leave Password empty");
             }
-            else 
+            else
             {
-                if(user.Password.Length<8)
+                if (user.Password.Length < 8)
                 {
                     throw CustomException.BadRequest("password should be at least 8 characters");
                 }
-                else if((!user.Password.Contains("1")) && (!user.Password.Contains("2")) && (!user.Password.Contains("3")) && (!user.Password.Contains("4")) && (!user.Password.Contains("5")) && (!user.Password.Contains("6")) && (!user.Password.Contains("7")) && (!user.Password.Contains("8")) && (!user.Password.Contains("9")) && (!user.Password.Contains("0")))
+                else if ((!user.Password.Contains("1")) && (!user.Password.Contains("2")) && (!user.Password.Contains("3")) && (!user.Password.Contains("4")) && (!user.Password.Contains("5")) && (!user.Password.Contains("6")) && (!user.Password.Contains("7")) && (!user.Password.Contains("8")) && (!user.Password.Contains("9")) && (!user.Password.Contains("0")))
                 {
                     throw CustomException.BadRequest("password should contains at least one number");
                 }
-                else if((!user.Password.Contains("!")) && (!user.Password.Contains("@")) && (!user.Password.Contains("#")) && (!user.Password.Contains("$")) && (!user.Password.Contains("%")) && (!user.Password.Contains("^")) && (!user.Password.Contains("&")) && (!user.Password.Contains("*")) && (!user.Password.Contains("(")) && (!user.Password.Contains(")")))
+                else if ((!user.Password.Contains("!")) && (!user.Password.Contains("@")) && (!user.Password.Contains("#")) && (!user.Password.Contains("$")) && (!user.Password.Contains("%")) && (!user.Password.Contains("^")) && (!user.Password.Contains("&")) && (!user.Password.Contains("*")) && (!user.Password.Contains("(")) && (!user.Password.Contains(")")))
                 {
                     throw CustomException.BadRequest("password should contains at least one special charachter (! - @ - # - $ - % - & - * - ( - ) - _ - [ - ])");
                 }
             }
-             PasswordUtils.HashPassword(createDto.Password , out string hashedPassword , out byte[] salt);
+            PasswordUtils.HashPassword(createDto.Password, out string hashedPassword, out byte[] salt);
             user.CartId = Guid.NewGuid();
             user.Password = hashedPassword;
             user.Salt = salt;
@@ -132,86 +136,86 @@ namespace src.Services.user
         {
             var foundUser = await _userRepo.GetByIdAsync(id);
             bool isDeleted = await _userRepo.DeleteOneAsync(foundUser);
-            if(isDeleted)
+            if (isDeleted)
             {
                 return true;
             }
             return false;
         }
         // update
-        public async Task<bool> UpdateOneAsync(Guid id , UserUpdateDto updateDto)
+        public async Task<bool> UpdateOneAsync(Guid id, UserUpdateDto updateDto)
         {
             var foundUser = await _userRepo.GetByIdAsync(id);
             var userTable = await _userRepo.GetAllAsync();
             var duplicatEmail = userTable.Any(x => x.Email == updateDto.Email && x.UserId != foundUser.UserId);
             var duplicatUsername = userTable.Any(x => x.Username == updateDto.Username && x.UserId != foundUser.UserId);
             var duplicatPhone = userTable.Any(x => x.PhoneNumber == updateDto.PhoneNumber && x.UserId != foundUser.UserId);
-            if(duplicatEmail)
+            if (duplicatEmail)
             {
                 throw CustomException.BadRequest($"email already exist try another one");
             }
-            if(duplicatUsername)
+            if (duplicatUsername)
             {
                 throw CustomException.BadRequest($"Username already exist try another one");
             }
-            if(duplicatPhone)
+            if (duplicatPhone)
             {
                 throw CustomException.BadRequest($"phone number already exist try another one");
             }
-            if(foundUser == null)
+            if (foundUser == null)
             {
                 throw CustomException.BadRequest($"user with {id}  doesnt exist");
             }
             else
             {
-                if(updateDto.Email == null)
+                if (updateDto.Email == null)
                 {
                     updateDto.Email = foundUser.Email;
                 }
-                if(updateDto.Username == null)
+                if (updateDto.Username == null)
                 {
                     updateDto.Username = foundUser.Username;
                 }
-                if(updateDto.FirstName == null)
+                if (updateDto.FirstName == null)
                 {
                     updateDto.FirstName = foundUser.FirstName;
                 }
-                if(updateDto.LastName == null)
+                if (updateDto.LastName == null)
                 {
                     updateDto.LastName = foundUser.LastName;
                 }
-                if(updateDto.PhoneNumber == null)
+                if (updateDto.PhoneNumber == null)
                 {
                     updateDto.PhoneNumber = foundUser.PhoneNumber;
                 }
-                if(updateDto.Password == null)
+                if (updateDto.Password == null)
                 {
                     updateDto.Password = foundUser.Password;
                 }
-                else 
+                else
                 {
-                    if(updateDto.Password.Length<8)
+                    if (updateDto.Password.Length < 8)
                     {
                         throw CustomException.BadRequest("password should be at least 8 characters");
                     }
-                    else if((!updateDto.Password.Contains("1")) && (!updateDto.Password.Contains("2")) && (!updateDto.Password.Contains("3")) && (!updateDto.Password.Contains("4")) && (!updateDto.Password.Contains("5")) && (!updateDto.Password.Contains("6")) && (!updateDto.Password.Contains("7")) && (!updateDto.Password.Contains("8")) && (!updateDto.Password.Contains("9")) && (!updateDto.Password.Contains("0")))
+                    else if ((!updateDto.Password.Contains("1")) && (!updateDto.Password.Contains("2")) && (!updateDto.Password.Contains("3")) && (!updateDto.Password.Contains("4")) && (!updateDto.Password.Contains("5")) && (!updateDto.Password.Contains("6")) && (!updateDto.Password.Contains("7")) && (!updateDto.Password.Contains("8")) && (!updateDto.Password.Contains("9")) && (!updateDto.Password.Contains("0")))
                     {
                         throw CustomException.BadRequest("password should contains at least one number");
                     }
-                    else if((!updateDto.Password.Contains("!")) && (!updateDto.Password.Contains("@")) && (!updateDto.Password.Contains("#")) && (!updateDto.Password.Contains("$")) && (!updateDto.Password.Contains("%")) && (!updateDto.Password.Contains("^")) && (!updateDto.Password.Contains("&")) && (!updateDto.Password.Contains("*")) && (!updateDto.Password.Contains("(")) && (!updateDto.Password.Contains(")")))
+                    else if ((!updateDto.Password.Contains("!")) && (!updateDto.Password.Contains("@")) && (!updateDto.Password.Contains("#")) && (!updateDto.Password.Contains("$")) && (!updateDto.Password.Contains("%")) && (!updateDto.Password.Contains("^")) && (!updateDto.Password.Contains("&")) && (!updateDto.Password.Contains("*")) && (!updateDto.Password.Contains("(")) && (!updateDto.Password.Contains(")")))
                     {
                         throw CustomException.BadRequest("password should contains at least one special charachter (! - @ - # - $ - % - & - * - ( - ) - _ - [ - ])");
                     }
                 }
-                if(updateDto.CartId == null)
+                if (updateDto.CartId == null)
                 {
                     updateDto.CartId = foundUser.CartId;
                 }
-                if(foundUser.Email.Contains("@admin.com"))
+                if (foundUser.Email.Contains("@admin.com"))
                 {
                     updateDto.Role = UserRole.Admin;
                 }
-                else 
+                else
                 {
                     updateDto.Role = UserRole.Customer;
                 }
@@ -222,7 +226,7 @@ namespace src.Services.user
                 _mapper.Map(updateDto, foundUser);
                 return await _userRepo.UpdateOneAsync(foundUser);
             }
-           
+
         }
         public async Task<List<UserReadDto>> GetAllAsync()
         {

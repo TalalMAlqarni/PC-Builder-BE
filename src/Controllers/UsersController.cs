@@ -10,11 +10,13 @@ using static src.DTO.UserDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using static src.Entity.User;
+using System.Security.Claims;
 
 namespace src.Controllers
-{   [ApiController]
+{
+    [ApiController]
     [Route("api/v1/[controller]")]
-    public class UsersController  : ControllerBase
+    public class UsersController : ControllerBase
     {
         protected readonly IUserService _userService;
 
@@ -29,7 +31,7 @@ namespace src.Controllers
             var userCreated = await _userService.CreateOneAsync(createDto);
             return Ok(userCreated);
         }
-        
+
         // log in
         [HttpPost("signIn")]
         public async Task<ActionResult<string>> SignInUser([FromBody] UserCreateDto createDto)
@@ -37,14 +39,27 @@ namespace src.Controllers
             var token = await _userService.SignInAsync(createDto);
             return Ok(token);
         }
+
+        // get user by token
+        [HttpGet("auth")]
+        [Authorize]
+        public async Task<ActionResult<UserReadDto>> GetUserByToken()
+        {
+            var authenticatedClaims = HttpContext.User;
+            var userId = authenticatedClaims.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+            var userGuid = new Guid(userId);
+            var user = await _userService.GetByIdAsync(userGuid);
+            return Ok(user);
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserReadDto>>> GetAllUsers()
         {
             var userList = await _userService.GetAllAsync();
-           
-                return Ok(userList);
-            
+
+            return Ok(userList);
+
         }
         [HttpGet("{userId}")]
         [Authorize(Roles = "Admin")]
@@ -67,15 +82,16 @@ namespace src.Controllers
             var isDeleted = await _userService.DeleteOneAsync(userId);
             return isDeleted ? Ok("user deleted seccsufully") : StatusCode(500);
         }
-         
+
         [HttpPut("{userId}")]
+        [Authorize]
         public async Task<ActionResult<UserReadDto>> UpdateUser(Guid userId, UserUpdateDto updateDto)
         {
             var userRead = await _userService.UpdateOneAsync(userId, updateDto);
             return Ok($"{userRead} Updated seccussfuly");
         }
-        
+
     }
 
-    
+
 }
