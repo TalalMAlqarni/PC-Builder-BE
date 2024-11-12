@@ -17,6 +17,7 @@ namespace src.Database
         public DbSet<Product> Product { get; set; }
         public DbSet<Review> Review { get; set; }
         public DbSet<SubCategory> SubCategory { get; set; }
+        public DbSet<Specifications> Specifications { get; set; }
         public DbSet<User> User { get; set; }
         public DatabaseContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

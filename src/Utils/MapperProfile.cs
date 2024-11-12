@@ -14,6 +14,7 @@ using static src.DTO.SubCategoryDTO;
 using Microsoft.Extensions.Options;
 using static src.DTO.ReviewDTO;
 using static src.DTO.CouponDTO;
+using static src.DTO.SpecificationsDTO;
 
 namespace src.Utils
 {
@@ -91,6 +92,15 @@ namespace src.Utils
             .ForAllMembers(options =>
                 options.Condition((src, dest, srcProperty) => srcProperty != null)
             );
+
+            // Specifications mappings
+            CreateMap<Specifications, ReadSpecificationsDto>();
+            CreateMap<CreateSpecificationsDto, Specifications>();
+            CreateMap<UpdateSpecificationsDto, Specifications>()
+                .ForAllMembers(options =>
+                    options.Condition((src, dest, srcProperty) => srcProperty != null)
+                );
+
 
             //Coupon mappings
             CreateMap<Coupon, CouponReadDto>();

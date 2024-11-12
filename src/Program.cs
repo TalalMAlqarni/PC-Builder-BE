@@ -7,6 +7,7 @@ using src.Services.Payment;
 using src.Services.product;
 using src.Services.SubCategory;
 using src.Services.user;
+using src.Services.specifications;
 using src.Services;
 using src.Utils;
 using src.Services.cart;
@@ -51,6 +52,7 @@ builder
     .AddScoped<IPaymentService, PaymentService>().AddScoped<PaymentRepository, PaymentRepository>()
     .AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>()
     .AddScoped<IReviewService, ReviewService>().AddScoped<ReviewRepository, ReviewRepository>()
+    .AddScoped<ISpecificationsService, SpecificationsService>().AddScoped<SpecificationsRepository, SpecificationsRepository>()
     .AddScoped<ICouponService, CouponService>().AddScoped<CouponRepository, CouponRepository>();
 
 //CORS

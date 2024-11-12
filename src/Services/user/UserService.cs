@@ -101,7 +101,7 @@ namespace src.Services.user
                 }
             }
             PasswordUtils.HashPassword(createDto.Password, out string hashedPassword, out byte[] salt);
-            user.CartId = Guid.NewGuid();
+            user.CartId = null;
             user.Password = hashedPassword;
             user.Salt = salt;
             var savedUser = await _userRepo.CreateOneAsync(user);
