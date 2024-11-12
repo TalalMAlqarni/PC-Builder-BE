@@ -109,7 +109,7 @@ var app = builder.Build();
 // for deployment part:
 app.UseRouting();
 app.MapGet("/", () =>
-"Hello! You may notice that the website appears empty at the moment. This is because we are currently focused on developing the backend functionality. The front-end will be completed individually by each team member, transforming the project into a complete full-stack application. Thank you for your understanding! Team members: Abdulaziz, Razan, Raghad, Jomana, and Talal.");
+"Hello! ");
 //
 // test database connection
 using (var scope = app.Services.CreateScope())
