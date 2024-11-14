@@ -62,7 +62,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins("https://pc-builder-fe.onrender.com", "http://localhost:3000")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .SetIsOriginAllowed((host) => true)
@@ -109,7 +109,7 @@ var app = builder.Build();
 // for deployment part:
 app.UseRouting();
 app.MapGet("/", () =>
-"Hello! ");
+"Hello! please use https://pc-builder-be.onrender.com/api/v1/ {End Point You want to use or test}");
 //
 // test database connection
 using (var scope = app.Services.CreateScope())

@@ -38,6 +38,33 @@ namespace src.Controller
             return Ok(category);
         }
 
+        // Get category name and product name by product Id
+        [HttpGet("products/{id}")]
+        public async Task<ActionResult<ProductCategoryDto>> GetCategoryAndProductNameByProductId(Guid id)
+        {
+            var categoryList = await _categoryService.GetAllAsync();
+            foreach (var category in categoryList)
+            {
+                if (category.SubCategory != null)
+                {
+                    foreach (var subCategory in category.SubCategory)
+                    {
+                        var product = subCategory.Products.FirstOrDefault(p => p.ProductId == id);
+                        if (product != null)
+                        {
+                            var result = new ProductCategoryDto
+                            {
+                                CategoryName = category.CategoryName,
+                                ProductName = product.ProductName
+                            };
+                            return Ok(result);
+                        }
+                    }
+                }
+            }
+            return NotFound("Category or product not found");
+        }
+
         // Add a category 
         [Authorize(Roles = "Admin")]
         [HttpPost]
